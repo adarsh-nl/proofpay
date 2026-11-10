@@ -85,7 +85,9 @@ describe("JobSchema", () => {
   });
 
   it("requires the core fields", () => {
-    const { criteria: _criteria, ...withoutCriteria } = job;
+    const withoutCriteria = Object.fromEntries(
+      Object.entries(job).filter(([key]) => key !== "criteria"),
+    );
     expect(JobSchema.safeParse(withoutCriteria).success).toBe(false);
   });
 });
