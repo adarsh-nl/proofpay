@@ -1,0 +1,50 @@
+{
+  "title": "Stovetop cleaned",
+  "description": "Degrease a stovetop: surface free of burnt-on residue, burners clean and re-seated, no debris around them, front panel polished.",
+  "category": "cleaning",
+  "amount": {
+    "currency": "USD",
+    "value": "50.00"
+  },
+  "livenessCode": "2048",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "Stovetop surface is free of grease and burnt-on residue",
+      "required": true,
+      "weight": 0.35
+    },
+    {
+      "id": "c2",
+      "label": "Burners/rings are clean and re-seated",
+      "required": true,
+      "weight": 0.25
+    },
+    {
+      "id": "c3",
+      "label": "No food debris around the burners",
+      "required": true,
+      "weight": 0.2
+    },
+    {
+      "id": "c4",
+      "label": "Hob front panel polished",
+      "required": false,
+      "weight": 0.2
+    }
+  ],
+  "expected": {
+    "outcome": "APPROVED",
+    "alternatives": [],
+    "criteria": {
+      "c1": "PASS",
+      "c2": "PASS",
+      "c3": "PASS",
+      "c4": "PASS",
+      "cL": "PASS"
+    }
+  },
+  "notes": "Photograph from above at a fixed position before and after. Code note can rest on the counter edge in the after frame.",
+  "ready": false,
+  "exifTakenAt": null
+}

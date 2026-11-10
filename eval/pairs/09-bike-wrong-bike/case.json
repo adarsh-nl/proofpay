@@ -1,0 +1,46 @@
+{
+  "title": "After photo shows a different bike",
+  "description": "Replace a bicycle chain on a blue city bike. The after photo shows a different, red bike.",
+  "category": "bike_repair",
+  "amount": {
+    "currency": "USD",
+    "value": "60.00"
+  },
+  "livenessCode": "2790",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "Chain is new/clean and fully seated on the sprockets",
+      "required": true,
+      "weight": 0.35
+    },
+    {
+      "id": "c2",
+      "label": "Chain tension looks correct (no excessive sag)",
+      "required": true,
+      "weight": 0.25
+    },
+    {
+      "id": "c3",
+      "label": "Drivetrain is lubricated without excess oil",
+      "required": false,
+      "weight": 0.2
+    },
+    {
+      "id": "c4",
+      "label": "Work area and bike left tidy",
+      "required": false,
+      "weight": 0.2
+    }
+  ],
+  "expected": {
+    "outcome": "HUMAN_REVIEW",
+    "alternatives": [
+      "REJECTED"
+    ],
+    "criteria": {}
+  },
+  "notes": "MANUAL §9.5 \"after photo of a different bike\". before_1 must show the blue bike, after_1 a clearly different red bike in the same spot/angle. Expect SCENE_MISMATCH (HIGH) -> HUMAN_REVIEW, or uncertain required criteria.",
+  "ready": false,
+  "exifTakenAt": null
+}

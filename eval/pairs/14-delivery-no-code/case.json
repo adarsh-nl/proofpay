@@ -1,0 +1,40 @@
+{
+  "title": "Parcel delivered without the liveness code",
+  "description": "Deliver a parcel to the front door: parcel at the door, house number visible, but no liveness code in the photo.",
+  "category": "delivery",
+  "amount": {
+    "currency": "USD",
+    "value": "45.00"
+  },
+  "livenessCode": "8043",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "Parcel visible at the delivery door",
+      "required": true,
+      "weight": 0.4
+    },
+    {
+      "id": "c2",
+      "label": "Door/house number visible and legible",
+      "required": true,
+      "weight": 0.4
+    },
+    {
+      "id": "c3",
+      "label": "Parcel undamaged and not exposed to weather",
+      "required": false,
+      "weight": 0.2
+    }
+  ],
+  "expected": {
+    "outcome": "REJECTED",
+    "alternatives": [
+      "HUMAN_REVIEW"
+    ],
+    "criteria": {}
+  },
+  "notes": "MANUAL §9.5 \"no code\" expects REJECTED or HUMAN_REVIEW. Deliberately omit the sticky note from every AFTER frame. cL is required: FAIL high-confidence -> REJECTED, NOT_VISIBLE -> HUMAN_REVIEW.",
+  "ready": false,
+  "exifTakenAt": null
+}

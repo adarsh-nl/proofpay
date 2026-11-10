@@ -1,0 +1,43 @@
+{
+  "title": "Bike brake pad replaced",
+  "description": "Replace a bicycle brake pad: new pad visible and seated, cable reconnected, wheel spins freely.",
+  "category": "bike_repair",
+  "amount": {
+    "currency": "USD",
+    "value": "45.00"
+  },
+  "livenessCode": "8547",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "New brake pad is visible and correctly seated in the calliper",
+      "required": true,
+      "weight": 0.4
+    },
+    {
+      "id": "c2",
+      "label": "Brake cable is reconnected and the lever pulls firmly",
+      "required": true,
+      "weight": 0.3
+    },
+    {
+      "id": "c3",
+      "label": "Wheel spins freely without rubbing",
+      "required": false,
+      "weight": 0.3
+    }
+  ],
+  "expected": {
+    "outcome": "APPROVED",
+    "alternatives": [],
+    "criteria": {
+      "c1": "PASS",
+      "c2": "PASS",
+      "c3": "PASS",
+      "cL": "PASS"
+    }
+  },
+  "notes": "MANUAL §9.5 bike brake-pad case. Photograph the calliper close-up; code note taped to the handlebar in the AFTER frame.",
+  "ready": false,
+  "exifTakenAt": null
+}

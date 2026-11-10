@@ -1,0 +1,40 @@
+{
+  "title": "Parcel left at the wrong door",
+  "description": "Deliver a parcel to a front door; the photo is taken at a different door than the one in the before photo.",
+  "category": "delivery",
+  "amount": {
+    "currency": "USD",
+    "value": "45.00"
+  },
+  "livenessCode": "3471",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "Parcel is visible at the agreed delivery door",
+      "required": true,
+      "weight": 0.4
+    },
+    {
+      "id": "c2",
+      "label": "Door and house number match the before photo",
+      "required": true,
+      "weight": 0.3
+    },
+    {
+      "id": "c3",
+      "label": "Parcel is undamaged and not exposed to weather",
+      "required": false,
+      "weight": 0.3
+    }
+  ],
+  "expected": {
+    "outcome": "HUMAN_REVIEW",
+    "alternatives": [
+      "REJECTED"
+    ],
+    "criteria": {}
+  },
+  "notes": "MANUAL §9.5 \"wrong door\". BEFORE shot of your own front door; AFTER shot of a clearly different door (e.g. a neighbour/building door) with the parcel. Expect SCENE_MISMATCH (HIGH) -> HUMAN_REVIEW.",
+  "ready": false,
+  "exifTakenAt": null
+}

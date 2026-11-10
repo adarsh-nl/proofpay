@@ -1,0 +1,48 @@
+{
+  "title": "Shelf missing one panel",
+  "description": "Assemble a flat-pack bookshelf. One shelf/panel is missing, the rest of the shelf is assembled.",
+  "category": "assembly",
+  "amount": {
+    "currency": "USD",
+    "value": "80.00"
+  },
+  "livenessCode": "1285",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "Item fully assembled, no leftover parts visible",
+      "required": true,
+      "weight": 0.4
+    },
+    {
+      "id": "c2",
+      "label": "All shelves/panels present and aligned",
+      "required": true,
+      "weight": 0.3
+    },
+    {
+      "id": "c3",
+      "label": "Item stands stable on a flat floor",
+      "required": false,
+      "weight": 0.15
+    },
+    {
+      "id": "c4",
+      "label": "Packaging removed",
+      "required": false,
+      "weight": 0.15
+    }
+  ],
+  "expected": {
+    "outcome": "PARTIAL",
+    "alternatives": [
+      "REJECTED"
+    ],
+    "criteria": {
+      "c2": "FAIL"
+    }
+  },
+  "notes": "MANUAL §9.5 \"missing a shelf\" expects PARTIAL. Note for the eval: c2 (\"All shelves/panels present and aligned\") is required, so the §10 engine can also return REJECTED (required FAIL with high confidence); PARTIAL is only reachable if c2 is judged PASS/NOT_VISIBLE. Both outcomes are recorded.",
+  "ready": false,
+  "exifTakenAt": null
+}

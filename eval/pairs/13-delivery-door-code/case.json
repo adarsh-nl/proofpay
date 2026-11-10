@@ -1,0 +1,43 @@
+{
+  "title": "Parcel delivered at the door, code visible",
+  "description": "Deliver a parcel to the front door of a house: parcel at the door, house number visible, parcel undamaged.",
+  "category": "delivery",
+  "amount": {
+    "currency": "USD",
+    "value": "45.00"
+  },
+  "livenessCode": "5926",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "Parcel visible at the delivery door",
+      "required": true,
+      "weight": 0.4
+    },
+    {
+      "id": "c2",
+      "label": "Door/house number visible and legible",
+      "required": true,
+      "weight": 0.4
+    },
+    {
+      "id": "c3",
+      "label": "Parcel undamaged and not exposed to weather",
+      "required": false,
+      "weight": 0.2
+    }
+  ],
+  "expected": {
+    "outcome": "APPROVED",
+    "alternatives": [],
+    "criteria": {
+      "c1": "PASS",
+      "c2": "PASS",
+      "c3": "PASS",
+      "cL": "PASS"
+    }
+  },
+  "notes": "MANUAL §9.5 delivery case. House number must be legible in the AFTER shot; blur or crop any family name on the door. Use your own doorstep only.",
+  "ready": false,
+  "exifTakenAt": null
+}

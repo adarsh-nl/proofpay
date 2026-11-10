@@ -1,0 +1,52 @@
+{
+  "title": "After photo is the before photo re-uploaded",
+  "description": "Deep-clean a home-office desk. The worker re-uploads the before photo as the after photo instead of doing the work.",
+  "category": "cleaning",
+  "amount": {
+    "currency": "USD",
+    "value": "40.00"
+  },
+  "livenessCode": "9174",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "Floor around the desk is clear of dust and marks",
+      "required": true,
+      "weight": 0.3
+    },
+    {
+      "id": "c2",
+      "label": "Desk surface is wiped, no dust or sticky marks",
+      "required": true,
+      "weight": 0.3
+    },
+    {
+      "id": "c3",
+      "label": "Monitor and keyboard are dust-free",
+      "required": true,
+      "weight": 0.2
+    },
+    {
+      "id": "c4",
+      "label": "No wrappers or rubbish visible near the desk",
+      "required": false,
+      "weight": 0.2
+    }
+  ],
+  "expected": {
+    "outcome": "HUMAN_REVIEW",
+    "alternatives": [
+      "PARTIAL"
+    ],
+    "criteria": {
+      "c1": "PASS",
+      "c2": "PASS",
+      "c3": "PASS",
+      "c4": "PASS",
+      "cL": "PASS"
+    }
+  },
+  "notes": "after_1.jpg MUST be a byte copy of this case before_1.jpg (cp before_1.jpg after_1.jpg). Put the code sticky note in the BEFORE frame too so cL can pass. MANUAL §9.5 expects HUMAN_REVIEW; the decision engine only returns HUMAN_REVIEW on a HIGH flag or an uncertain required criterion, so a NO_CHANGE-only case may come out PARTIAL (MEDIUM flag blocks APPROVED) - both are accepted by this label.",
+  "ready": false,
+  "exifTakenAt": null
+}

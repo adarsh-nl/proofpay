@@ -1,0 +1,38 @@
+{
+  "title": "After photo is a stock doorstep image",
+  "description": "Deliver a parcel to a front door; the worker uploads a known stock photo of a parcel on a doorstep instead.",
+  "category": "delivery",
+  "amount": {
+    "currency": "USD",
+    "value": "45.00"
+  },
+  "livenessCode": "9650",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "Parcel visible at the delivery door",
+      "required": true,
+      "weight": 0.4
+    },
+    {
+      "id": "c2",
+      "label": "Door/house number visible and legible",
+      "required": true,
+      "weight": 0.4
+    },
+    {
+      "id": "c3",
+      "label": "Parcel undamaged and not exposed to weather",
+      "required": false,
+      "weight": 0.2
+    }
+  ],
+  "expected": {
+    "outcome": "HUMAN_REVIEW",
+    "alternatives": [],
+    "criteria": {}
+  },
+  "notes": "MANUAL §9.5 \"stock parcel image\". after_1.jpg MUST be a copy of an image in eval/stock/ (currently cp eval/stock/placeholder-doorstep-1.jpg). Forensics hashes eval/stock/* on every run, so EXACT_DUPLICATE (HIGH) -> HUMAN_REVIEW. Keep the committed placeholder until real stock photos replace it.",
+  "ready": false,
+  "exifTakenAt": null
+}
