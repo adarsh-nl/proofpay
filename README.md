@@ -58,7 +58,7 @@ flowchart LR
   ESC --> AG
   AG -->|capture / partial capture / void / refund| PP
   R -->|override| API
-  PP -->|webhooks (stretch)| API
+  PP -->|"webhooks (stretch)"| API
   API <--> DB
 ```
 
