@@ -24,7 +24,7 @@ const EDITABLE_STATUSES = ["AUTHORIZED", "REJECTED"] as const;
 const MAX_SUBMISSIONS = 2;
 
 export function uploadRoot(): string {
-  return path.resolve(process.cwd(), getEnv().UPLOAD_DIR);
+  return path.resolve(/* turbopackIgnore: true */ process.cwd(), getEnv().UPLOAD_DIR);
 }
 
 function requireEditable(job: Job): void {
@@ -120,7 +120,7 @@ export async function removeEvidence(
   requireEditable(job);
   const item = listEvidence(jobId, db).find((candidate) => candidate.id === evidenceId);
   if (!item || !deleteEvidence(jobId, evidenceId, db)) throw new NotFoundError("Evidence");
-  const file = path.join(uploadRoot(), jobId, path.basename(item.url));
+  const file = path.join(/* turbopackIgnore: true */ uploadRoot(), jobId, path.basename(item.url));
   await unlink(file).catch(() => undefined);
 }
 

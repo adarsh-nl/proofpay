@@ -16,7 +16,7 @@ export const GET = withErrors<{ jobId: string; file: string }>(async (_req, ctx)
   const { jobId, file } = await ctx.params;
   if (!JOB_PATTERN.test(jobId) || !FILE_PATTERN.test(file)) throw new NotFoundError("Image");
   const root = uploadRoot();
-  const target = path.resolve(root, jobId, file);
+  const target = path.resolve(/* turbopackIgnore: true */ root, jobId, file);
   if (!target.startsWith(root + path.sep)) throw new NotFoundError("Image");
   let bytes: Buffer;
   try {
