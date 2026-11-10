@@ -7,7 +7,7 @@
  */
 import { expect, type APIRequestContext, type Page } from '@playwright/test';
 
-import type { Job, JobListItem } from '../../src/shared/contracts';
+import type { Job, JobListItem } from '../../../src/shared/contracts';
 
 export type EscrowStatus =
   | 'CREATED'
