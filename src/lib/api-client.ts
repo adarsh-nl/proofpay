@@ -164,6 +164,22 @@ const FIXTURE_VERIFICATION = VerificationBundleSchema.parse(verificationFixture)
  * API routes merge (`NEXT_PUBLIC_USE_FIXTURES=1`). It is not a fake backend. */
 const fixtureStore = new Map<string, Job>(Object.entries(FIXTURE_JOBS));
 
+/** Captured partial of the cleaning job, so the timeline can render
+ * Held $120 → AI verified 4/5 → Captured $96 → Released $24. */
+const settledPartial = FIXTURE_JOBS['demo-partial'];
+if (settledPartial.payment) {
+  fixtureStore.set('demo-settled', {
+    ...settledPartial,
+    id: 'demo-settled',
+    status: 'CAPTURED',
+    payment: {
+      ...settledPartial.payment,
+      captured: { currency: 'USD', value: '96.00' },
+      captureIds: ['MOCK-CAP-1'],
+    },
+  });
+}
+
 function fixtureJobOrFallback(id: string): Job {
   const existing = fixtureStore.get(id);
   if (existing) return existing;
