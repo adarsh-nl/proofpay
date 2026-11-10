@@ -128,4 +128,14 @@ curl -s -X POST $BASE/api/jobs/$JOB/agent/evidence-pack -b pp_role=reviewer -H '
 curl -s -X POST $BASE/api/jobs/$JOB/verify -b pp_role=reviewer -H 'content-type: application/json' -d '{"force":true}'
 ```
 
+## Demo reset (off by default)
+
+```bash
+# Only when the server runs with DEMO_RESET_ENABLED=1; otherwise this answers 404.
+# Reviewer only (plus the passcode header if REVIEWER_PASSCODE is set).
+# Deletes every job and uploaded photo, releases open sandbox holds (best effort) and re-seeds
+# the three demo jobs → {"jobs":[...3 jobs in CREATED...],"deletedJobs":n,"releasedHolds":n}
+curl -s -X POST $BASE/api/dev/reset -b pp_role=reviewer
+```
+
 Routes 16 (`reauthorize`) and 19 (`webhooks/paypal`) are stretch tasks (T17, T16).

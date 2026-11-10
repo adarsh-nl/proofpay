@@ -222,6 +222,7 @@ Authoritative list: `.env.example`. Server code reads env **only** through `src/
 | `DATABASE_PATH` | yes | `./data/proofpay.db` | |
 | `UPLOAD_DIR` | yes | `./data/uploads` | |
 | `SEED_ON_BOOT` | no | `1` on Render | |
+| `DEMO_RESET_ENABLED` | no | `0` | `1` enables `POST /api/dev/reset` (reviewer only): deletes every job and photo and re-seeds the three demo jobs. Leave `0` unless you are recording or demoing |
 | `AUTO_CAPTURE_ON_APPROVE` | no | `1` | |
 | `T_PASS` `T_PARTIAL` `T_CONF` `T_LOW_CONF` `PARTIAL_ROUND_TO` | no | `0.9 0.5 0.75 0.6 0.05` | Decision thresholds |
 | `REVIEWER_PASSCODE` | no | — | Gate for `/reviewer` on the hosted demo |
