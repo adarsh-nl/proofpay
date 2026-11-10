@@ -77,6 +77,7 @@ const EnvSchema = z
     DATABASE_PATH: withDefault("./data/proofpay.db"),
     UPLOAD_DIR: withDefault("./data/uploads"),
     SEED_ON_BOOT: flag(false),
+    DEMO_RESET_ENABLED: flag(false),
     REVIEWER_PASSCODE: optionalString,
   })
   .superRefine((env, ctx) => {
