@@ -17,7 +17,7 @@ import path from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
 import sharp from 'sharp';
 
-import { fetchJob, gotoWithRetry, jobIdFromUrl, selectRole } from './helpers/api';
+import { fetchJob, gotoWithRetry, jobIdFromUrl, resetDemoData, selectRole } from './helpers/api';
 import {
   attachEvidenceWithRetry,
   authorizeJobWithMock,
@@ -108,6 +108,11 @@ async function captureViewport(page: Page, name: string, label: string, note = '
 function recordFlow(name: string, started: number, ok: boolean): void {
   flows.push({ name, ok, ms: Date.now() - started });
 }
+
+// Start from the three seeded demo jobs, whatever ran before this file.
+test.beforeAll(async ({ request }) => {
+  await resetDemoData(request);
+});
 
 test.describe.configure({ mode: 'serial' });
 

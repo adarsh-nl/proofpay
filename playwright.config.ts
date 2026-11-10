@@ -67,6 +67,8 @@ export default defineConfig({
           NEXT_PUBLIC_PAYPAL_MOCK: '1',
           VISION_MOCK: '1',
           AUTO_CAPTURE_ON_APPROVE: '1',
+          // Lets every spec file reset to the seeded demo jobs (helpers/api.ts resetDemoData).
+          DEMO_RESET_ENABLED: '1',
           DATABASE_PATH: './data/e2e.db',
           UPLOAD_DIR: './data/e2e-uploads',
           APP_BASE_URL: BASE_URL,

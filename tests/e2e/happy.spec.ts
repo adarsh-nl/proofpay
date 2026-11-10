@@ -16,7 +16,7 @@
  */
 import { expect, test } from '@playwright/test';
 
-import { fetchJob, gotoWithRetry, jobIdFromUrl, selectRole, waitForJobStatus } from './helpers/api';
+import { fetchJob, gotoWithRetry, jobIdFromUrl, resetDemoData, selectRole, waitForJobStatus } from './helpers/api';
 import { uploadEvidenceAndSubmit } from './helpers/flow';
 import { AFTER_IMAGE, BEFORE_IMAGE } from './helpers/images';
 import { clickPaypalCheckoutButton, completePaypalSandboxCheckout, liveBuyerCredentials } from './helpers/paypal';
@@ -42,6 +42,11 @@ async function createBikeJob(page: import('@playwright/test').Page): Promise<str
   await expect(page.getByTestId('job-status')).toHaveAttribute('data-status', 'CREATED', { timeout: 20_000 });
   return jobId;
 }
+
+// Start from the three seeded demo jobs, whatever ran before this file.
+test.beforeAll(async ({ request }) => {
+  await resetDemoData(request);
+});
 
 test.describe('happy path (mock PayPal + mock vision)', () => {
   test('create job -> authorize -> upload -> APPROVED -> CAPTURED', async ({ page, request }) => {

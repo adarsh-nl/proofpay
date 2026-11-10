@@ -11,9 +11,14 @@
  */
 import { expect, test } from '@playwright/test';
 
-import { fetchJob, gotoWithRetry, selectRole } from './helpers/api';
+import { fetchJob, gotoWithRetry, resetDemoData, selectRole } from './helpers/api';
 import { authorizeJobWithMock, DEMO_DELIVERY, openJob, uploadEvidenceAndSubmit } from './helpers/flow';
 import { FRAUD_BEFORE_IMAGE, STOCK_DUPLICATE_IMAGE } from './helpers/images';
+
+// Start from the three seeded demo jobs, whatever ran before this file.
+test.beforeAll(async ({ request }) => {
+  await resetDemoData(request);
+});
 
 test.describe('fraud path (demo-delivery, known stock photo)', () => {
   test('stock after photo -> HUMAN_REVIEW with duplicate flag -> reviewer reject -> VOIDED', async ({ page, request }) => {
