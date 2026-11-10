@@ -1,0 +1,72 @@
+# Render blueprint for the ProofPay hosted demo (PayPal sandbox only).
+# Blueprint spec: https://render.com/docs/blueprint-spec
+#
+# Free tier notes:
+# - the disk is ephemeral, so SEED_ON_BOOT=1 recreates the SQLite demo database
+#   on every boot (scripts/start.mjs runs the seed before `next start`);
+# - the service spins down when idle, so the first request after a pause is slow
+#   (warm it up ~2 minutes before the demo, see docs/DEMO_AND_SUBMISSION.md);
+# - NEXT_PUBLIC_* variables are inlined at BUILD time: set
+#   NEXT_PUBLIC_PAYPAL_CLIENT_ID in the dashboard before the first deploy/build.
+services:
+  - type: web
+    name: proofpay
+    runtime: node
+    plan: free
+    region: frankfurt
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: PAYPAL_ENV
+        value: sandbox
+      - key: PAYPAL_API_BASE
+        value: https://api-m.sandbox.paypal.com
+      - key: PAYPAL_MOCK
+        value: "0"
+      - key: NEXT_PUBLIC_PAYPAL_MOCK
+        value: "0"
+      - key: CURRENCY
+        value: USD
+      - key: AI_PROVIDER
+        value: google
+      - key: VISION_MOCK
+        value: "0"
+      - key: VLM_TIMEOUT_MS
+        value: "45000"
+      - key: AUTO_CAPTURE_ON_APPROVE
+        value: "1"
+      - key: SEED_ON_BOOT
+        value: "1"
+      - key: DATABASE_PATH
+        value: ./data/proofpay.db
+      - key: UPLOAD_DIR
+        value: ./data/uploads
+      # Secrets: set these in the Render dashboard (sync:false).
+      - key: PAYPAL_CLIENT_ID
+        sync: false
+      - key: PAYPAL_CLIENT_SECRET
+        sync: false
+      - key: PAYPAL_WEBHOOK_ID
+        sync: false
+      - key: NEXT_PUBLIC_PAYPAL_CLIENT_ID
+        sync: false # inlined at build time: set before the first build
+      - key: GOOGLE_GENERATIVE_AI_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: REVIEWER_PASSCODE
+        sync: false
+      - key: APP_BASE_URL
+        sync: false # https://<service>.onrender.com
+      # Model ids are provider-versioned: set current ids from the provider's
+      # models page in the dashboard (required when VISION_MOCK=0).
+      - key: LLM_MODEL
+        sync: false
+      - key: VLM_MODEL
+        sync: false

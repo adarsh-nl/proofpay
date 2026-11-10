@@ -98,7 +98,7 @@ Until A07 fills the table, open the PayPal Developer Dashboard → Testing Tools
 4. Back on `/?as=customer` → the job shows per‑criterion verdicts with boxes → **Captured** in the money timeline. Check the sandbox business account's activity to see the capture.
 5. Optional: repeat with `eval/pairs/04-*` (partial → accept the agent's proposal) and `eval/pairs/16-*` (duplicate photo → human review → `/?as=reviewer` → reject → hold voided).
 
-Hosted demo: `https://<render-url>` *(added by task T15)*. **Sandbox only. No real money moves.**
+Hosted demo: **(URL added after the human deploys the Render blueprint)**. **Sandbox only. No real money moves.**
 
 Other commands: `npm run check` (lint + typecheck + unit tests) · `npm run e2e` (Playwright) · `npm run eval` (vision eval → `eval/report.md`).
 
