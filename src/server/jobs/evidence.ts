@@ -156,7 +156,7 @@ export function submitEvidence(
     { before: evidence.length - after, after, attempt: submissions + 1 },
     db,
   );
-  void runVerification(jobId, db).catch((error: unknown) => {
+  void runVerification(jobId, { db }).catch((error: unknown) => {
     console.error("[evidence] verification failed to start", error);
   });
   return submitted;

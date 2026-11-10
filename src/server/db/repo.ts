@@ -512,6 +512,23 @@ export function deleteEvidence(
   return result.changes > 0;
 }
 
+/**
+ * Raw evidence rows (with the on-disk `path`) for the server-side pipeline
+ * (verification orchestrator, forensics). API responses use `listEvidence`.
+ */
+export function listEvidenceRows(
+  jobId?: string,
+  db: ProofPayDb = getDb(),
+): t.EvidenceRow[] {
+  return (
+    jobId
+      ? db.select().from(t.evidence).where(eq(t.evidence.jobId, jobId))
+      : db.select().from(t.evidence)
+  )
+    .orderBy(asc(t.evidence.uploadedAt))
+    .all();
+}
+
 export function getEvidenceRowBySha(
   sha256: string,
   db: ProofPayDb = getDb(),
