@@ -17,6 +17,9 @@ export async function openJob(page: Page, jobId: string, role: DemoRole = 'custo
   await selectRole(page, role);
   const path = role === 'worker' ? `/worker/jobs/${jobId}` : `/jobs/${jobId}`;
   await gotoWithRetry(page, path);
+  // Let the client bundles finish loading/hydrating: in `next dev` the first request to a
+  // route compiles it, and a file input set before hydration loses its change event.
+  await page.waitForLoadState('networkidle', { timeout: 20_000 }).catch(() => undefined);
 }
 
 /**
@@ -50,14 +53,35 @@ export async function uploadEvidenceAndSubmit(
   await expect(livenessCode).toContainText(/\d{4}/);
   const code = (await livenessCode.textContent())?.match(/\d{4}/)?.[0] ?? '';
 
-  await page.getByTestId('dropzone-before').setInputFiles(beforeFile);
-  await page.getByTestId('dropzone-after').setInputFiles(afterFile);
   const submit = page.getByTestId('submit-evidence');
-  await expect(submit).toBeEnabled({ timeout: 20_000 });
+  await attachEvidenceWithRetry(page, beforeFile, afterFile, submit);
 
   await Promise.all([
     page.waitForURL((url) => /^\/jobs\/[^/?#]+$/.test(url.pathname), { timeout: 45_000 }),
     submit.click(),
   ]);
   return code;
+}
+
+/**
+ * Attach the before/after photos. If the form was not hydrated yet the input change is
+ * lost (state still shows 0 photos and the submit button stays disabled); retry once or
+ * twice instead of flaking.
+ */
+async function attachEvidenceWithRetry(
+  page: Page,
+  beforeFile: string,
+  afterFile: string,
+  submit: import('@playwright/test').Locator,
+): Promise<void> {
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    await page.getByTestId('dropzone-before').setInputFiles(beforeFile);
+    await page.getByTestId('dropzone-after').setInputFiles(afterFile);
+    try {
+      await expect(submit).toBeEnabled({ timeout: 8_000 });
+      return;
+    } catch (error) {
+      if (attempt === 3) throw error;
+    }
+  }
 }
