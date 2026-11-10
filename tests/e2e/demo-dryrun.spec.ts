@@ -76,6 +76,28 @@ async function capture(page: Page, name: string, label: string, note = ''): Prom
   }
 }
 
+async function captureViewport(page: Page, name: string, label: string, note = ''): Promise<void> {
+  const started = Date.now();
+  try {
+    const raw = await page.screenshot({ fullPage: false });
+    const optimized = await optimizePng(raw);
+    await mkdir(IMG_DIR, { recursive: true });
+    const file = path.join(IMG_DIR, `${name}.png`);
+    await writeFile(file, optimized);
+    shots.push({ name, label, ok: true, ms: Date.now() - started, sizeBytes: optimized.length, note });
+  } catch (error) {
+    shots.push({
+      name,
+      label,
+      ok: false,
+      ms: Date.now() - started,
+      sizeBytes: 0,
+      note: error instanceof Error ? error.message : String(error),
+    });
+    throw error;
+  }
+}
+
 function recordFlow(name: string, started: number, ok: boolean): void {
   flows.push({ name, ok, ms: Date.now() - started });
 }
@@ -131,10 +153,10 @@ test.describe('@dryrun demo dry-run (three stories from the script)', () => {
       await expect(page.getByTestId('job-status')).toHaveAttribute('data-status', 'CAPTURED', { timeout: 60_000 });
       await expect(page.getByTestId('verdict-c1')).toContainText('PASS', { timeout: 20_000 });
       await capture(page, '05-verification-boxes', 'Verification result: per-criterion verdicts with evidence boxes');
-      await expect(page.getByTestId('timeline-event').filter({ hasText: 'Captured $60.00' }).first()).toBeVisible({
-        timeout: 20_000,
-      });
-      await capture(page, '06-timeline-captured', 'Money timeline: Held $60.00 -> Verified -> Captured $60.00');
+      const capturedRow = page.getByTestId('timeline-event').filter({ hasText: 'Captured $60.00' }).first();
+      await expect(capturedRow).toBeVisible({ timeout: 20_000 });
+      await capturedRow.scrollIntoViewIfNeeded();
+      await captureViewport(page, '06-timeline-captured', 'Money timeline: Held $60.00 -> Verified -> Captured $60.00');
 
       const job = await fetchJob(request, jobId);
       expect(job.status).toBe('CAPTURED');
