@@ -1,5 +1,5 @@
 import "server-only";
-import { unlink } from "node:fs/promises";
+import { rename, unlink } from "node:fs/promises";
 import path from "node:path";
 import {
   MAX_EVIDENCE_BYTES,
@@ -9,7 +9,14 @@ import {
   type Job,
 } from "@/shared/contracts";
 import { getDb, type ProofPayDb } from "@/server/db/client";
-import { deleteEvidence, insertEvidence, listEvents, listEvidence } from "@/server/db/repo";
+import {
+  deleteEvidence,
+  insertEvidence,
+  listEvents,
+  listEvidence,
+  listEvidenceRows,
+  updateEvidencePath,
+} from "@/server/db/repo";
 import { getEnv } from "@/server/env";
 import { transition, type Actor } from "@/server/escrow/machine";
 import { ConflictError, HttpError, NotFoundError, ValidationError } from "@/server/http/errors";
@@ -125,14 +132,42 @@ export async function removeEvidence(
 }
 
 /**
+ * Renumber a job's stored photos so the n-th photo of a phase (in upload
+ * order) is `<phase>_<n>.jpg`. The verifier calls images `B1..Bn` / `A1..An`
+ * by that position and the UI loads `/api/uploads/<job>/<phase>_<n>.jpg`, so a
+ * gap left by a deleted photo would point the viewer at the wrong file.
+ */
+export async function compactEvidenceFiles(jobId: string, db: ProofPayDb = getDb()): Promise<number> {
+  const root = uploadRoot();
+  const moves: Array<{ id: string; from: string; to: string }> = [];
+  for (const phase of ["before", "after"] as const) {
+    const rows = listEvidenceRows(jobId, db).filter((row) => row.phase === phase);
+    rows.forEach((row, index) => {
+      const to = `${jobId}/${phase}_${index + 1}.jpg`;
+      if (row.path !== to) moves.push({ id: row.id, from: row.path, to });
+    });
+  }
+  if (moves.length === 0) return 0;
+  const abs = (relative: string) =>
+    path.join(/* turbopackIgnore: true */ root, jobId, path.basename(relative));
+  // Two passes, so a target name that is still in use by another move is never overwritten.
+  for (const move of moves) await rename(abs(move.from), abs(`.moving-${move.id}.jpg`));
+  for (const move of moves) {
+    await rename(abs(`.moving-${move.id}.jpg`), abs(move.to));
+    updateEvidencePath(move.id, move.to, db);
+  }
+  return moves.length;
+}
+
+/**
  * MANUAL §8 #9: needs at least one after photo, moves the job to
  * `EVIDENCE_SUBMITTED` and starts verification in the background.
  */
-export function submitEvidence(
+export async function submitEvidence(
   jobId: string,
   actor: Actor = "worker",
   db: ProofPayDb = getDb(),
-): Job {
+): Promise<Job> {
   const job = requireJob(jobId, db);
   requireEditable(job);
   const evidence = listEvidence(jobId, db);
@@ -149,6 +184,7 @@ export function submitEvidence(
       "RETRY_LIMIT_REACHED",
     );
   }
+  await compactEvidenceFiles(jobId, db);
   const submitted = transition(
     jobId,
     "EVIDENCE_SUBMITTED",

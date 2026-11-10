@@ -10,5 +10,5 @@ export const POST = withErrors<{ id: string }>(async (req, ctx) => {
   const role = requireRole(req, "worker");
   const { id } = await ctx.params;
   SubmitBodySchema.parse(await readJson(req));
-  return NextResponse.json({ job: jobForRole(submitEvidence(id), role) }, { status: 202 });
+  return NextResponse.json({ job: jobForRole(await submitEvidence(id), role) }, { status: 202 });
 });
