@@ -8,6 +8,10 @@
 - [ ] **T14 PayPal Agent Toolkit `get_order`**: with real sandbox credentials and `PAYPAL_MOCK=0`, call `POST /api/jobs/<id>/agent/evidence-pack` as reviewer for an authorized job → expected: the "Order status (PayPal Agent Toolkit `get_order`)" line shows the real order status, not `UNAVAILABLE`. Not run: no credentials. The toolkit is created with `context.sandbox: true` (it defaults to the live API); its sandbox base URL is `https://api.sandbox.paypal.com`.
 - [ ] **T15 Render deploy**: create the Render blueprint, set the secret env vars, deploy, then run the happy path on the hosted URL. The README "Hosted demo" line needs the final URL.
 - [ ] **T16/T17/T18 (stretch, only if reached)**: webhooks/disputes/payouts need real sandbox features enabled + a public URL.
+- [ ] **S02 Devpost form**: fill `{{HOSTED_URL}}`, `{{YOUTUBE_URL}}`, `{{EVAL_NUMBERS}}` (after the photo eval run) and `{{TOOLS_USED}}` in `docs/DEVPOST.md`/the Devpost form itself. The AI-tool list must be entered in the **Devpost form**, not in the repo (the repo naming rule forbids tool names in repo content).
+- [ ] **S02 sandbox buyer login**: replace the `<sandbox-buyer-email>` / `<sandbox-buyer-password>` placeholders in README "Try it (sandbox)" with the sandbox **personal** account (never a live account); review the README quickstart once more on the media machine.
+- [ ] **S02 README link check**: after the deploy, paste the Render URL into both `docs/DEVPOST.md` (`{{HOSTED_URL}}`) and the README "Hosted demo" line.
+- [ ] **Submission**: add the two team members on Devpost (Representative: Adarsh), upload the video, enter the Built With tags, and save a screenshot of the submitted confirmation.
 
 ## CROSS-OWNER REQUESTS
 - [ ] `src/lib/api-client.ts` `listEvidence(jobId): Promise<EvidenceItem[]>` calling `GET /api/jobs/:id/evidence` (owner: Frontend lane), why: image ids `B1..Bn` / `A1..An` follow upload order per phase, and file names can have gaps after a photo is deleted.
