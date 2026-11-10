@@ -1,0 +1,349 @@
+{
+  "id": "demo-partial",
+  "title": "Apartment deep clean",
+  "description": "Deep clean of a two bedroom apartment: floors, surfaces, bathroom, oven and rubbish removal.",
+  "category": "cleaning",
+  "amount": {
+    "currency": "USD",
+    "value": "120.00"
+  },
+  "status": "PARTIAL",
+  "livenessCode": "4821",
+  "customerName": "Demo Customer",
+  "workerName": "Demo Worker",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "Floor is clear of dust and marks",
+      "howToVerify": "Floors across the visible rooms should look clean with no dust, crumbs or visible marks.",
+      "required": true,
+      "weight": 0.2,
+      "phase": "before_after",
+      "source": "llm"
+    },
+    {
+      "id": "c2",
+      "label": "Surfaces wiped, no streaks",
+      "howToVerify": "Counters, tables and shelves should be free of streaks, dust and spills.",
+      "required": false,
+      "weight": 0.2,
+      "phase": "after",
+      "source": "llm"
+    },
+    {
+      "id": "c3",
+      "label": "Sink/bathroom spotless",
+      "howToVerify": "The sink and bathroom surfaces should have no limescale, hair or soap residue.",
+      "required": true,
+      "weight": 0.2,
+      "phase": "after",
+      "source": "llm"
+    },
+    {
+      "id": "c4",
+      "label": "Oven interior has no visible grease",
+      "howToVerify": "The inside of the oven (door open, racks visible) should show no grease or burnt residue.",
+      "required": false,
+      "weight": 0.2,
+      "phase": "after",
+      "source": "llm"
+    },
+    {
+      "id": "c5",
+      "label": "Rubbish removed",
+      "howToVerify": "Bins are empty and no rubbish bags are left in the rooms.",
+      "required": true,
+      "weight": 0.2,
+      "phase": "after",
+      "source": "llm"
+    },
+    {
+      "id": "cL",
+      "label": "Liveness code 4821 visible in at least one after photo (written on paper or shown on a phone screen)",
+      "howToVerify": "Look for a handwritten or phone-displayed 4 digit code in the after photos and read it.",
+      "required": true,
+      "weight": 0,
+      "phase": "after",
+      "source": "system"
+    }
+  ],
+  "payment": {
+    "orderId": "MOCK-ORDER-1",
+    "authorizationId": "MOCK-AUTH-1",
+    "authorizationStatus": "CREATED",
+    "authorized": {
+      "currency": "USD",
+      "value": "120.00"
+    },
+    "captured": {
+      "currency": "USD",
+      "value": "0.00"
+    },
+    "refunded": {
+      "currency": "USD",
+      "value": "0.00"
+    },
+    "captureIds": [],
+    "expiresAt": "2026-12-09T09:20:00.000Z",
+    "honorPeriodEndsAt": "2026-11-13T09:20:00.000Z"
+  },
+  "events": [
+    {
+      "id": 1,
+      "type": "STATUS_CHANGED",
+      "toStatus": "CREATED",
+      "actor": "customer",
+      "data": null,
+      "createdAt": "2026-11-10T08:55:00.000Z"
+    },
+    {
+      "id": 2,
+      "type": "PAYPAL_CALL",
+      "actor": "customer",
+      "data": {
+        "op": "create_order",
+        "orderId": "MOCK-ORDER-1"
+      },
+      "createdAt": "2026-11-10T09:18:00.000Z"
+    },
+    {
+      "id": 3,
+      "type": "STATUS_CHANGED",
+      "fromStatus": "CREATED",
+      "toStatus": "AUTHORIZED",
+      "actor": "customer",
+      "data": {
+        "authorizationId": "MOCK-AUTH-1"
+      },
+      "createdAt": "2026-11-10T09:20:00.000Z"
+    },
+    {
+      "id": 4,
+      "type": "STATUS_CHANGED",
+      "fromStatus": "AUTHORIZED",
+      "toStatus": "EVIDENCE_SUBMITTED",
+      "actor": "worker",
+      "data": {
+        "afterImages": 2,
+        "beforeImages": 1
+      },
+      "createdAt": "2026-11-10T09:35:00.000Z"
+    },
+    {
+      "id": 5,
+      "type": "STATUS_CHANGED",
+      "fromStatus": "EVIDENCE_SUBMITTED",
+      "toStatus": "VERIFYING",
+      "actor": "system",
+      "data": null,
+      "createdAt": "2026-11-10T09:35:05.000Z"
+    },
+    {
+      "id": 6,
+      "type": "STATUS_CHANGED",
+      "fromStatus": "VERIFYING",
+      "toStatus": "PARTIAL",
+      "actor": "system",
+      "data": {
+        "score": 0.8
+      },
+      "createdAt": "2026-11-10T09:42:00.000Z"
+    },
+    {
+      "id": 7,
+      "type": "AGENT_MESSAGE",
+      "actor": "agent",
+      "data": {
+        "proposalId": "prp_demo_partial_1",
+        "kind": "PARTIAL_CAPTURE",
+        "captureAmount": {
+          "currency": "USD",
+          "value": "96.00"
+        },
+        "releaseAmount": {
+          "currency": "USD",
+          "value": "24.00"
+        },
+        "explanation": "4 of 5 cleaning checks passed. The oven interior (c4) still shows grease in the after photo (highlighted area). Proposed: pay 80% now and release the remaining $24.00 hold.",
+        "basedOnVerificationId": "ver_demo_cleaning"
+      },
+      "createdAt": "2026-11-10T09:43:00.000Z"
+    }
+  ],
+  "createdAt": "2026-11-10T08:55:00.000Z",
+  "updatedAt": "2026-11-10T09:45:00.000Z",
+  "latestVerification": {
+    "id": "ver_demo_cleaning",
+    "attempt": 1,
+    "model": "gemini-2.5-flash",
+    "mock": true,
+    "createdAt": "2026-11-10T09:42:00.000Z",
+    "report": {
+      "verdicts": [
+        {
+          "criterionId": "c1",
+          "verdict": "PASS",
+          "confidence": 0.95,
+          "rationale": "Both after photos show clean flooring with no dust, crumbs or visible marks in the living room and hallway.",
+          "evidence": [
+            {
+              "imageId": "A1",
+              "box_2d": [
+                520,
+                80,
+                940,
+                780
+              ],
+              "note": "Clean living-room floor"
+            }
+          ]
+        },
+        {
+          "criterionId": "c2",
+          "verdict": "PASS",
+          "confidence": 0.93,
+          "rationale": "The kitchen counter and table surfaces show no streaks, dust or spills.",
+          "evidence": [
+            {
+              "imageId": "A1",
+              "box_2d": [
+                300,
+                320,
+                460,
+                900
+              ],
+              "note": "Counter surface wiped"
+            }
+          ]
+        },
+        {
+          "criterionId": "c3",
+          "verdict": "PASS",
+          "confidence": 0.91,
+          "rationale": "The bathroom sink and tiles are free of limescale, hair and soap residue.",
+          "evidence": [
+            {
+              "imageId": "A2",
+              "box_2d": [
+                340,
+                140,
+                720,
+                620
+              ],
+              "note": "Sink and surrounding tiles clean"
+            }
+          ]
+        },
+        {
+          "criterionId": "c4",
+          "verdict": "FAIL",
+          "confidence": 0.88,
+          "rationale": "Grease is still visible on the oven interior.",
+          "evidence": [
+            {
+              "imageId": "A2",
+              "box_2d": [
+                180,
+                520,
+                520,
+                940
+              ],
+              "note": "Brown grease residue on oven wall"
+            }
+          ]
+        },
+        {
+          "criterionId": "c5",
+          "verdict": "PASS",
+          "confidence": 0.9,
+          "rationale": "The kitchen bin is empty and no rubbish bags are visible in the rooms.",
+          "evidence": [
+            {
+              "imageId": "A1",
+              "box_2d": [
+                600,
+                60,
+                880,
+                260
+              ],
+              "note": "Empty bin area"
+            }
+          ]
+        },
+        {
+          "criterionId": "cL",
+          "verdict": "PASS",
+          "confidence": 0.97,
+          "rationale": "The handwritten code 4821 is legible on the sticky note in the first after photo.",
+          "evidence": [
+            {
+              "imageId": "A1",
+              "box_2d": [
+                60,
+                700,
+                220,
+                940
+              ],
+              "note": "Sticky note with 4821"
+            }
+          ]
+        }
+      ],
+      "sameScene": {
+        "verdict": "SAME",
+        "confidence": 0.9,
+        "rationale": "Before and after photos show the same kitchen layout with identical tiles and window frame."
+      },
+      "livenessCode": {
+        "found": true,
+        "readValue": "4821",
+        "imageId": "A1"
+      },
+      "imageQualityIssues": [
+        "NONE"
+      ],
+      "summary": "Four of five cleaning criteria pass; the oven interior still shows visible grease in the after photo."
+    },
+    "forensics": {
+      "flags": [
+        {
+          "code": "EXIF_MISSING",
+          "level": "INFO",
+          "message": "The after photo has no EXIF timestamp (many apps strip it); not treated as fraud on its own.",
+          "evidenceIds": [
+            "ev_after_1"
+          ]
+        },
+        {
+          "code": "SCREENSHOT",
+          "level": "MEDIUM",
+          "message": "One after image looks like a photo of a screen; ask the worker for a direct photo.",
+          "evidenceIds": [
+            "ev_after_2"
+          ]
+        },
+        {
+          "code": "NEAR_DUPLICATE",
+          "level": "HIGH",
+          "message": "The after photo is very similar to an image already used on another job.",
+          "evidenceIds": [
+            "ev_after_2"
+          ]
+        }
+      ]
+    },
+    "decision": {
+      "outcome": "PARTIAL",
+      "score": 0.8,
+      "captureAmount": {
+        "currency": "USD",
+        "value": "96.00"
+      },
+      "reasons": [
+        "c4 (oven interior) FAIL with confidence 0.88: grease is still visible.",
+        "c2, c3, c1, c5 PASS; weighted score 0.80.",
+        "Score is between T_PARTIAL and T_PASS: partial capture of 80% proposed."
+      ]
+    }
+  }
+}
