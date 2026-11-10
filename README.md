@@ -126,7 +126,7 @@ Limitations (honest): role switching via `?as=` is a demo convenience, not authe
 
 ## Screenshots
 
-Captured by the automated demo dry-run (`npx playwright test -g @dryrun`); per-shot
+Captured by the automated demo dry-run (`E2E_DRYRUN=1 npx playwright test tests/e2e/demo-dryrun.spec.ts`); per-shot
 timings, OK/glitch results, the first-navigation time and the exact commands are in
 [docs/DRYRUN_REPORT.md](docs/DRYRUN_REPORT.md).
 

@@ -3,9 +3,12 @@
  * order on the app, capture one named screenshot per script shot into `docs/img/`, measure
  * timings and write `docs/DRYRUN_REPORT.md`.
  *
- *   npx playwright test -g @dryrun                 # local managed server (next dev, mocks)
- *   BASE_URL=https://<render-url> npx playwright test -g @dryrun
- *                                                  # same run against the hosted demo
+ * It is EXCLUDED from the default `npm run e2e` (see playwright.config.ts) because it
+ * consumes the seeded demo jobs and rewrites the committed README artifacts. Run it on
+ * its own against a fresh database/server:
+ *
+ *   E2E_DRYRUN=1 npx playwright test tests/e2e/demo-dryrun.spec.ts
+ *   BASE_URL=https://<render-url> E2E_DRYRUN=1 npx playwright test tests/e2e/demo-dryrun.spec.ts
  *
  * The screenshots are the README "Screenshots" section; the dry-run report records per-shot
  * OK/glitch, per-flow timings and the first-navigation ("cold start") time. Videos are
@@ -290,11 +293,12 @@ test.describe('@dryrun demo dry-run (three stories from the script)', () => {
     lines.push('## How to reproduce');
     lines.push('');
     lines.push('```bash');
-    lines.push('# local (mocks, managed server on :3100)');
-    lines.push('npm run e2e -- -g @dryrun');
+    lines.push('# local (mocks, managed server) — excluded from the default `npm run e2e` so the');
+    lines.push('# core specs keep a fresh demo database; run it on its own:');
+    lines.push('E2E_DRYRUN=1 npx playwright test tests/e2e/demo-dryrun.spec.ts');
     lines.push('');
     lines.push('# against the hosted demo (real sandbox credentials on the Render instance)');
-    lines.push('BASE_URL=https://<render-url> npm run e2e -- -g @dryrun');
+    lines.push('BASE_URL=https://<render-url> E2E_DRYRUN=1 npx playwright test tests/e2e/demo-dryrun.spec.ts');
     lines.push('```');
     lines.push('');
     await writeFile(REPORT_PATH, lines.join('\n'));
