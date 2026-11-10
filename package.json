@@ -17,7 +17,7 @@
     "db:generate": "drizzle-kit generate",
     "db:reset": "tsx scripts/db-reset.ts",
     "e2e": "playwright test",
-    "eval": "tsx scripts/eval.ts",
+    "eval": "tsx --conditions=react-server scripts/eval.ts",
     "eval:validate": "tsx scripts/eval-validate.ts"
   },
   "dependencies": {
