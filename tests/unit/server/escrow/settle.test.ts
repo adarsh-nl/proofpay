@@ -24,6 +24,8 @@ beforeEach(() => {
   process.env.PAYPAL_MOCK = "1";
   process.env.CURRENCY = "USD";
   process.env.AUTO_CAPTURE_ON_APPROVE = "1";
+  delete process.env.PAYOUTS_ENABLED;
+  delete process.env.WORKER_SANDBOX_EMAIL;
   resetEnvCache();
   resetPayPalMock();
   sequence += 1;
@@ -266,5 +268,55 @@ describe("PayPal failures", () => {
       op: "capture",
       issue: "AUTHORIZATION_ALREADY_CAPTURED",
     });
+  });
+});
+
+describe("worker payouts (stretch T18)", () => {
+  it("pays the worker after a capture when PAYOUTS_ENABLED=1", async () => {
+    process.env.PAYOUTS_ENABLED = "1";
+    process.env.WORKER_SANDBOX_EMAIL = "worker@example.test";
+    resetEnvCache();
+    const { jobId } = await createFundedJob("APPROVED", 6000);
+    await settle(jobId, { kind: "FULL" }, db);
+
+    const payoutEvents = (getJob(jobId, db)?.events ?? []).filter((event) => {
+      const data = event.data as { op?: string } | undefined;
+      return event.type === "PAYPAL_CALL" && data?.op === "payout";
+    });
+    expect(payoutEvents).toHaveLength(1);
+    const data = payoutEvents[0].data as {
+      ok?: boolean;
+      batchId?: string;
+      amountCents?: number;
+      currency?: string;
+    };
+    expect(data.ok).toBe(true);
+    expect(data.batchId).toMatch(/^MOCK-PAYOUT-/);
+    expect(data.amountCents).toBe(6000);
+    expect(data.currency).toBe("USD");
+  });
+
+  it("does not pay the worker by default (PAYOUTS_ENABLED=0)", async () => {
+    const { jobId } = await createFundedJob("APPROVED", 6000);
+    await settle(jobId, { kind: "FULL" }, db);
+    const payoutEvents = (getJob(jobId, db)?.events ?? []).filter((event) => {
+      const data = event.data as { op?: string } | undefined;
+      return event.type === "PAYPAL_CALL" && data?.op === "payout";
+    });
+    expect(payoutEvents).toHaveLength(0);
+  });
+
+  it("skips the payout when enabled but WORKER_SANDBOX_EMAIL is empty", async () => {
+    process.env.PAYOUTS_ENABLED = "1";
+    process.env.WORKER_SANDBOX_EMAIL = "";
+    resetEnvCache();
+    const { jobId } = await createFundedJob("APPROVED", 6000);
+    const result = await settle(jobId, { kind: "FULL" }, db);
+    expect(result.job.status).toBe("CAPTURED");
+    const payoutEvents = (getJob(jobId, db)?.events ?? []).filter((event) => {
+      const data = event.data as { op?: string } | undefined;
+      return event.type === "PAYPAL_CALL" && data?.op === "payout";
+    });
+    expect(payoutEvents).toHaveLength(0);
   });
 });
