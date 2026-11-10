@@ -68,3 +68,16 @@ export function requireReviewer(req: Request): Role {
   }
   return role;
 }
+
+/**
+ * Role used to decide what a GET may show. A `reviewer` cookie without the
+ * passcode (when one is configured) is treated as no role, so setting the
+ * cookie alone does not reveal reviewer-only fields such as the liveness code.
+ */
+export function viewerRole(req: Request): Role | undefined {
+  const role = getRole(req);
+  if (role !== "reviewer") return role;
+  const passcode = getEnv().REVIEWER_PASSCODE;
+  if (!passcode) return role;
+  return sameSecret(req.headers.get(REVIEWER_PASSCODE_HEADER) ?? "", passcode) ? role : undefined;
+}

@@ -54,7 +54,7 @@ export async function buildEvidencePack(
     : undefined;
 
   const lines: string[] = [
-    `# ProofPay evidence pack: ${job.title}`,
+    `# ProofPay evidence pack: ${cell(job.title)}`,
     "",
     "Sandbox demo. Generated from the ProofPay audit log; AI verdicts are advisory and a human approved any money movement.",
     "",
