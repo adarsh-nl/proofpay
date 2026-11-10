@@ -64,7 +64,25 @@ flowchart LR
 
 ## Quickstart (judges)
 
-Requirements: Node.js 20+ (`node -v`), npm 10+, git, a free [PayPal Developer](https://developer.paypal.com/) account (sandbox). Optional: an API key for the configured vision provider.
+Requirements: Node.js 22+ (`node -v`), npm 10+, git. For the real PayPal flow you also need a free [PayPal Developer](https://developer.paypal.com/) account (sandbox). Optional: an API key for the configured vision provider.
+
+**Fastest path, no accounts or keys (mock mode):**
+
+```bash
+git clone https://github.com/adarsh-nl/proofpay.git && cd proofpay
+npm ci
+cp .env.example .env.local
+#  Edit .env.local and set these three to 1 (VISION_MOCK is already 1):
+#    PAYPAL_MOCK=1                 (PayPal calls are served by an in-memory fake; no network)
+#    NEXT_PUBLIC_PAYPAL_MOCK=1     (the job page shows "Simulate PayPal approval (mock)" instead of the PayPal popup)
+#    VISION_MOCK=1                 (deterministic AI verification; no AI key)
+npm run db:reset                  # creates ./data/proofpay.db, seeds 3 demo jobs
+npm run dev                       # → http://localhost:3000
+```
+
+`bash eval/judge-test.sh` does exactly this on a fresh clone (install, build, start, then the bike job from "create" to "captured") and prints `JUDGE TEST PASSED`.
+
+**With the real PayPal sandbox:**
 
 ```bash
 git clone https://github.com/adarsh-nl/proofpay.git && cd proofpay
@@ -94,13 +112,15 @@ Until A07 fills the table, open the PayPal Developer Dashboard → Testing Tools
 ### Steps (about 3 minutes)
 1. Open `http://localhost:3000/?as=customer` → **New job** → e.g. "Replace bike chain", category *bike_repair*, $60 → **Create**. Review the AI checklist → **Save**.
 2. Click the **PayPal** button → log in with the **sandbox buyer** in [Try it (sandbox)](#try-it-sandbox) → approve. You'll see **"Funds held by PayPal"**.
-3. Open `/?as=worker` → the job → note the 4‑digit code → upload `eval/pairs/06-*/before_1.jpg` and `after_1.jpg` → **Submit**.
+3. Open `/?as=worker` → the job → note the 4‑digit code → upload a before and an after photo (any JPEG, PNG or WebP of your own, up to 8 MB each; HEIC is not supported) → **Submit**. With `VISION_MOCK=1` the photo content is not inspected, so any two different photos work.
 4. Back on `/?as=customer` → the job shows per‑criterion verdicts with boxes → **Captured** in the money timeline. Check the sandbox business account's activity to see the capture.
-5. Optional: repeat with `eval/pairs/04-*` (partial → accept the agent's proposal) and `eval/pairs/16-*` (duplicate photo → human review → `/?as=reviewer` → reject → hold voided).
+5. Optional: open the seeded job **Apartment deep clean** (`/jobs/demo-cleaning`): it ends in a partial result, and the customer accepts the agent's proposal ($96 of $120). For the fraud path, open **Parcel delivery to the front door** (`/jobs/demo-delivery`) and upload `eval/stock/placeholder-doorstep-1.jpg` as the after photo: the duplicate check sends it to human review → `/?as=reviewer` → reject → the hold is voided.
+
+In mock mode (`NEXT_PUBLIC_PAYPAL_MOCK=1`) step 2 is a **Simulate PayPal approval (mock)** button; there is no PayPal login.
 
 Hosted demo: **(URL added after the human deploys the Render blueprint)**. **Sandbox only. No real money moves.**
 
-Other commands: `npm run check` (lint + typecheck + unit tests) · `npm run e2e` (Playwright) · `npm run eval` (vision eval → `eval/report.md`).
+Other commands: `npm run check` (lint + typecheck + unit tests) · `npm run e2e` (Playwright; run `npx playwright install chromium` once first) · `npm run eval` (vision eval → `eval/report.md`).
 
 Limitations (honest): role switching via `?as=` is a demo convenience, not authentication. On Render's free tier the SQLite DB and uploads reset on restart. The AI can be wrong, so low‑confidence or suspicious cases always go to a human.
 
@@ -110,7 +130,7 @@ Limitations (honest): role switching via `?as=` is a demo convenience, not authe
 
 ProofPay is a working prototype of vision-verified escrow on **PayPal sandbox**. No real money moves. Four minutes with it:
 
-1. **No credentials needed.** Run `npm ci && npm run db:reset && cp .env.example .env.local && npm run dev` — the default `.env.example` has `VISION_MOCK=1`; set `PAYPAL_MOCK=1` and `NEXT_PUBLIC_PAYPAL_MOCK=1` in `.env.local` to fake PayPal too (a "Simulate PayPal approval (mock)" button appears instead of the PayPal popup).
+1. **No credentials needed.** Run `npm ci && cp .env.example .env.local && npm run db:reset && npm run dev` (Node.js 22+) — the default `.env.example` has `VISION_MOCK=1`; set `PAYPAL_MOCK=1` and `NEXT_PUBLIC_PAYPAL_MOCK=1` in `.env.local` to fake PayPal too (a "Simulate PayPal approval (mock)" button appears instead of the PayPal popup).
 2. **The whole loop with mocks:** `/?as=customer` → create a job → mock-approve the payment ("Funds held by PayPal") → `/?as=worker` → read the liveness code, upload before/after photos → submit → back as customer to see the per-criterion verdicts and the money timeline.
 3. **Real PayPal sandbox:** put sandbox credentials in `.env.local` (`PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `NEXT_PUBLIC_PAYPAL_CLIENT_ID`) and keep `VISION_MOCK=1`; get them from https://developer.paypal.com/ → Apps & Credentials → Sandbox. The buyer login for `sandbox.paypal.com` is in [Try it (sandbox)](#try-it-sandbox).
 4. **With a real vision key:** set `VISION_MOCK=0`, `GOOGLE_GENERATIVE_AI_API_KEY` (or `OPENAI_API_KEY`) and a current `LLM_MODEL`/`VLM_MODEL` id. Without a key the deterministic mock produces the same demo outcomes: bike → full capture, cleaning → partial capture ($96 of $120) approved by the customer, reused stock photo → human review.
@@ -147,7 +167,7 @@ Honest limitations: the `?as=` role switch is a demo convenience, not authentica
 
 ### First 30 minutes for the Collaborator (step by step)
 1. Accept the GitHub invite to `adarsh-nl/proofpay` and the Notion page share.
-2. Install: Node 20+ (`node -v`), git, and Google Chrome.
+2. Install: Node 22+ (`node -v`), git, and Google Chrome.
 3. `git clone https://github.com/adarsh-nl/proofpay.git && cd proofpay && npm ci` (after T00 has merged).
 4. Get the sandbox `PAYPAL_CLIENT_ID` / `PAYPAL_CLIENT_SECRET` from Adarsh via password manager → `cp .env.example .env.local` → paste them in → keep `VISION_MOCK=1`.
 5. `npm run db:reset && npm run dev`, then open http://localhost:3000.

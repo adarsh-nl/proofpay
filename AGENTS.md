@@ -146,7 +146,7 @@ Frontend lane UI work before the APIs exist: build against the zod types plus **
 
 ```bash
 # 0. Prereqs
-node -v          # must be >= 20 (Render default may differ; we pin "engines": {"node": ">=20"})
+node -v          # must be >= 22 (we pin "engines": {"node": ">=22"}; render.yaml sets NODE_VERSION=22)
 npm -v
 git --version
 
