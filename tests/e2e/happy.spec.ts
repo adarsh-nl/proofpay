@@ -16,7 +16,7 @@
  */
 import { expect, test } from '@playwright/test';
 
-import { fetchJob, jobIdFromUrl, selectRole, waitForJobStatus } from './helpers/api';
+import { fetchJob, gotoWithRetry, jobIdFromUrl, selectRole, waitForJobStatus } from './helpers/api';
 import { AFTER_IMAGE, BEFORE_IMAGE } from './helpers/images';
 import { clickPaypalCheckoutButton, completePaypalSandboxCheckout, liveBuyerCredentials } from './helpers/paypal';
 
@@ -28,7 +28,7 @@ const JOB_AMOUNT = '60.00';
 /** Create a bike job as the customer and return its html job id. */
 async function createBikeJob(page: import('@playwright/test').Page): Promise<string> {
   await selectRole(page, 'customer');
-  await page.goto('/customer/new');
+  await gotoWithRetry(page, '/customer/new');
 
   await page.getByTestId('create-job-title').fill(JOB_TITLE);
   await page.getByTestId('create-job-description').fill(JOB_DESCRIPTION);
@@ -45,7 +45,7 @@ async function createBikeJob(page: import('@playwright/test').Page): Promise<str
 /** Upload the synthetic before/after pair from the worker view and submit. */
 async function uploadEvidence(page: import('@playwright/test').Page, jobId: string): Promise<string> {
   await selectRole(page, 'worker');
-  await page.goto(`/worker/jobs/${jobId}`);
+  await gotoWithRetry(page, `/worker/jobs/${jobId}`);
 
   const livenessCode = page.getByTestId('liveness-code');
   await expect(livenessCode).toBeVisible({ timeout: 30_000 });
@@ -57,7 +57,15 @@ async function uploadEvidence(page: import('@playwright/test').Page, jobId: stri
   await page.getByTestId('dropzone-after').setInputFiles(AFTER_IMAGE);
   const submit = page.getByTestId('submit-evidence');
   await expect(submit).toBeEnabled({ timeout: 20_000 });
-  await submit.click();
+
+  // The form POSTs the submission and only then redirects to /jobs/<id>. Wait for that
+  // redirect before navigating away, otherwise the in-flight request is aborted.
+  // Match the customer job detail path exactly: `/worker/jobs/<id>` also contains
+  // `/jobs/<id>`, and navigating away while the POST is in flight would lose it.
+  await Promise.all([
+    page.waitForURL((url) => /^\/jobs\/[^/?#]+$/.test(url.pathname), { timeout: 45_000 }),
+    submit.click(),
+  ]);
   return code;
 }
 
@@ -80,7 +88,7 @@ test.describe('happy path (mock PayPal + mock vision)', () => {
     // 4. Verification runs in-process; the customer view ends CAPTURED with a verdict
     //    and a $60.00 timeline event (mock C6: all criteria PASS -> APPROVED -> capture).
     await selectRole(page, 'customer');
-    await page.goto(`/jobs/${jobId}`);
+    await gotoWithRetry(page, `/jobs/${jobId}`);
     await expect(page.getByTestId('job-status')).toHaveAttribute('data-status', 'CAPTURED', { timeout: 45_000 });
     await expect(page.getByTestId('verdict-c1')).toContainText('PASS');
     await expect(page.getByTestId('timeline-event').filter({ hasText: '$60.00' }).first()).toBeVisible({ timeout: 20_000 });
@@ -114,7 +122,7 @@ test.describe('@live real sandbox PayPal', () => {
     await uploadEvidence(page, jobId);
 
     await selectRole(page, 'customer');
-    await page.goto(`/jobs/${jobId}`);
+    await gotoWithRetry(page, `/jobs/${jobId}`);
     await expect(page.getByTestId('job-status')).toHaveAttribute('data-status', 'CAPTURED', { timeout: 90_000 });
     const captured = await fetchJob(request, jobId);
     expect(captured.payment?.captured.value).toBe(JOB_AMOUNT);

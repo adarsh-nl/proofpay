@@ -46,7 +46,10 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      // `channel: 'chromium'` forces the full Chromium binary (new headless) instead of
+      // chrome-headless-shell, which crashes at startup on this machine ("icudtl.dat not
+      // found in bundle"). Both binaries are installed by `npx playwright install chromium`.
+      use: { ...devices['Desktop Chrome'], channel: 'chromium' },
     },
   ],
   webServer: MANAGED_SERVER
