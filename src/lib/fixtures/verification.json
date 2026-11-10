@@ -1,0 +1,105 @@
+{
+  "id": "ver_demo_cleaning",
+  "attempt": 1,
+  "model": "gemini-2.5-flash",
+  "mock": true,
+  "createdAt": "2026-11-10T09:42:00.000Z",
+  "report": {
+    "verdicts": [
+      {
+        "criterionId": "c1",
+        "verdict": "PASS",
+        "confidence": 0.95,
+        "rationale": "Both after photos show clean flooring with no dust, crumbs or visible marks in the living room and hallway.",
+        "evidence": [
+          { "imageId": "A1", "box_2d": [520, 80, 940, 780], "note": "Clean living-room floor" }
+        ]
+      },
+      {
+        "criterionId": "c2",
+        "verdict": "PASS",
+        "confidence": 0.93,
+        "rationale": "The kitchen counter and table surfaces show no streaks, dust or spills.",
+        "evidence": [
+          { "imageId": "A1", "box_2d": [300, 320, 460, 900], "note": "Counter surface wiped" }
+        ]
+      },
+      {
+        "criterionId": "c3",
+        "verdict": "PASS",
+        "confidence": 0.91,
+        "rationale": "The bathroom sink and tiles are free of limescale, hair and soap residue.",
+        "evidence": [
+          { "imageId": "A2", "box_2d": [340, 140, 720, 620], "note": "Sink and surrounding tiles clean" }
+        ]
+      },
+      {
+        "criterionId": "c4",
+        "verdict": "FAIL",
+        "confidence": 0.88,
+        "rationale": "Grease is still visible on the oven interior.",
+        "evidence": [
+          { "imageId": "A2", "box_2d": [180, 520, 520, 940], "note": "Brown grease residue on oven wall" }
+        ]
+      },
+      {
+        "criterionId": "c5",
+        "verdict": "PASS",
+        "confidence": 0.9,
+        "rationale": "The kitchen bin is empty and no rubbish bags are visible in the rooms.",
+        "evidence": [
+          { "imageId": "A1", "box_2d": [600, 60, 880, 260], "note": "Empty bin area" }
+        ]
+      },
+      {
+        "criterionId": "cL",
+        "verdict": "PASS",
+        "confidence": 0.97,
+        "rationale": "The handwritten code 4821 is legible on the sticky note in the first after photo.",
+        "evidence": [
+          { "imageId": "A1", "box_2d": [60, 700, 220, 940], "note": "Sticky note with 4821" }
+        ]
+      }
+    ],
+    "sameScene": {
+      "verdict": "SAME",
+      "confidence": 0.9,
+      "rationale": "Before and after photos show the same kitchen layout with identical tiles and window frame."
+    },
+    "livenessCode": { "found": true, "readValue": "4821", "imageId": "A1" },
+    "imageQualityIssues": ["NONE"],
+    "summary": "Four of five cleaning criteria pass; the oven interior still shows visible grease in the after photo."
+  },
+  "forensics": {
+    "flags": [
+      {
+        "code": "EXIF_MISSING",
+        "level": "INFO",
+        "message": "The after photo has no EXIF timestamp (many apps strip it); not treated as fraud on its own.",
+        "evidenceIds": ["ev_after_1"]
+      },
+      {
+        "code": "SCREENSHOT",
+        "level": "MEDIUM",
+        "message": "One after image looks like a photo of a screen; ask the worker for a direct photo.",
+        "evidenceIds": ["ev_after_2"]
+      },
+      {
+        "code": "NEAR_DUPLICATE",
+        "level": "HIGH",
+        "message": "The after photo is very similar to an image already used on another job.",
+        "evidenceIds": ["ev_after_2"]
+      }
+    ]
+  },
+  "decision": {
+    "outcome": "PARTIAL",
+    "score": 0.8,
+    "captureAmount": { "currency": "USD", "value": "96.00" },
+    "reasons": [
+      "c4 (oven interior) FAIL with confidence 0.88: grease is still visible.",
+      "c2, c3, c1, c5 PASS; weighted score 0.80.",
+      "Score is between T_PARTIAL and T_PASS: partial capture of 80% proposed."
+    ]
+  }
+}

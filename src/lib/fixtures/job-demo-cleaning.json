@@ -1,0 +1,106 @@
+{
+  "id": "demo-cleaning",
+  "title": "Apartment deep clean",
+  "description": "Deep clean of a two bedroom apartment: floors, surfaces, bathroom, oven and rubbish removal.",
+  "category": "cleaning",
+  "amount": { "currency": "USD", "value": "120.00" },
+  "status": "AUTHORIZED",
+  "livenessCode": "4821",
+  "customerName": "Demo Customer",
+  "workerName": "Demo Worker",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "Floor is clear of dust and marks",
+      "howToVerify": "Floors across the visible rooms should look clean with no dust, crumbs or visible marks.",
+      "required": true,
+      "weight": 0.2,
+      "phase": "before_after",
+      "source": "llm"
+    },
+    {
+      "id": "c2",
+      "label": "Surfaces wiped, no streaks",
+      "howToVerify": "Counters, tables and shelves should be free of streaks, dust and spills.",
+      "required": false,
+      "weight": 0.2,
+      "phase": "after",
+      "source": "llm"
+    },
+    {
+      "id": "c3",
+      "label": "Sink/bathroom spotless",
+      "howToVerify": "The sink and bathroom surfaces should have no limescale, hair or soap residue.",
+      "required": true,
+      "weight": 0.2,
+      "phase": "after",
+      "source": "llm"
+    },
+    {
+      "id": "c4",
+      "label": "Oven interior has no visible grease",
+      "howToVerify": "The inside of the oven (door open, racks visible) should show no grease or burnt residue.",
+      "required": false,
+      "weight": 0.2,
+      "phase": "after",
+      "source": "llm"
+    },
+    {
+      "id": "c5",
+      "label": "Rubbish removed",
+      "howToVerify": "Bins are empty and no rubbish bags are left in the rooms.",
+      "required": true,
+      "weight": 0.2,
+      "phase": "after",
+      "source": "llm"
+    },
+    {
+      "id": "cL",
+      "label": "Liveness code 4821 visible in at least one after photo (written on paper or shown on a phone screen)",
+      "howToVerify": "Look for a handwritten or phone-displayed 4 digit code in the after photos and read it.",
+      "required": true,
+      "weight": 0,
+      "phase": "after",
+      "source": "system"
+    }
+  ],
+  "payment": {
+    "orderId": "MOCK-ORDER-1",
+    "authorizationId": "MOCK-AUTH-1",
+    "authorizationStatus": "CREATED",
+    "authorized": { "currency": "USD", "value": "120.00" },
+    "captured": { "currency": "USD", "value": "0.00" },
+    "refunded": { "currency": "USD", "value": "0.00" },
+    "captureIds": [],
+    "expiresAt": "2026-12-09T09:20:00.000Z",
+    "honorPeriodEndsAt": "2026-11-13T09:20:00.000Z"
+  },
+  "events": [
+    {
+      "id": 1,
+      "type": "STATUS_CHANGED",
+      "toStatus": "CREATED",
+      "actor": "customer",
+      "data": null,
+      "createdAt": "2026-11-10T08:55:00.000Z"
+    },
+    {
+      "id": 2,
+      "type": "PAYPAL_CALL",
+      "actor": "customer",
+      "data": { "op": "create_order", "orderId": "MOCK-ORDER-1" },
+      "createdAt": "2026-11-10T09:18:00.000Z"
+    },
+    {
+      "id": 3,
+      "type": "STATUS_CHANGED",
+      "fromStatus": "CREATED",
+      "toStatus": "AUTHORIZED",
+      "actor": "customer",
+      "data": { "authorizationId": "MOCK-AUTH-1" },
+      "createdAt": "2026-11-10T09:20:00.000Z"
+    }
+  ],
+  "createdAt": "2026-11-10T08:55:00.000Z",
+  "updatedAt": "2026-11-10T09:20:00.000Z"
+}
