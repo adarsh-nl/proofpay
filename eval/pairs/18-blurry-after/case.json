@@ -1,0 +1,40 @@
+{
+  "title": "Blurry and underexposed after photo",
+  "description": "Clean a small work area; the worker submits an out-of-focus, underexposed after photo.",
+  "category": "other",
+  "amount": {
+    "currency": "USD",
+    "value": "60.00"
+  },
+  "livenessCode": "6804",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "The requested work result is clearly visible",
+      "required": true,
+      "weight": 0.5
+    },
+    {
+      "id": "c2",
+      "label": "Work area is tidy",
+      "required": false,
+      "weight": 0.3
+    },
+    {
+      "id": "c3",
+      "label": "Before/after show the same place",
+      "required": false,
+      "weight": 0.2
+    }
+  ],
+  "expected": {
+    "outcome": "HUMAN_REVIEW",
+    "alternatives": [
+      "REJECTED"
+    ],
+    "criteria": {}
+  },
+  "notes": "MANUAL §9.5 \"blurry/dark after photo\". AFTER shot deliberately out of focus / underexposed (no tripod, cover the lens partially) so the result cannot be verified. Expect required criteria UNCERTAIN/NOT_VISIBLE or low confidence -> HUMAN_REVIEW.",
+  "ready": false,
+  "exifTakenAt": null
+}

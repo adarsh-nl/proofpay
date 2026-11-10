@@ -1,0 +1,46 @@
+{
+  "title": "Photo reused from another job",
+  "description": "Deep-clean a home-office desk; the worker reuses a photo that was already uploaded for a different job.",
+  "category": "cleaning",
+  "amount": {
+    "currency": "USD",
+    "value": "40.00"
+  },
+  "livenessCode": "2318",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "Floor around the desk is clear of dust and marks",
+      "required": true,
+      "weight": 0.3
+    },
+    {
+      "id": "c2",
+      "label": "Desk surface is wiped, no dust or sticky marks",
+      "required": true,
+      "weight": 0.3
+    },
+    {
+      "id": "c3",
+      "label": "Monitor and keyboard are dust-free",
+      "required": true,
+      "weight": 0.2
+    },
+    {
+      "id": "c4",
+      "label": "No wrappers or rubbish visible near the desk",
+      "required": false,
+      "weight": 0.2
+    }
+  ],
+  "expected": {
+    "outcome": "HUMAN_REVIEW",
+    "alternatives": [
+      "REJECTED"
+    ],
+    "criteria": {}
+  },
+  "notes": "MANUAL §9.5 \"photo reused from job #1\". after_1.jpg MUST be a byte copy of 01-desk-clean/before_1.jpg. The eval runner treats every other case as a different job, so EXACT_DUPLICATE (HIGH) -> HUMAN_REVIEW only if case 01 is ready too. Shoot 01 before 17.",
+  "ready": false,
+  "exifTakenAt": null
+}

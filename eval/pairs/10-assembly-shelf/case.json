@@ -1,0 +1,50 @@
+{
+  "title": "Flat-pack shelf assembled",
+  "description": "Assemble a flat-pack bookshelf: fully assembled, all shelves present and aligned, stands stable, packaging removed.",
+  "category": "assembly",
+  "amount": {
+    "currency": "USD",
+    "value": "80.00"
+  },
+  "livenessCode": "4158",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "Item fully assembled, no leftover parts visible",
+      "required": true,
+      "weight": 0.4
+    },
+    {
+      "id": "c2",
+      "label": "All shelves/panels present and aligned",
+      "required": true,
+      "weight": 0.3
+    },
+    {
+      "id": "c3",
+      "label": "Item stands stable on a flat floor",
+      "required": false,
+      "weight": 0.15
+    },
+    {
+      "id": "c4",
+      "label": "Packaging removed",
+      "required": false,
+      "weight": 0.15
+    }
+  ],
+  "expected": {
+    "outcome": "APPROVED",
+    "alternatives": [],
+    "criteria": {
+      "c1": "PASS",
+      "c2": "PASS",
+      "c3": "PASS",
+      "c4": "PASS",
+      "cL": "PASS"
+    }
+  },
+  "notes": "MANUAL §9.5 assembly case. Full front view, same position before (flat-pack on floor) and after (assembled).",
+  "ready": false,
+  "exifTakenAt": null
+}

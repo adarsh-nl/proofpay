@@ -1,0 +1,50 @@
+{
+  "title": "Flat-pack chair assembled",
+  "description": "Assemble a flat-pack chair: fully assembled, all four legs/bolts present, stable on the floor, packaging removed.",
+  "category": "assembly",
+  "amount": {
+    "currency": "USD",
+    "value": "50.00"
+  },
+  "livenessCode": "7639",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "Chair is fully assembled, no loose parts left over",
+      "required": true,
+      "weight": 0.4
+    },
+    {
+      "id": "c2",
+      "label": "All four legs and bolts are present and tight",
+      "required": true,
+      "weight": 0.3
+    },
+    {
+      "id": "c3",
+      "label": "Chair stands stable on the floor",
+      "required": false,
+      "weight": 0.15
+    },
+    {
+      "id": "c4",
+      "label": "Packaging and tools removed from the frame",
+      "required": false,
+      "weight": 0.15
+    }
+  ],
+  "expected": {
+    "outcome": "APPROVED",
+    "alternatives": [],
+    "criteria": {
+      "c1": "PASS",
+      "c2": "PASS",
+      "c3": "PASS",
+      "c4": "PASS",
+      "cL": "PASS"
+    }
+  },
+  "notes": "MANUAL §9.5 assembly case. Code note propped on the seat for the AFTER shot.",
+  "ready": false,
+  "exifTakenAt": null
+}

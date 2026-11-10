@@ -1,0 +1,50 @@
+{
+  "title": "Desk area cleaned",
+  "description": "Deep-clean a home-office desk: floor around the desk clear, surfaces wiped, monitor and keyboard dust-free, rubbish removed.",
+  "category": "cleaning",
+  "amount": {
+    "currency": "USD",
+    "value": "40.00"
+  },
+  "livenessCode": "4821",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "Floor around the desk is clear of dust and marks",
+      "required": true,
+      "weight": 0.3
+    },
+    {
+      "id": "c2",
+      "label": "Desk surface is wiped, no dust or sticky marks",
+      "required": true,
+      "weight": 0.3
+    },
+    {
+      "id": "c3",
+      "label": "Monitor and keyboard are dust-free",
+      "required": true,
+      "weight": 0.2
+    },
+    {
+      "id": "c4",
+      "label": "No wrappers or rubbish visible near the desk",
+      "required": false,
+      "weight": 0.2
+    }
+  ],
+  "expected": {
+    "outcome": "APPROVED",
+    "alternatives": [],
+    "criteria": {
+      "c1": "PASS",
+      "c2": "PASS",
+      "c3": "PASS",
+      "c4": "PASS",
+      "cL": "PASS"
+    }
+  },
+  "notes": "Full clean of a small public desk area; write the 4-digit code on a sticky note in the AFTER frame. Before shot and after shot from the same standing position.",
+  "ready": false,
+  "exifTakenAt": null
+}

@@ -1,0 +1,43 @@
+{
+  "title": "Bike tyre pumped, gauge visible",
+  "description": "Pump a bicycle tyre and show the pressure: tyre inflated, gauge reading visible, both wheels seated, bike stable.",
+  "category": "bike_repair",
+  "amount": {
+    "currency": "USD",
+    "value": "25.00"
+  },
+  "livenessCode": "6015",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "Tyre is inflated and a pressure gauge reading is visible",
+      "required": true,
+      "weight": 0.4
+    },
+    {
+      "id": "c2",
+      "label": "Both wheels look correctly seated and undamaged",
+      "required": true,
+      "weight": 0.3
+    },
+    {
+      "id": "c3",
+      "label": "Bike is upright and stable on the ground",
+      "required": false,
+      "weight": 0.3
+    }
+  ],
+  "expected": {
+    "outcome": "APPROVED",
+    "alternatives": [],
+    "criteria": {
+      "c1": "PASS",
+      "c2": "PASS",
+      "c3": "PASS",
+      "cL": "PASS"
+    }
+  },
+  "notes": "MANUAL §9.5 \"tyre pumped (gauge visible)\". Keep the pump and gauge in the AFTER frame; same wheel visible in the BEFORE frame.",
+  "ready": false,
+  "exifTakenAt": null
+}

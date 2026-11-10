@@ -1,0 +1,57 @@
+{
+  "title": "Apartment deep clean, one area left dirty",
+  "description": "Deep clean a small apartment: floor, kitchen surfaces, sink, oven and rubbish. The worker cleans everything except the oven interior.",
+  "category": "cleaning",
+  "amount": {
+    "currency": "USD",
+    "value": "120.00"
+  },
+  "livenessCode": "5683",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "Floor is clear of dust and marks",
+      "required": true,
+      "weight": 0.2
+    },
+    {
+      "id": "c2",
+      "label": "Surfaces wiped, no streaks",
+      "required": true,
+      "weight": 0.2
+    },
+    {
+      "id": "c3",
+      "label": "Sink/bathroom spotless",
+      "required": true,
+      "weight": 0.2
+    },
+    {
+      "id": "c4",
+      "label": "Oven interior has no visible grease",
+      "required": false,
+      "weight": 0.2
+    },
+    {
+      "id": "c5",
+      "label": "Rubbish removed",
+      "required": true,
+      "weight": 0.2
+    }
+  ],
+  "expected": {
+    "outcome": "PARTIAL",
+    "alternatives": [],
+    "criteria": {
+      "c1": "PASS",
+      "c2": "PASS",
+      "c3": "PASS",
+      "c4": "FAIL",
+      "c5": "PASS",
+      "cL": "PASS"
+    }
+  },
+  "notes": "Use the MANUAL §9.5 cleaning template: 4/5 areas clean, oven left greasy on purpose. Expect score 0.80 -> PARTIAL, capture $96.00 and release $24.00 (MANUAL §9.4, same maths as demo-cleaning mock C6). This is the A04 partial-path case.",
+  "ready": false,
+  "exifTakenAt": null
+}

@@ -1,0 +1,50 @@
+{
+  "title": "Kitchen sink cleaned",
+  "description": "Clean a kitchen sink and the area around it: basin spotless, tap polished, counter dry, mirror streak-free.",
+  "category": "cleaning",
+  "amount": {
+    "currency": "USD",
+    "value": "45.00"
+  },
+  "livenessCode": "7139",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "Sink basin is spotless, no soap scum or residue",
+      "required": true,
+      "weight": 0.3
+    },
+    {
+      "id": "c2",
+      "label": "Tap and handles are shiny and free of limescale",
+      "required": true,
+      "weight": 0.25
+    },
+    {
+      "id": "c3",
+      "label": "Counter around the sink is dry and free of clutter",
+      "required": true,
+      "weight": 0.25
+    },
+    {
+      "id": "c4",
+      "label": "Mirror above the sink is streak-free",
+      "required": false,
+      "weight": 0.2
+    }
+  ],
+  "expected": {
+    "outcome": "APPROVED",
+    "alternatives": [],
+    "criteria": {
+      "c1": "PASS",
+      "c2": "PASS",
+      "c3": "PASS",
+      "c4": "PASS",
+      "cL": "PASS"
+    }
+  },
+  "notes": "Codes visible in the after shot. Keep the same camera height/angle before and after; avoid reflections of faces in the mirror.",
+  "ready": false,
+  "exifTakenAt": null
+}

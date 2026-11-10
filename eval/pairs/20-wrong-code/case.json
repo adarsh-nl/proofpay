@@ -1,0 +1,48 @@
+{
+  "title": "Liveness code written with wrong digits",
+  "description": "Replace a bicycle chain; the after photo shows a liveness code, but with the wrong digits.",
+  "category": "bike_repair",
+  "amount": {
+    "currency": "USD",
+    "value": "60.00"
+  },
+  "livenessCode": "7493",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "Chain is new/clean and fully seated on the sprockets",
+      "required": true,
+      "weight": 0.35
+    },
+    {
+      "id": "c2",
+      "label": "Chain tension looks correct (no excessive sag)",
+      "required": true,
+      "weight": 0.25
+    },
+    {
+      "id": "c3",
+      "label": "Drivetrain is lubricated without excess oil",
+      "required": false,
+      "weight": 0.2
+    },
+    {
+      "id": "c4",
+      "label": "Work area and bike left tidy",
+      "required": false,
+      "weight": 0.2
+    }
+  ],
+  "expected": {
+    "outcome": "REJECTED",
+    "alternatives": [
+      "HUMAN_REVIEW"
+    ],
+    "criteria": {
+      "cL": "FAIL"
+    }
+  },
+  "notes": "MANUAL §9.5 wrong-code case. In the AFTER frame write a different 4-digit number (e.g. 1111) than this case livenessCode. cL is required -> FAIL high-confidence = REJECTED, NOT_VISIBLE/uncertain = HUMAN_REVIEW.",
+  "ready": false,
+  "exifTakenAt": null
+}
