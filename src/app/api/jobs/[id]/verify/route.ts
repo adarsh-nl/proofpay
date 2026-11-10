@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { VerifyBodySchema } from "@/shared/contracts";
 import { getJob } from "@/server/db/repo";
 import { ConflictError, NotFoundError } from "@/server/http/errors";
-import { requireRole } from "@/server/http/role";
-import { withErrors } from "@/server/http/with-errors";
+import { requireReviewer } from "@/server/http/role";
+import { readJson, withErrors } from "@/server/http/with-errors";
 import { runVerification } from "@/server/vision/orchestrator";
 
 /**
@@ -13,9 +13,9 @@ import { runVerification } from "@/server/vision/orchestrator";
  * submission round.
  */
 export const POST = withErrors<{ id: string }>(async (req, ctx) => {
-  const role = requireRole(req, "reviewer");
+  const role = requireReviewer(req);
   const { id } = await ctx.params;
-  const body = VerifyBodySchema.parse(await req.json().catch(() => ({})));
+  const body = VerifyBodySchema.parse(await readJson(req));
 
   const job = getJob(id);
   if (!job) throw new NotFoundError("Job");

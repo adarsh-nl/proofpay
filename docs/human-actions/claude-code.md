@@ -13,6 +13,11 @@
 - [ ] **S02 README link check**: after the deploy, paste the Render URL into both `docs/DEVPOST.md` (`{{HOSTED_URL}}`) and the README "Hosted demo" line.
 - [ ] **Submission**: add the two team members on Devpost (Representative: Adarsh), upload the video, enter the Built With tags, and save a screenshot of the submitted confirmation.
 
+## npm audit (report only, 2026-11-10, `npm audit --omit=dev`)
+18 advisories (11 high, 5 moderate, 2 low, 0 critical). Nothing was changed; `npm audit fix --force` would downgrade `@paypal/agent-toolkit` to 1.3.5 and `shadcn` to 1.0.0 (both breaking).
+- [ ] **Via `@paypal/agent-toolkit` 1.11.0** (its own bundled copies of `ai` 4, `openai`, `@langchain/core`, `langsmith`, `mathjs`, `jsondiffpatch`, `uuid`, `zod` 3): 11 high, 1 moderate. Exposure here is small: the toolkit is loaded only with real PayPal credentials (`PAYPAL_MOCK=0`), only its three read tools are used (`get_order`, `list_disputes`, `get_dispute`), and no user input reaches its `mathjs`, `langchain` or `openai` code. Decide after the hackathon whether to replace it with direct REST reads.
+- [ ] **Via `shadcn`** (listed under `dependencies`; pulls `ts-morph`, `minimatch`, `deepmerge`): 4 moderate, 2 low. It is a code generator used at development time and is not imported by the app. Owner: Frontend lane; moving it to `devDependencies` (or removing it) clears these from the production tree.
+
 ## CROSS-OWNER REQUESTS
 - [ ] `src/lib/api-client.ts` `listEvidence(jobId): Promise<EvidenceItem[]>` calling `GET /api/jobs/:id/evidence` (owner: Frontend lane), why: image ids `B1..Bn` / `A1..An` follow upload order per phase, and file names can have gaps after a photo is deleted.
 - [ ] Settlement panel (owner: Frontend lane): the proposal is at the top level of the latest `AGENT_MESSAGE` event data and also under `data.proposal`; `proposalId` is stable per verification.

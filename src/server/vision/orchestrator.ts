@@ -173,6 +173,8 @@ export async function runVerification(
     const afterImages = await loadImages(afterRows, uploadDir);
 
     const report: VerificationReport = await verifier({
+      // One source of truth for mock mode: the validated env (unset means mock).
+      mock: env.VISION_MOCK,
       criteria: job.criteria,
       before: beforeImages,
       after: afterImages,
