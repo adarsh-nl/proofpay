@@ -3,13 +3,18 @@
  *
  * Never fake "real" evidence: these are seeded-PRNG 32x32 gray block patterns upscaled
  * to 800x600 with a "SYNTHETIC TEST IMAGE" overlay — no gradients (their dHash collapses),
- * no faces, no PII. The generator asserts that the before/after pair is >= 20 bits apart
- * in dHash terms (so `runForensics` never reports NO_CHANGE / NEAR_DUPLICATE) and that a
- * q60 re-encode keeps the hash within 6 bits.
+ * no faces, no PII. The generator asserts that any two different pairs are >= 20 bits
+ * apart in dHash terms (so `runForensics` never reports NO_CHANGE / NEAR_DUPLICATE across
+ * specs) and that a q60 re-encode keeps a hash within 6 bits of the original.
  *
- * The committed jpgs live in `tests/e2e/fixtures/` and are uploaded by `happy.spec.ts`
- * through the real dropzones. Regenerate them with:
- *   npx tsx tests/e2e/helpers/generate-fixtures.ts
+ * Three committed pairs exist so specs that run in the same server/database do not look
+ * like duplicates of each other (forensics flags re-used photos seen in another job):
+ *   pair 1 `synthetic-{before,after}-1.jpg` — happy path
+ *   pair 2 `synthetic-{before,after}-2.jpg` — partial-settlement path
+ *   pair 3 `synthetic-{before,after}-3.jpg` — fraud path before photo (after photo is the
+ *            known-stock image `eval/stock/placeholder-doorstep-1.jpg`).
+ *
+ * Regenerate with: `npx tsx tests/e2e/helpers/generate-fixtures.ts`
  */
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -22,8 +27,11 @@ export const DISTINCT_DHASH_MIN = 20;
 export const Q60_DHASH_MAX = 6;
 
 /** Seeds are frozen: changing them changes the committed fixtures. */
-export const BEFORE_SEED = 20260101;
-export const AFTER_SEED = 20260102;
+export const SYNTHETIC_PAIRS = [
+  { index: 1, label: 'happy', beforeSeed: 20260101, afterSeed: 20260102 },
+  { index: 2, label: 'partial', beforeSeed: 20260201, afterSeed: 20260202 },
+  { index: 3, label: 'fraud', beforeSeed: 20260301, afterSeed: 20260302 },
+] as const;
 
 export type SyntheticPair = {
   beforeFile: string;
@@ -96,33 +104,65 @@ export function hamming(a: string, b: string): number {
 }
 
 /**
- * Generate the pair into `outDir` as `synthetic-before-1.jpg` / `synthetic-after-1.jpg`
- * and assert the C10 dHash rules.
+ * Generate one pair into `outDir` as `synthetic-before-<n>.jpg` / `synthetic-after-<n>.jpg`
+ * and assert the C10 dHash rules against every already-generated pair.
  */
-export async function generateSyntheticPair(outDir: string): Promise<SyntheticPair> {
+export async function generateSyntheticPairs(outDir: string): Promise<SyntheticPair[]> {
   await mkdir(outDir, { recursive: true });
-  const before = await buildSyntheticImage(BEFORE_SEED, 'e2e before');
-  const after = await buildSyntheticImage(AFTER_SEED, 'e2e after');
-  const beforeDhash = await dhash(before);
-  const afterDhash = await dhash(after);
-  const distance = hamming(beforeDhash, afterDhash);
-  if (distance < DISTINCT_DHASH_MIN) {
-    throw new Error(`before/after dHash are only ${distance} bits apart; pick different seeds (C10)`);
-  }
-  const reencoded = await dhash(await sharp(after).jpeg({ quality: 60 }).toBuffer());
-  const q60Distance = hamming(afterDhash, reencoded);
-  if (q60Distance > Q60_DHASH_MAX) {
-    throw new Error(`after image dHash drifted ${q60Distance} bits at q60 (> ${Q60_DHASH_MAX}, C10)`);
-  }
+  const pairs: SyntheticPair[] = [];
 
-  const beforeFile = path.join(outDir, 'synthetic-before-1.jpg');
-  const afterFile = path.join(outDir, 'synthetic-after-1.jpg');
-  await writeFile(beforeFile, before);
-  await writeFile(afterFile, after);
-  return { beforeFile, afterFile, beforeDhash, afterDhash, distance };
+  for (const spec of SYNTHETIC_PAIRS) {
+    const before = await buildSyntheticImage(spec.beforeSeed, `e2e ${spec.label} before`);
+    const after = await buildSyntheticImage(spec.afterSeed, `e2e ${spec.label} after`);
+    const beforeDhash = await dhash(before);
+    const afterDhash = await dhash(after);
+    const distance = hamming(beforeDhash, afterDhash);
+    if (distance < DISTINCT_DHASH_MIN) {
+      throw new Error(`${spec.label}: before/after dHash only ${distance} bits apart; pick different seeds (C10)`);
+    }
+    const q60 = hamming(afterDhash, await dhash(await sharp(after).jpeg({ quality: 60 }).toBuffer()));
+    if (q60 > Q60_DHASH_MAX) {
+      throw new Error(`${spec.label}: after image dHash drifted ${q60} bits at q60 (> ${Q60_DHASH_MAX}, C10)`);
+    }
+    for (const other of pairs) {
+      for (const [a, b, what] of [
+        [other.beforeDhash, beforeDhash, 'before/before'],
+        [other.afterDhash, afterDhash, 'after/after'],
+        [other.beforeDhash, afterDhash, 'before/after'],
+        [other.afterDhash, beforeDhash, 'after/before'],
+      ] as const) {
+        const crossDistance = hamming(a, b);
+        if (crossDistance < DISTINCT_DHASH_MIN) {
+          throw new Error(`${spec.label}: ${what} dHash only ${crossDistance} bits apart from the previous pair (C10)`);
+        }
+      }
+    }
+
+    const beforeFile = path.join(outDir, `synthetic-before-${spec.index}.jpg`);
+    const afterFile = path.join(outDir, `synthetic-after-${spec.index}.jpg`);
+    await writeFile(beforeFile, before);
+    await writeFile(afterFile, after);
+    pairs.push({ beforeFile, afterFile, beforeDhash, afterDhash, distance });
+  }
+  return pairs;
 }
 
 /** Absolute paths of the committed fixtures used by the specs. */
 export const FIXTURES_DIR = path.join(__dirname, '..', 'fixtures');
 export const BEFORE_IMAGE = path.join(FIXTURES_DIR, 'synthetic-before-1.jpg');
 export const AFTER_IMAGE = path.join(FIXTURES_DIR, 'synthetic-after-1.jpg');
+export const PARTIAL_BEFORE_IMAGE = path.join(FIXTURES_DIR, 'synthetic-before-2.jpg');
+export const PARTIAL_AFTER_IMAGE = path.join(FIXTURES_DIR, 'synthetic-after-2.jpg');
+export const FRAUD_BEFORE_IMAGE = path.join(FIXTURES_DIR, 'synthetic-before-3.jpg');
+export const FRAUD_AFTER_IMAGE = path.join(FIXTURES_DIR, 'synthetic-after-3.jpg');
+
+/** A known-stock image (eval/stock) that triggors EXACT_DUPLICATE when uploaded as after. */
+export const STOCK_DUPLICATE_IMAGE = path.join(
+  __dirname,
+  '..',
+  '..',
+  '..',
+  'eval',
+  'stock',
+  'placeholder-doorstep-1.jpg',
+);

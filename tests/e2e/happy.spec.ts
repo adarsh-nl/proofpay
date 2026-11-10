@@ -17,6 +17,7 @@
 import { expect, test } from '@playwright/test';
 
 import { fetchJob, gotoWithRetry, jobIdFromUrl, selectRole, waitForJobStatus } from './helpers/api';
+import { uploadEvidenceAndSubmit } from './helpers/flow';
 import { AFTER_IMAGE, BEFORE_IMAGE } from './helpers/images';
 import { clickPaypalCheckoutButton, completePaypalSandboxCheckout, liveBuyerCredentials } from './helpers/paypal';
 
@@ -42,33 +43,6 @@ async function createBikeJob(page: import('@playwright/test').Page): Promise<str
   return jobId;
 }
 
-/** Upload the synthetic before/after pair from the worker view and submit. */
-async function uploadEvidence(page: import('@playwright/test').Page, jobId: string): Promise<string> {
-  await selectRole(page, 'worker');
-  await gotoWithRetry(page, `/worker/jobs/${jobId}`);
-
-  const livenessCode = page.getByTestId('liveness-code');
-  await expect(livenessCode).toBeVisible({ timeout: 30_000 });
-  await expect(livenessCode).toContainText(/\d{4}/);
-
-  const code = (await livenessCode.textContent())?.match(/\d{4}/)?.[0] ?? '';
-
-  await page.getByTestId('dropzone-before').setInputFiles(BEFORE_IMAGE);
-  await page.getByTestId('dropzone-after').setInputFiles(AFTER_IMAGE);
-  const submit = page.getByTestId('submit-evidence');
-  await expect(submit).toBeEnabled({ timeout: 20_000 });
-
-  // The form POSTs the submission and only then redirects to /jobs/<id>. Wait for that
-  // redirect before navigating away, otherwise the in-flight request is aborted.
-  // Match the customer job detail path exactly: `/worker/jobs/<id>` also contains
-  // `/jobs/<id>`, and navigating away while the POST is in flight would lose it.
-  await Promise.all([
-    page.waitForURL((url) => /^\/jobs\/[^/?#]+$/.test(url.pathname), { timeout: 45_000 }),
-    submit.click(),
-  ]);
-  return code;
-}
-
 test.describe('happy path (mock PayPal + mock vision)', () => {
   test('create job -> authorize -> upload -> APPROVED -> CAPTURED', async ({ page, request }) => {
     // 1. Customer creates the job: status CREATED, AI checklist present.
@@ -82,7 +56,7 @@ test.describe('happy path (mock PayPal + mock vision)', () => {
     await expect(page.getByTestId('liveness-code')).toHaveCount(0); // customer never sees the code
 
     // 3. Worker sees the code and uploads before/after evidence.
-    const livenessCode = await uploadEvidence(page, jobId);
+    const livenessCode = await uploadEvidenceAndSubmit(page, jobId, BEFORE_IMAGE, AFTER_IMAGE);
     expect(livenessCode).toMatch(/^\d{4}$/);
 
     // 4. Verification runs in-process; the customer view ends CAPTURED with a verdict
@@ -119,7 +93,7 @@ test.describe('@live real sandbox PayPal', () => {
     await completePaypalSandboxCheckout(page, liveCredentials);
 
     await expect(page.getByTestId('funds-held')).toBeVisible({ timeout: 60_000 });
-    await uploadEvidence(page, jobId);
+    await uploadEvidenceAndSubmit(page, jobId, BEFORE_IMAGE, AFTER_IMAGE);
 
     await selectRole(page, 'customer');
     await gotoWithRetry(page, `/jobs/${jobId}`);
