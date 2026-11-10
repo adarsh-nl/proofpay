@@ -9,7 +9,9 @@ import { POLL_INTERVAL_MS } from '@/lib/constants';
 import type { Role } from '@/lib/role';
 import type { Job } from '@/shared/contracts';
 
+import { CheckoutPanel } from './CheckoutPanel';
 import { CriteriaEditor } from './CriteriaEditor';
+import { FundsHeldCard } from './FundsHeldCard';
 import { StatusHeader } from './StatusHeader';
 
 /** C2: full job page composition, in slot order. Later tasks replace the
@@ -75,9 +77,14 @@ export function JobView({ initialJob, role }: { initialJob: Job; role: Role }) {
       ) : null}
 
       {isCreated ? <CriteriaEditor job={job} onUpdated={setJob} /> : null}
-
-      {/* TODO(F03): <CheckoutPanel job={job} onUpdated={setJob} /> — CREATED only */}
-      {/* TODO(F03): <FundsHeldCard job={job} /> — AUTHORIZED and later */}
+      {isCreated && role === 'customer' ? <CheckoutPanel job={job} onUpdated={setJob} /> : null}
+      {isCreated && role !== 'customer' ? (
+        <p className="rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm text-blue-900">
+          Switch to the customer role to hold the payment with PayPal (use the customer role card on
+          the landing page).
+        </p>
+      ) : null}
+      {!isCreated && job.payment ? <FundsHeldCard job={job} /> : null}
       {/* TODO(F05): <VerificationSection job={job} /> — when job.latestVerification */}
       {/* TODO(F06): <SettlementPanel job={job} role={role} onUpdated={setJob} /> */}
       {/* TODO(F06): <MoneyTimeline job={job} /> */}
