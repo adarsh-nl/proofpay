@@ -6,6 +6,10 @@
 - [ ] **T05 partial-capture remainder**: run `npx tsx scripts/paypal-partial-capture-experiment.ts` with real credentials (approve the $100 order in the browser when prompted). It captures $80 with `final_capture:true`, GETs the authorization and tries a void. Record the observed lines in the verification log of `docs/REFERENCES.md` (is the remaining $20 released? does void return `CANNOT_BE_VOIDED`?). The code currently assumes the authorization reports `CAPTURED` and that the remainder is released.
 - [ ] **T15 Render deploy**: create the Render blueprint, set the secret env vars, deploy, then run the happy path on the hosted URL. The README "Hosted demo" line needs the final URL.
 - [ ] **T16/T17/T18 (stretch, only if reached)**: webhooks/disputes/payouts need real sandbox features enabled + a public URL.
+- [ ] **S02 Devpost form**: fill `{{HOSTED_URL}}`, `{{YOUTUBE_URL}}`, `{{EVAL_NUMBERS}}` (after the photo eval run) and `{{TOOLS_USED}}` in `docs/DEVPOST.md`/the Devpost form itself. The AI-tool list must be entered in the **Devpost form**, not in the repo (the repo naming rule forbids tool names in repo content).
+- [ ] **S02 sandbox buyer login**: replace the `<sandbox-buyer-email>` / `<sandbox-buyer-password>` placeholders in README "Try it (sandbox)" with the sandbox **personal** account (never a live account); review the README quickstart once more on the media machine.
+- [ ] **S02 README link check**: after the deploy, paste the Render URL into both `docs/DEVPOST.md` (`{{HOSTED_URL}}`) and the README "Hosted demo" line.
+- [ ] **Submission**: add the two team members on Devpost (Representative: Adarsh), upload the video, enter the Built With tags, and save a screenshot of the submitted confirmation.
 
 ## CROSS-OWNER REQUESTS
 - [ ] (none yet)

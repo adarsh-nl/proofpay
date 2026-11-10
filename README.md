@@ -106,6 +106,25 @@ Limitations (honest): role switching via `?as=` is a demo convenience, not authe
 
 ---
 
+## For judges
+
+ProofPay is a working prototype of vision-verified escrow on **PayPal sandbox**. No real money moves. Four minutes with it:
+
+1. **No credentials needed.** Run `npm ci && npm run db:reset && cp .env.example .env.local && npm run dev` — the default `.env.example` has `VISION_MOCK=1`; set `PAYPAL_MOCK=1` and `NEXT_PUBLIC_PAYPAL_MOCK=1` in `.env.local` to fake PayPal too (a "Simulate PayPal approval (mock)" button appears instead of the PayPal popup).
+2. **The whole loop with mocks:** `/?as=customer` → create a job → mock-approve the payment ("Funds held by PayPal") → `/?as=worker` → read the liveness code, upload before/after photos → submit → back as customer to see the per-criterion verdicts and the money timeline.
+3. **Real PayPal sandbox:** put sandbox credentials in `.env.local` (`PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `NEXT_PUBLIC_PAYPAL_CLIENT_ID`) and keep `VISION_MOCK=1`; get them from https://developer.paypal.com/ → Apps & Credentials → Sandbox. The buyer login for `sandbox.paypal.com` is in [Try it (sandbox)](#try-it-sandbox).
+4. **With a real vision key:** set `VISION_MOCK=0`, `GOOGLE_GENERATIVE_AI_API_KEY` (or `OPENAI_API_KEY`) and a current `LLM_MODEL`/`VLM_MODEL` id. Without a key the deterministic mock produces the same demo outcomes: bike → full capture, cleaning → partial capture ($96 of $120) approved by the customer, reused stock photo → human review.
+
+| Switch | `1` means | Use it for |
+|---|---|---|
+| `VISION_MOCK` | no AI calls; deterministic verification | judges, e2e, CI |
+| `PAYPAL_MOCK` | PayPal calls served by an in-memory fake (orders, authorize, capture, void, refund) | judges without sandbox creds |
+| `NEXT_PUBLIC_PAYPAL_MOCK` | the UI shows a mock-approve button instead of the PayPal JS SDK | same |
+
+Honest limitations: the `?as=` role switch is a demo convenience, not authentication; on Render's free tier the SQLite DB and uploads reset on restart; the AI can be wrong, so low-confidence or suspicious cases always go to a human. The Devpost text (with the submitted eval numbers and video link) is in [docs/DEVPOST.md](docs/DEVPOST.md).
+
+---
+
 ## For the team (Adarsh, Collaborator, and their AI agents)
 
 ### Where things live
