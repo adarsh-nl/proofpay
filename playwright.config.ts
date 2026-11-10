@@ -10,6 +10,12 @@
  *   BASE_URL=https://<host> npm run e2e
  * which skips the managed `webServer`.
  *
+ * The demo dry-run (`tests/e2e/demo-dryrun.spec.ts`) is excluded from the default suite
+ * because it consumes the seeded demo jobs and rewrites the committed README artifacts.
+ * Run it on its own (it resets the demo data first):
+ *   E2E_DRYRUN=1 npx playwright test tests/e2e/demo-dryrun.spec.ts
+ *   BASE_URL=https://<host> E2E_DRYRUN=1 npx playwright test tests/e2e/demo-dryrun.spec.ts
+ *
  * `@live` tests additionally need a real sandbox buyer:
  *   E2E_BUYER_EMAIL=... E2E_BUYER_PASSWORD=... BASE_URL=http://localhost:3100 npm run e2e -- -g @live
  * (only when the target app runs with NEXT_PUBLIC_PAYPAL_MOCK=0.)
@@ -25,6 +31,13 @@ const RECORDINGS_DIR = path.join(__dirname, 'docs', 'recordings', 'e2e');
 
 export default defineConfig({
   testDir: './tests/e2e',
+  /**
+   * `demo-dryrun.spec.ts` is a README/report artifact generator: it consumes the seeded
+   * demo jobs and rewrites `docs/img/` + `docs/DRYRUN_REPORT.md` on every run. The default
+   * `npm run e2e` stays a pure offline test suite; run the dry-run explicitly:
+   *   E2E_DRYRUN=1 npx playwright test tests/e2e/demo-dryrun.spec.ts
+   */
+  testIgnore: process.env.E2E_DRYRUN ? [] : ['**/demo-dryrun.spec.ts'],
   outputDir: RECORDINGS_DIR,
   fullyParallel: false,
   workers: 1,
