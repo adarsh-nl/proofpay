@@ -39,6 +39,7 @@ import {
 
 import jobBikeFixture from './fixtures/job-demo-bike.json';
 import jobCleaningFixture from './fixtures/job-demo-cleaning.json';
+import jobPartialFixture from './fixtures/job-demo-partial.json';
 import jobsFixture from './fixtures/jobs.json';
 import verificationFixture from './fixtures/verification.json';
 
@@ -153,6 +154,7 @@ async function request<T>(
 const FIXTURE_JOBS = {
   'demo-bike': JobSchema.parse(jobBikeFixture),
   'demo-cleaning': JobSchema.parse(jobCleaningFixture),
+  'demo-partial': JobSchema.parse(jobPartialFixture),
 } satisfies Record<string, Job>;
 
 const FIXTURE_JOB_LIST: JobListItem[] = JobListResponseSchema.parse(jobsFixture).jobs;

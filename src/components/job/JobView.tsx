@@ -13,6 +13,7 @@ import { CheckoutPanel } from './CheckoutPanel';
 import { CriteriaEditor } from './CriteriaEditor';
 import { FundsHeldCard } from './FundsHeldCard';
 import { StatusHeader } from './StatusHeader';
+import { VerificationSection } from '@/components/verification/VerificationSection';
 
 /** C2: full job page composition, in slot order. Later tasks replace the
  *  placeholder comments below with one import + one JSX line each. */
@@ -85,7 +86,7 @@ export function JobView({ initialJob, role }: { initialJob: Job; role: Role }) {
         </p>
       ) : null}
       {!isCreated && job.payment ? <FundsHeldCard job={job} /> : null}
-      {/* TODO(F05): <VerificationSection job={job} /> — when job.latestVerification */}
+      {job.latestVerification ? <VerificationSection job={job} /> : null}
       {/* TODO(F06): <SettlementPanel job={job} role={role} onUpdated={setJob} /> */}
       {/* TODO(F06): <MoneyTimeline job={job} /> */}
 

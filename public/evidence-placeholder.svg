@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Evidence photo placeholder">
+  <rect width="800" height="600" fill="#e4e4e7" />
+  <rect x="40" y="40" width="720" height="520" fill="none" stroke="#a1a1aa" stroke-width="4" stroke-dasharray="16 12" />
+  <path d="M300 300l70 70 140-140" fill="none" stroke="#71717a" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" />
+  <text x="400" y="470" font-family="system-ui, sans-serif" font-size="28" fill="#52525b" text-anchor="middle">Evidence photo not available yet</text>
+</svg>
