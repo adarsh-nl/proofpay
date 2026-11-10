@@ -40,6 +40,7 @@ import {
 import jobBikeFixture from './fixtures/job-demo-bike.json';
 import jobCleaningFixture from './fixtures/job-demo-cleaning.json';
 import jobPartialFixture from './fixtures/job-demo-partial.json';
+import jobReviewFixture from './fixtures/job-demo-review.json';
 import jobsFixture from './fixtures/jobs.json';
 import verificationFixture from './fixtures/verification.json';
 
@@ -155,6 +156,7 @@ const FIXTURE_JOBS = {
   'demo-bike': JobSchema.parse(jobBikeFixture),
   'demo-cleaning': JobSchema.parse(jobCleaningFixture),
   'demo-partial': JobSchema.parse(jobPartialFixture),
+  'demo-review': JobSchema.parse(jobReviewFixture),
 } satisfies Record<string, Job>;
 
 const FIXTURE_JOB_LIST: JobListItem[] = JobListResponseSchema.parse(jobsFixture).jobs;
