@@ -1,6 +1,6 @@
 ## [TaskID] Title
 
-**Notion row:** <link>  •  **Tool used:** Cursor / Claude Code / Antigravity  •  **Owner:** Adarsh / Collaborator
+**Notion row:** <link>  •  **Lane:** Frontend lane / Backend lane / QA lane  •  **Owner:** Adarsh / Collaborator
 
 ### What changed
 -
@@ -10,7 +10,7 @@
 
 ### Checks
 - [ ] `npm run check` green locally
-- [ ] Only touched paths owned by my tool (AGENTS.md §4), or this is a docs-only PR
+- [ ] Only touched paths owned by my lane (AGENTS.md §4), or this is a docs-only PR
 - [ ] No secrets / `.env.local` / large binaries in diff
 - [ ] `.env.example` / docs updated if behaviour or env changed
 - [ ] Screenshot/GIF attached (UI) · sandbox IDs pasted (PayPal) · spec output pasted (e2e)

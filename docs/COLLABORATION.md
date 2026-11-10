@@ -1,13 +1,13 @@
-# Collaboration: 2 humans, 3 agents, 1 repo
+# Collaboration: 2 humans, 3 lanes, 1 repo
 
 Repo: https://github.com/adarsh-nl/proofpay · Board: https://app.notion.com/p/e1809761315044039838e9ff7bc70f02
 
 ## 1. Roles
 | | Adarsh | Collaborator |
 |---|---|---|
-| Primary tools | Claude Code (backend, PayPal, vision), Antigravity (eval) | Cursor (UI), Antigravity (e2e, demo), Claude Code (T12, T15, S02) |
-| Reviews PRs from | Collaborator's tools | Adarsh's tools |
-| Decides | vision thresholds, demo story, sponsor target, final submit | UI/UX, copy, e2e scope |
+| Primary lanes | Backend lane (backend, PayPal, vision), QA lane (eval) | Frontend lane (UI), QA lane (e2e, demo), Backend lane (T12, T15, S02) |
+| Reviews PRs from | Collaborator's lanes | Adarsh's lanes |
+| Decides | vision thresholds, demo story, final submit. Sponsor targets are **both** Render and AG Grid | UI/UX, copy, e2e scope |
 | Devpost | **Team Representative**: creates the project, invites the Collaborator, submits | Drafts text, uploads screenshots |
 
 ## 2. Branches
@@ -32,18 +32,18 @@ Repo: https://github.com/adarsh-nl/proofpay · Board: https://app.notion.com/p/e
 Merge cadence: merge as soon as the task is green. Don't batch. There's a mandatory "merge everything that's ready" sweep at every sync checkpoint.
 
 ## 4. Conflict avoidance
-- **Folder ownership** (AGENTS.md §4) is the main protection. Two tools never write the same folder.
+- **Folder ownership** (AGENTS.md §4) is the main protection. Two lanes never write the same folder.
 - Hot shared files:
   - `package.json` / `package-lock.json`: add dependencies in **your own PR**. If you hit a conflict, take `main`'s lockfile and re‑run `npm install <your-dep>`. Never hand‑merge lockfiles.
   - `.env.example`: append only, in alphabetical order inside its section.
   - `src/shared/contracts.ts`: frozen after T01. Additive changes only (new optional fields), via `contract-change`.
-  - `README.md`: one owner per section. Quickstart = Claude Code (T00/T15/A06); screenshots and "How it works" = Cursor/Antigravity (F08/A05).
-- Generated code (shadcn `src/components/ui/**`, drizzle migrations) is committed by the owning tool only.
+  - `README.md`: one owner per section. Quickstart = Backend lane (T00/T15/A06); screenshots and "How it works" = Frontend lane/QA lane (F08/A05).
+- Generated code (shadcn `src/components/ui/**`, drizzle migrations) is committed by the owning lane only.
 
 ## 5. Sync checkpoints (15 min max, voice or chat)
 | When (CET) | Agenda |
 |---|---|
-| Tue 14:00 | Kick‑off: read the README and AGENTS.md, share sandbox creds via password manager, decide the sponsor target, start T00/F01 |
+| Tue 14:00 | Kick‑off: read the README and AGENTS.md, share sandbox creds via password manager, confirm both sponsor targets (Render and AG Grid), start T00/F01 |
 | Tue 16:00 | Contracts frozen (T01 merged). Collaborator confirms the fixtures match |
 | Tue 19:00 | What merged; evening plan (A01 photo shoot) |
 | Wed 09:00 | Stand‑up; check Notion for Blocked |
@@ -59,7 +59,7 @@ Status lives in **Notion** (not chat). At each checkpoint everyone opens the boa
 ## 6. Communication rules
 - Blocked > 20 min → Notion **Blocked** + ping the other human with `BLOCKED <TaskID>: <one line>`.
 - Secrets are only ever shared via password manager/Signal. Never in Notion, GitHub, PR comments or agent chats.
-- If an agent proposes touching another tool's folder, the human says no and files a Notion task.
+- If an agent proposes touching another lane's folder, the human says no and files a Notion task.
 
 ## 7. If things go wrong
 | Situation | Do |

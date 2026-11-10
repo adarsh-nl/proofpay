@@ -31,21 +31,14 @@ Checked on **Tue 10 Nov 2026 (~13:15–13:30 CET)** unless noted. "Verify" means
 | Agent Toolkit (npm `@paypal/agent-toolkit`, AI SDK adapter) | https://developer.paypal.com/ai-tools/toolkit · https://www.npmjs.com/package/@paypal/agent-toolkit · https://github.com/paypal/agent-toolkit | Verify `configuration.actions` keys |
 | Agent tools list (updated 29 Oct 2026): orders create/get/pay, refunds, disputes list/get/accept, invoices, subscriptions, tracking, reporting. **No void/partial capture tool** | https://developer.paypal.com/ai-tools/agent-tools | |
 | PayPal MCP server (local `npx -y @paypal/mcp --tools=all`; remote sandbox `https://mcp.sandbox.paypal.com/sse`) | https://developer.paypal.com/ai-tools/mcp-server | Dev‑time tool |
-| PayPal AI toolkit plugin for coding agents (Claude Code, Cursor) | https://github.com/paypal/ai-toolkit | Optional |
+| PayPal AI toolkit plugin for coding agents | https://github.com/paypal/ai-toolkit | Optional |
 
 ## Partners (only where they help)
 | Partner | Use | Source |
 |---|---|---|
 | Render (web service; Workflows for durable tasks, TS SDK) | Deploy target (MVP); Workflows = stretch S6 | https://render.com/docs/workflows · https://render.com/docs/workflows-sdk-typescript |
-| APIMatic Context Plugin (PayPal SDK context for Cursor / Claude Code: `npx context-plugins install paypal`) | Dev‑time accuracy. Claim it only if actually used | https://github.com/apimatic/context-plugins-installer · https://github.com/apimatic/plugin-marketplace · https://paypalaihackathon.devpost.com/details/apimatic |
-| AG Grid / AG Studio (PayPal + AG Grid boilerplate) | Stretch F09 reviewer/ops grid | https://github.com/paypaldev/hackathon-paypal-ag-grid-boilerplate · https://www.ag-grid.com/blog/hackathon-paypal-and-ag-studio/ |
-
-## Tools
-| Tool | Fact | Source |
-|---|---|---|
-| Antigravity | Editor + Agent Manager (parallel agents); browser subagent via `/browser` drives Chrome through Chrome DevTools MCP; may save `recording.webm` (not guaranteed); artifacts (plans, walkthroughs, screenshots); reads `AGENTS.md`/`GEMINI.md`/`.agents/rules/*.md` | https://antigravity.google/blog/introducing-google-antigravity · https://antigravity.google/docs/ide/browser-recordings/ · https://antigravity.google/docs/artifacts/ · https://antigravity.google/docs/rules/ |
-| Claude Code | Reads `CLAUDE.md`; `@path` imports | Claude Code docs (verify) |
-| Cursor | Project rules in `.cursor/rules/*.mdc` with `alwaysApply`; also reads `AGENTS.md` | Cursor docs (verify) |
+| APIMatic Context Plugin (PayPal SDK context: `npx context-plugins install paypal`) | Dev‑time accuracy. Claim it only if actually used | https://github.com/apimatic/context-plugins-installer · https://github.com/apimatic/plugin-marketplace · https://paypalaihackathon.devpost.com/details/apimatic |
+| AG Grid / AG Studio (PayPal + AG Grid boilerplate) | MVP F09 escrow/ledger dashboard. Sponsor target together with Render | https://github.com/paypaldev/hackathon-paypal-ag-grid-boilerplate · https://www.ag-grid.com/blog/hackathon-paypal-and-ag-studio/ |
 
 ## Verification log (append here)
 | Date/time (CET) | Who | What was verified | Result |

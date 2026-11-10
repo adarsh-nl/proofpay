@@ -3,7 +3,7 @@
   "id": "T00",
   "title": "Repo bootstrap: Next.js+TS scaffold, tooling, scripts, CI",
   "owner": "Adarsh",
-  "tool": "Claude Code",
+  "lane": "Backend lane",
   "phase": "Tue 14:00–16:00",
   "est": 0.75,
   "deps": [],
@@ -15,7 +15,7 @@
   "id": "T01",
   "title": "Shared contracts: zod schemas + escrow transition table (src/shared/*)",
   "owner": "Adarsh",
-  "tool": "Claude Code",
+  "lane": "Backend lane",
   "phase": "Tue 14:00–16:00",
   "est": 0.75,
   "deps": [
@@ -29,7 +29,7 @@
   "id": "T02",
   "title": "DB schema (Drizzle + better-sqlite3), repositories, seed script",
   "owner": "Adarsh",
-  "tool": "Claude Code",
+  "lane": "Backend lane",
   "phase": "Tue 16:00–19:00",
   "est": 1.0,
   "deps": [
@@ -43,7 +43,7 @@
   "id": "T03",
   "title": "PayPal REST client: OAuth token cache, ppFetch, PayPal-Request-Id, error mapping",
   "owner": "Adarsh",
-  "tool": "Claude Code",
+  "lane": "Backend lane",
   "phase": "Tue 16:00–19:00",
   "est": 1.0,
   "deps": [
@@ -57,7 +57,7 @@
   "id": "T04",
   "title": "Orders v2: create (intent AUTHORIZE) + authorize + get; API endpoints 5–6",
   "owner": "Adarsh",
-  "tool": "Claude Code",
+  "lane": "Backend lane",
   "phase": "Tue 20:30–23:00",
   "est": 1.0,
   "deps": [
@@ -72,7 +72,7 @@
   "id": "T05",
   "title": "Payments v2: capture full/partial (final_capture), void, refund, reauthorize, get auth",
   "owner": "Adarsh",
-  "tool": "Claude Code",
+  "lane": "Backend lane",
   "phase": "Wed 09:00–13:00",
   "est": 1.0,
   "deps": [
@@ -86,7 +86,7 @@
   "id": "T06",
   "title": "Escrow state machine + settle.ts (PayPal side effects before transitions)",
   "owner": "Adarsh",
-  "tool": "Claude Code",
+  "lane": "Backend lane",
   "phase": "Wed 09:00–13:00",
   "est": 1.5,
   "deps": [
@@ -101,7 +101,7 @@
   "id": "T07",
   "title": "Job + evidence API routes (endpoints 1–4, 7–9, 11–15, 17, 20, 21) with withErrors()",
   "owner": "Adarsh",
-  "tool": "Claude Code",
+  "lane": "Backend lane",
   "phase": "Wed 09:00–13:00",
   "est": 1.5,
   "deps": [
@@ -116,7 +116,7 @@
   "id": "T08",
   "title": "Criteria generator (LLM generateObject) + category fallback templates + liveness criterion",
   "owner": "Adarsh",
-  "tool": "Claude Code",
+  "lane": "Backend lane",
   "phase": "Tue 20:30–23:00",
   "est": 1.0,
   "deps": [
@@ -130,7 +130,7 @@
   "id": "T09",
   "title": "Evidence ingest: sharp resize, sha256, dHash, exifr EXIF; store under UPLOAD_DIR",
   "owner": "Adarsh",
-  "tool": "Claude Code",
+  "lane": "Backend lane",
   "phase": "Tue 16:00–19:00",
   "est": 1.0,
   "deps": [
@@ -144,7 +144,7 @@
   "id": "T10",
   "title": "Forensics checks (duplicates, before≈after, EXIF window, scene/screenshot flags)",
   "owner": "Adarsh",
-  "tool": "Claude Code",
+  "lane": "Backend lane",
   "phase": "Wed 09:00–13:00",
   "est": 1.0,
   "deps": [
@@ -158,7 +158,7 @@
   "id": "T11",
   "title": "VLM verifier (generateObject, image labelling, retry-on-invalid, mock fixtures)",
   "owner": "Adarsh",
-  "tool": "Claude Code",
+  "lane": "Backend lane",
   "phase": "Tue 20:30–23:00",
   "est": 1.5,
   "deps": [
@@ -173,7 +173,7 @@
   "id": "T12",
   "title": "Decision engine (pure) + thresholds from env",
   "owner": "Collaborator",
-  "tool": "Claude Code",
+  "lane": "Backend lane",
   "phase": "Wed 09:00–13:00",
   "est": 0.75,
   "deps": [
@@ -187,7 +187,7 @@
   "id": "T13",
   "title": "Verification orchestrator: submit -> VERIFYING -> forensics+VLM -> decide -> settle/agent",
   "owner": "Adarsh",
-  "tool": "Claude Code",
+  "lane": "Backend lane",
   "phase": "Wed 14:00–18:00",
   "est": 1.0,
   "deps": [
@@ -204,7 +204,7 @@
   "id": "T14",
   "title": "Settlement agent v1 (AI SDK tools, policy gate, proposals, evidence pack markdown, PayPal Agent Toolkit read tools)",
   "owner": "Adarsh",
-  "tool": "Claude Code",
+  "lane": "Backend lane",
   "phase": "Wed 14:00–18:00",
   "est": 2.0,
   "deps": [
@@ -218,21 +218,21 @@
   "id": "T15",
   "title": "Render deploy: render.yaml, health check, SEED_ON_BOOT, env vars; hosted URL in README",
   "owner": "Collaborator",
-  "tool": "Claude Code",
+  "lane": "Backend lane",
   "phase": "Wed 19:30–23:30",
   "est": 0.75,
   "deps": [
    "T13"
   ],
   "branch": "feat/T15-render",
-  "ac": "render.yaml blueprint (web service, node, build npm ci && npm run build, start npm start, healthCheckPath /api/health); deployed URL loads and runs happy path in sandbox; README updated with URL.",
+  "ac": "render.yaml blueprint (web service, node, build npm ci && npm run build, start npm start, healthCheckPath /api/health); deployed URL loads and runs happy path in sandbox; README updated with URL. This is the Render sponsor submission, alongside the AG Grid ledger (F09).",
   "stretch": false
  },
  {
   "id": "T16",
   "title": "STRETCH: PayPal webhooks route with signature verification",
   "owner": "Adarsh",
-  "tool": "Claude Code",
+  "lane": "Backend lane",
   "phase": "Wed 19:30–23:30",
   "est": 1.0,
   "deps": [
@@ -246,7 +246,7 @@
   "id": "T17",
   "title": "STRETCH: Reauthorize button + honor-period countdown",
   "owner": "Adarsh",
-  "tool": "Claude Code",
+  "lane": "Backend lane",
   "phase": "Wed 19:30–23:30",
   "est": 0.75,
   "deps": [
@@ -261,7 +261,7 @@
   "id": "T18",
   "title": "STRETCH: Payouts to worker after capture (simulated)",
   "owner": "Adarsh",
-  "tool": "Claude Code",
+  "lane": "Backend lane",
   "phase": "Wed 19:30–23:30",
   "est": 1.0,
   "deps": [
@@ -275,7 +275,7 @@
   "id": "F01",
   "title": "App shell: layout, role switcher (?as=), nav, theme, shadcn setup, landing page with origin story",
   "owner": "Collaborator",
-  "tool": "Cursor",
+  "lane": "Frontend lane",
   "phase": "Tue 14:00–16:00",
   "est": 1.0,
   "deps": [
@@ -289,7 +289,7 @@
   "id": "F02",
   "title": "Customer: create job form + editable criteria preview",
   "owner": "Collaborator",
-  "tool": "Cursor",
+  "lane": "Frontend lane",
   "phase": "Tue 16:00–19:00",
   "est": 1.5,
   "deps": [
@@ -304,7 +304,7 @@
   "id": "F03",
   "title": "PayPal Buttons checkout (intent=authorize) on job page",
   "owner": "Collaborator",
-  "tool": "Cursor",
+  "lane": "Frontend lane",
   "phase": "Wed 09:00–13:00",
   "est": 1.0,
   "deps": [
@@ -319,7 +319,7 @@
   "id": "F04",
   "title": "Worker: evidence upload (before/after, camera capture, previews, liveness code banner)",
   "owner": "Collaborator",
-  "tool": "Cursor",
+  "lane": "Frontend lane",
   "phase": "Wed 09:00–13:00",
   "est": 1.5,
   "deps": [
@@ -334,7 +334,7 @@
   "id": "F05",
   "title": "Verification result view: per-criterion cards + bounding-box overlay + forensics flags",
   "owner": "Collaborator",
-  "tool": "Cursor",
+  "lane": "Frontend lane",
   "phase": "Wed 14:00–18:00",
   "est": 2.0,
   "deps": [
@@ -349,7 +349,7 @@
   "id": "F06",
   "title": "Money timeline + settlement panel (accept/decline partial, void, PayPal IDs)",
   "owner": "Collaborator",
-  "tool": "Cursor",
+  "lane": "Frontend lane",
   "phase": "Wed 14:00–18:00",
   "est": 1.5,
   "deps": [
@@ -364,7 +364,7 @@
   "id": "F07",
   "title": "Reviewer console: queue table, job detail, approve/partial/reject, evidence pack",
   "owner": "Collaborator",
-  "tool": "Cursor",
+  "lane": "Frontend lane",
   "phase": "Wed 19:30–23:30",
   "est": 1.5,
   "deps": [
@@ -379,7 +379,7 @@
   "id": "F08",
   "title": "Demo polish: empty/loading/error states, copy, favicon, OG image, screenshots for README",
   "owner": "Collaborator",
-  "tool": "Cursor",
+  "lane": "Frontend lane",
   "phase": "Thu 09:00–12:00",
   "est": 1.0,
   "deps": [
@@ -392,35 +392,35 @@
  },
  {
   "id": "F09",
-  "title": "STRETCH: AG Grid reviewer/ops grid (only if AG Grid sponsor chosen)",
+  "title": "AG Grid escrow/ledger dashboard (jobs, held/captured/released, flags)",
   "owner": "Collaborator",
-  "tool": "Cursor",
+  "lane": "Frontend lane",
   "phase": "Wed 19:30–23:30",
   "est": 1.5,
   "deps": [
    "F07"
   ],
   "branch": "feat/F09-ag-grid",
-  "ac": "AG Grid community grid of all jobs with status, held/captured/released amounts, flags; filter + sort; listed in Built With.",
-  "stretch": true
+  "ac": "AG Grid Community grid is the escrow/ledger dashboard: every job with status, held, captured, and released amounts, and fraud flags; column filter and sort; ag-grid-react and ag-grid-community installed; named in README Built with and in the Devpost sponsor fields together with the Render deploy (T15).",
+  "stretch": false
  },
  {
   "id": "A01",
   "title": "Eval dataset: shoot 12–20 before/after pairs + case.json labels (human-heavy)",
   "owner": "Adarsh",
-  "tool": "Antigravity",
+  "lane": "QA lane",
   "phase": "Tue 20:30–23:00 + Wed 08:00–09:00",
   "est": 2.0,
   "deps": [],
   "branch": "feat/A01-eval-dataset",
-  "ac": "eval/pairs/NN-slug/{case.json,before_*.jpg,after_*.jpg} for >=12 cases from MANUAL §9.5 table; images <=1600px, no faces/PII; eval/stock has 2 images; Antigravity agent generated case.json skeletons + a validation script (npm run eval:validate) that passes.",
+  "ac": "eval/pairs/NN-slug/{case.json,before_*.jpg,after_*.jpg} for >=12 cases from MANUAL §9.5 table; images <=1600px, no faces/PII; eval/stock has 2 images; case.json skeletons and scripts/eval-validate.ts exist and npm run eval:validate passes.",
   "stretch": false
  },
  {
   "id": "A02",
   "title": "Eval runner: npm run eval writes the eval report (+ --record fixtures for mock mode)",
   "owner": "Adarsh",
-  "tool": "Antigravity",
+  "lane": "QA lane",
   "phase": "Wed 14:00–18:00",
   "est": 1.0,
   "deps": [
@@ -437,7 +437,7 @@
   "id": "A03",
   "title": "E2E happy path: create job -> sandbox PayPal authorize -> upload -> APPROVED -> CAPTURED",
   "owner": "Collaborator",
-  "tool": "Antigravity",
+  "lane": "QA lane",
   "phase": "Wed 19:30–23:30",
   "est": 1.5,
   "deps": [
@@ -447,14 +447,14 @@
    "T13"
   ],
   "branch": "feat/A03-e2e-happy",
-  "ac": "tests/e2e/happy.spec.ts (Playwright) passes locally with VISION_MOCK=1 and sandbox buyer creds from env (E2E_BUYER_EMAIL/PASSWORD); Antigravity browser recording saved to docs/recordings/ (not committed if >10MB).",
+  "ac": "tests/e2e/happy.spec.ts (Playwright) passes locally with VISION_MOCK=1 and sandbox buyer creds from env (E2E_BUYER_EMAIL/PASSWORD); a browser recording saved to docs/recordings/ (not committed if >10MB).",
   "stretch": false
  },
  {
   "id": "A04",
   "title": "E2E partial + fraud paths (PARTIAL accept -> partial capture; duplicate -> HUMAN_REVIEW -> void)",
   "owner": "Collaborator",
-  "tool": "Antigravity",
+  "lane": "QA lane",
   "phase": "Thu 09:00–12:00",
   "est": 1.0,
   "deps": [
@@ -470,7 +470,7 @@
   "id": "A05",
   "title": "Demo dry-run on hosted Render URL; capture screenshots + backup screen recording",
   "owner": "Collaborator",
-  "tool": "Antigravity",
+  "lane": "QA lane",
   "phase": "Thu 12:30–15:00",
   "est": 1.0,
   "deps": [
@@ -486,7 +486,7 @@
   "id": "A06",
   "title": "Fresh-clone judge test: follow README from zero in a clean folder",
   "owner": "Collaborator",
-  "tool": "Antigravity",
+  "lane": "QA lane",
   "phase": "Thu 12:30–15:00",
   "est": 0.75,
   "deps": [
@@ -497,10 +497,22 @@
   "stretch": false
  },
  {
+  "id": "A07",
+  "title": "Fill the README Try it (sandbox) buyer login once the sandbox personal account exists",
+  "owner": "Adarsh",
+  "lane": "QA lane",
+  "phase": "Tue 14:00–16:00",
+  "est": 0.25,
+  "deps": [],
+  "branch": "docs/A07-sandbox-login",
+  "ac": "README 'Try it (sandbox)' shows the real sandbox personal (buyer) email and password, marked sandbox-only and no real money. Values come from the PayPal Developer Dashboard sandbox account. .env.example stays placeholders. The login is not pasted into Notion, PR text, or chat.",
+  "stretch": false
+ },
+ {
   "id": "S01",
   "title": "Record + edit demo video (<3:00), upload to YouTube public",
   "owner": "Adarsh",
-  "tool": "Antigravity",
+  "lane": "QA lane",
   "phase": "Thu 12:30–15:00",
   "est": 1.5,
   "deps": [
@@ -514,7 +526,7 @@
   "id": "S02",
   "title": "Devpost submission: text, Built With, tools used, repo URL, video, hosted URL, testing instructions",
   "owner": "Collaborator",
-  "tool": "Claude Code",
+  "lane": "Backend lane",
   "phase": "Thu 15:00–18:00",
   "est": 1.0,
   "deps": [
@@ -522,7 +534,7 @@
    "A06"
   ],
   "branch": "docs/S02-devpost",
-  "ac": "Checklist in docs/DEMO_AND_SUBMISSION.md all ticked; draft saved by Collaborator by 16:00 CET; Adarsh (team Representative) reviews and submits before 18:00 CET; repo public with MIT licence visible in About; screenshot of submission confirmation saved.",
+  "ac": "Checklist in docs/DEMO_AND_SUBMISSION.md all ticked, including both Render and AG Grid sponsor fields; draft saved by Collaborator by 16:00 CET; Adarsh (team Representative) reviews and submits before 18:00 CET; repo public with MIT licence visible in About; screenshot of submission confirmation saved.",
   "stretch": false
  }
 ]

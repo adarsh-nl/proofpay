@@ -1,22 +1,22 @@
 # Agent starter prompts
 
-Copy‑paste one block per task into the listed tool. Every prompt assumes the tool has loaded `AGENTS.md` (Cursor: `.cursor/rules/proofpay.mdc`; Claude Code: `CLAUDE.md`; Antigravity: native).
+Copy‑paste one block per task into the lane named on the task. Every prompt assumes `AGENTS.md` is loaded.
 Before pasting: set the Notion row to **In progress** and create the branch (`git switch -c <branch>` or a worktree, see `docs/COLLABORATION.md` §2).
 
 **Universal preamble.** Already embedded in each block below; shown here once for reference:
-> You are working on ProofPay (see AGENTS.md). Task <ID>: <title>. Branch: <branch>. Only modify paths your tool owns (AGENTS.md §4). Read AGENTS.md, docs/MANUAL.md sections referenced below, and src/shared/contracts.ts first. Make a short plan, then implement in small commits `<ID>: …`. Run `npm run check` until green. Don't print secrets. Finish by opening a PR `[<ID>] <title>` with the template, then output the AGENTS.md §10 hand‑off block. If a needed change is outside your paths, stop and describe it instead.
+> You are working on ProofPay (see AGENTS.md). Task <ID>: <title>. Branch: <branch>. Only modify paths your lane owns (AGENTS.md §4). Read AGENTS.md, docs/MANUAL.md sections referenced below, and src/shared/contracts.ts first. Make a short plan, then implement in small commits `<ID>: …`. Run `npm run check` until green. Don't print secrets. Finish by opening a PR `[<ID>] <title>` with the template, then output the AGENTS.md §10 hand‑off block. If a needed change is outside your paths, stop and describe it instead.
 
 ---
 
 ## T00
 
-**Repo bootstrap: Next.js+TS scaffold, tooling, scripts, CI** · Owner: Adarsh · Tool: **Claude Code** · Slot: Tue 14:00–16:00 · Est: 0.75 h · Depends on: — · Branch: `feat/T00-bootstrap`
+**Repo bootstrap: Next.js+TS scaffold, tooling, scripts, CI** · Owner: Adarsh · Lane: **Backend lane** · Slot: Tue 14:00–16:00 · Est: 0.75 h · Depends on: — · Branch: `feat/T00-bootstrap`
 
-Open a terminal in the repo (or a worktree), run `claude`, paste:
+In the repo root (or a worktree), paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task T00: Repo bootstrap: Next.js+TS scaffold, tooling, scripts, CI.
-Branch: feat/T00-bootstrap. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/T00-bootstrap. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -44,13 +44,13 @@ RULES
 
 ## T01
 
-**Shared contracts: zod schemas + escrow transition table (src/shared/*)** · Owner: Adarsh · Tool: **Claude Code** · Slot: Tue 14:00–16:00 · Est: 0.75 h · Depends on: T00 · Branch: `feat/T01-contracts`
+**Shared contracts: zod schemas + escrow transition table (src/shared/*)** · Owner: Adarsh · Lane: **Backend lane** · Slot: Tue 14:00–16:00 · Est: 0.75 h · Depends on: T00 · Branch: `feat/T01-contracts`
 
-Open a terminal in the repo (or a worktree), run `claude`, paste:
+In the repo root (or a worktree), paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task T01: Shared contracts: zod schemas + escrow transition table (src/shared/*).
-Branch: feat/T01-contracts. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/T01-contracts. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -76,13 +76,13 @@ RULES
 
 ## T02
 
-**DB schema (Drizzle + better-sqlite3), repositories, seed script** · Owner: Adarsh · Tool: **Claude Code** · Slot: Tue 16:00–19:00 · Est: 1.0 h · Depends on: T01 · Branch: `feat/T02-db`
+**DB schema (Drizzle + better-sqlite3), repositories, seed script** · Owner: Adarsh · Lane: **Backend lane** · Slot: Tue 16:00–19:00 · Est: 1.0 h · Depends on: T01 · Branch: `feat/T02-db`
 
-Open a terminal in the repo (or a worktree), run `claude`, paste:
+In the repo root (or a worktree), paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task T02: DB schema (Drizzle + better-sqlite3), repositories, seed script.
-Branch: feat/T02-db. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/T02-db. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -107,13 +107,13 @@ RULES
 
 ## T03
 
-**PayPal REST client: OAuth token cache, ppFetch, PayPal-Request-Id, error mapping** · Owner: Adarsh · Tool: **Claude Code** · Slot: Tue 16:00–19:00 · Est: 1.0 h · Depends on: T00 · Branch: `feat/T03-paypal-client`
+**PayPal REST client: OAuth token cache, ppFetch, PayPal-Request-Id, error mapping** · Owner: Adarsh · Lane: **Backend lane** · Slot: Tue 16:00–19:00 · Est: 1.0 h · Depends on: T00 · Branch: `feat/T03-paypal-client`
 
-Open a terminal in the repo (or a worktree), run `claude`, paste:
+In the repo root (or a worktree), paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task T03: PayPal REST client: OAuth token cache, ppFetch, PayPal-Request-Id, error mapping.
-Branch: feat/T03-paypal-client. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/T03-paypal-client. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -139,13 +139,13 @@ RULES
 
 ## T04
 
-**Orders v2: create (intent AUTHORIZE) + authorize + get; API endpoints 5–6** · Owner: Adarsh · Tool: **Claude Code** · Slot: Tue 20:30–23:00 · Est: 1.0 h · Depends on: T02, T03 · Branch: `feat/T04-orders-authorize`
+**Orders v2: create (intent AUTHORIZE) + authorize + get; API endpoints 5–6** · Owner: Adarsh · Lane: **Backend lane** · Slot: Tue 20:30–23:00 · Est: 1.0 h · Depends on: T02, T03 · Branch: `feat/T04-orders-authorize`
 
-Open a terminal in the repo (or a worktree), run `claude`, paste:
+In the repo root (or a worktree), paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task T04: Orders v2: create (intent AUTHORIZE) + authorize + get; API endpoints 5–6.
-Branch: feat/T04-orders-authorize. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/T04-orders-authorize. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -169,13 +169,13 @@ RULES
 
 ## T05
 
-**Payments v2: capture full/partial (final_capture), void, refund, reauthorize, get auth** · Owner: Adarsh · Tool: **Claude Code** · Slot: Wed 09:00–13:00 · Est: 1.0 h · Depends on: T03 · Branch: `feat/T05-payments-ops`
+**Payments v2: capture full/partial (final_capture), void, refund, reauthorize, get auth** · Owner: Adarsh · Lane: **Backend lane** · Slot: Wed 09:00–13:00 · Est: 1.0 h · Depends on: T03 · Branch: `feat/T05-payments-ops`
 
-Open a terminal in the repo (or a worktree), run `claude`, paste:
+In the repo root (or a worktree), paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task T05: Payments v2: capture full/partial (final_capture), void, refund, reauthorize, get auth.
-Branch: feat/T05-payments-ops. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/T05-payments-ops. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -200,13 +200,13 @@ RULES
 
 ## T06
 
-**Escrow state machine + settle.ts (PayPal side effects before transitions)** · Owner: Adarsh · Tool: **Claude Code** · Slot: Wed 09:00–13:00 · Est: 1.5 h · Depends on: T02, T05 · Branch: `feat/T06-escrow`
+**Escrow state machine + settle.ts (PayPal side effects before transitions)** · Owner: Adarsh · Lane: **Backend lane** · Slot: Wed 09:00–13:00 · Est: 1.5 h · Depends on: T02, T05 · Branch: `feat/T06-escrow`
 
-Open a terminal in the repo (or a worktree), run `claude`, paste:
+In the repo root (or a worktree), paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task T06: Escrow state machine + settle.ts (PayPal side effects before transitions).
-Branch: feat/T06-escrow. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/T06-escrow. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -231,19 +231,19 @@ RULES
 
 ## T07
 
-**Job + evidence API routes (endpoints 1–4, 7–9, 11–15, 17, 20, 21) with withErrors()** · Owner: Adarsh · Tool: **Claude Code** · Slot: Wed 09:00–13:00 · Est: 1.5 h · Depends on: T06, T09 · Branch: `feat/T07-api-routes`
+**Job + evidence API routes (endpoints 1–4, 7–9, 11–15, 17, 20, 21) with withErrors()** · Owner: Adarsh · Lane: **Backend lane** · Slot: Wed 09:00–13:00 · Est: 1.5 h · Depends on: T06, T09 · Branch: `feat/T07-api-routes`
 
-Open a terminal in the repo (or a worktree), run `claude`, paste:
+In the repo root (or a worktree), paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task T07: Job + evidence API routes (endpoints 1–4, 7–9, 11–15, 17, 20, 21) with withErrors().
-Branch: feat/T07-api-routes. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/T07-api-routes. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
 Implement the remaining API routes listed in docs/MANUAL.md §8 (#1–4, 7–9, 11–15, 17, 20, 21) under src/app/api/** plus src/server/http/{with-errors.ts,role.ts,errors.ts}.
 - withErrors maps ZodError→400, NotFound→404, IllegalTransition→409, PolicyError→403, PayPalError→502 {code:issue, message, details:{debugId}}, else 500. Error body {error:{code,message,details?}}.
-- role.ts: read cookie pp_role; requireRole(req, ...roles) → 403. A page/route `/?as=` sets the cookie (Cursor builds the page; you provide `src/app/api/role/route.ts` POST {role} that sets the cookie, documented in docs/API_EXAMPLES.md).
+- role.ts: read cookie pp_role; requireRole(req, ...roles) → 403. A page/route `/?as=` sets the cookie (the Frontend lane builds the page; you provide `src/app/api/role/route.ts` POST {role} that sets the cookie, documented in docs/API_EXAMPLES.md).
 - Evidence upload: request.formData(); ≤4 files/phase, ≤8MB; ingestImage from T09; filenames server-generated.
 - POST submit returns 202 and kicks off orchestrator (T13) with `void runVerification(jobId)` (stub if T13 isn't merged: set VERIFYING and log).
 - uploads route: path-traversal guard (resolve + startsWith UPLOAD_DIR), re-encoded image without GPS.
@@ -263,13 +263,13 @@ RULES
 
 ## T08
 
-**Criteria generator (LLM generateObject) + category fallback templates + liveness criterion** · Owner: Adarsh · Tool: **Claude Code** · Slot: Tue 20:30–23:00 · Est: 1.0 h · Depends on: T01 · Branch: `feat/T08-criteria`
+**Criteria generator (LLM generateObject) + category fallback templates + liveness criterion** · Owner: Adarsh · Lane: **Backend lane** · Slot: Tue 20:30–23:00 · Est: 1.0 h · Depends on: T01 · Branch: `feat/T08-criteria`
 
-Open a terminal in the repo (or a worktree), run `claude`, paste:
+In the repo root (or a worktree), paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task T08: Criteria generator (LLM generateObject) + category fallback templates + liveness criterion.
-Branch: feat/T08-criteria. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/T08-criteria. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -293,13 +293,13 @@ RULES
 
 ## T09
 
-**Evidence ingest: sharp resize, sha256, dHash, exifr EXIF; store under UPLOAD_DIR** · Owner: Adarsh · Tool: **Claude Code** · Slot: Tue 16:00–19:00 · Est: 1.0 h · Depends on: T02 · Branch: `feat/T09-evidence-ingest`
+**Evidence ingest: sharp resize, sha256, dHash, exifr EXIF; store under UPLOAD_DIR** · Owner: Adarsh · Lane: **Backend lane** · Slot: Tue 16:00–19:00 · Est: 1.0 h · Depends on: T02 · Branch: `feat/T09-evidence-ingest`
 
-Open a terminal in the repo (or a worktree), run `claude`, paste:
+In the repo root (or a worktree), paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task T09: Evidence ingest: sharp resize, sha256, dHash, exifr EXIF; store under UPLOAD_DIR.
-Branch: feat/T09-evidence-ingest. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/T09-evidence-ingest. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -322,13 +322,13 @@ RULES
 
 ## T10
 
-**Forensics checks (duplicates, before≈after, EXIF window, scene/screenshot flags)** · Owner: Adarsh · Tool: **Claude Code** · Slot: Wed 09:00–13:00 · Est: 1.0 h · Depends on: T09 · Branch: `feat/T10-forensics`
+**Forensics checks (duplicates, before≈after, EXIF window, scene/screenshot flags)** · Owner: Adarsh · Lane: **Backend lane** · Slot: Wed 09:00–13:00 · Est: 1.0 h · Depends on: T09 · Branch: `feat/T10-forensics`
 
-Open a terminal in the repo (or a worktree), run `claude`, paste:
+In the repo root (or a worktree), paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task T10: Forensics checks (duplicates, before≈after, EXIF window, scene/screenshot flags).
-Branch: feat/T10-forensics. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/T10-forensics. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -352,13 +352,13 @@ RULES
 
 ## T11
 
-**VLM verifier (generateObject, image labelling, retry-on-invalid, mock fixtures)** · Owner: Adarsh · Tool: **Claude Code** · Slot: Tue 20:30–23:00 · Est: 1.5 h · Depends on: T01, T09 · Branch: `feat/T11-vlm-verify`
+**VLM verifier (generateObject, image labelling, retry-on-invalid, mock fixtures)** · Owner: Adarsh · Lane: **Backend lane** · Slot: Tue 20:30–23:00 · Est: 1.5 h · Depends on: T01, T09 · Branch: `feat/T11-vlm-verify`
 
-Open a terminal in the repo (or a worktree), run `claude`, paste:
+In the repo root (or a worktree), paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task T11: VLM verifier (generateObject, image labelling, retry-on-invalid, mock fixtures).
-Branch: feat/T11-vlm-verify. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/T11-vlm-verify. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -367,7 +367,7 @@ Implement src/server/vision/{verify.ts,mock.ts} and add VERIFY_SYSTEM_PROMPT to 
 - On schema failure retry once, appending the zod issues; second failure → throw VlmInvalidOutput.
 - Post-validate: every criterionId present (missing → NOT_VISIBLE conf 0), boxes clamped to 0..1000, imageIds exist.
 - mock.ts: if VISION_MOCK=1 read eval/fixtures/<sha256 of first after image>.json, else a category default fixture in eval/fixtures/default-<category>.json (create 4 defaults).
-- Manually run on 3 eval pairs (script call or a test marked .skip by default) and paste the outputs (trimmed) in the PR. Check box_2d convention for your provider (Gemini documents [ymin,xmin,ymax,xmax]/1000; verify).
+- Manually run on 3 eval pairs (script call or a test marked .skip by default) and paste the outputs (trimmed) in the PR. Check the box_2d convention for your provider (often [ymin, xmin, ymax, xmax] / 1000; verify).
 
 ACCEPTANCE CRITERIA (all must be true; quote each in the PR with how you verified it)
 verifyEvidence() returns VerificationReport (zod) with boxes; prompt exactly as MANUAL §9.2 in src/server/vision/prompts.ts; one retry on zod failure; VISION_MOCK reads eval/fixtures; manual run on 3 eval pairs pasted in PR.
@@ -383,13 +383,13 @@ RULES
 
 ## T12
 
-**Decision engine (pure) + thresholds from env** · Owner: Collaborator · Tool: **Claude Code** · Slot: Wed 09:00–13:00 · Est: 0.75 h · Depends on: T01 · Branch: `feat/T12-decide`
+**Decision engine (pure) + thresholds from env** · Owner: Collaborator · Lane: **Backend lane** · Slot: Wed 09:00–13:00 · Est: 0.75 h · Depends on: T01 · Branch: `feat/T12-decide`
 
-Open a terminal in the repo (or a worktree), run `claude`, paste:
+In the repo root (or a worktree), paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task T12: Decision engine (pure) + thresholds from env.
-Branch: feat/T12-decide. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/T12-decide. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -412,13 +412,13 @@ RULES
 
 ## T13
 
-**Verification orchestrator: submit -> VERIFYING -> forensics+VLM -> decide -> settle/agent** · Owner: Adarsh · Tool: **Claude Code** · Slot: Wed 14:00–18:00 · Est: 1.0 h · Depends on: T06, T10, T11, T12 · Branch: `feat/T13-orchestrator`
+**Verification orchestrator: submit -> VERIFYING -> forensics+VLM -> decide -> settle/agent** · Owner: Adarsh · Lane: **Backend lane** · Slot: Wed 14:00–18:00 · Est: 1.0 h · Depends on: T06, T10, T11, T12 · Branch: `feat/T13-orchestrator`
 
-Open a terminal in the repo (or a worktree), run `claude`, paste:
+In the repo root (or a worktree), paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task T13: Verification orchestrator: submit -> VERIFYING -> forensics+VLM -> decide -> settle/agent.
-Branch: feat/T13-orchestrator. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/T13-orchestrator. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -442,13 +442,13 @@ RULES
 
 ## T14
 
-**Settlement agent v1 (AI SDK tools, policy gate, proposals, evidence pack markdown, PayPal Agent Toolkit read tools)** · Owner: Adarsh · Tool: **Claude Code** · Slot: Wed 14:00–18:00 · Est: 2.0 h · Depends on: T13 · Branch: `feat/T14-agent`
+**Settlement agent v1 (AI SDK tools, policy gate, proposals, evidence pack markdown, PayPal Agent Toolkit read tools)** · Owner: Adarsh · Lane: **Backend lane** · Slot: Wed 14:00–18:00 · Est: 2.0 h · Depends on: T13 · Branch: `feat/T14-agent`
 
-Open a terminal in the repo (or a worktree), run `claude`, paste:
+In the repo root (or a worktree), paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task T14: Settlement agent v1 (AI SDK tools, policy gate, proposals, evidence pack markdown, PayPal Agent Toolkit read tools).
-Branch: feat/T14-agent. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/T14-agent. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -474,13 +474,13 @@ RULES
 
 ## T15
 
-**Render deploy: render.yaml, health check, SEED_ON_BOOT, env vars; hosted URL in README** · Owner: Collaborator · Tool: **Claude Code** · Slot: Wed 19:30–23:30 · Est: 0.75 h · Depends on: T13 · Branch: `feat/T15-render`
+**Render deploy: render.yaml, health check, SEED_ON_BOOT, env vars; hosted URL in README** · Owner: Collaborator · Lane: **Backend lane** · Slot: Wed 19:30–23:30 · Est: 0.75 h · Depends on: T13 · Branch: `feat/T15-render`
 
-Open a terminal in the repo (or a worktree), run `claude`, paste:
+In the repo root (or a worktree), paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task T15: Render deploy: render.yaml, health check, SEED_ON_BOOT, env vars; hosted URL in README.
-Branch: feat/T15-render. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/T15-render. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -491,7 +491,7 @@ Create render.yaml (start from docs/DIRECTORY_TREE.md; verify keys at https://re
 - If better-sqlite3/sharp native builds fail on Render, record the error and fix (e.g. Node version pin via `engines` or the NODE_VERSION env var; verify).
 
 ACCEPTANCE CRITERIA (all must be true; quote each in the PR with how you verified it)
-render.yaml blueprint (web service, node, build npm ci && npm run build, start npm start, healthCheckPath /api/health); deployed URL loads and runs happy path in sandbox; README updated with URL.
+render.yaml blueprint (web service, node, build npm ci && npm run build, start npm start, healthCheckPath /api/health); deployed URL loads and runs happy path in sandbox; README updated with URL. This is the Render sponsor submission, alongside the AG Grid ledger (F09).
 
 RULES
 - Make a 5-10 line plan first, then implement in small commits "T15: <summary>".
@@ -504,13 +504,13 @@ RULES
 
 ## T16
 
-**STRETCH: PayPal webhooks route with signature verification** · Owner: Adarsh · Tool: **Claude Code** · Slot: Wed 19:30–23:30 · Est: 1.0 h · Depends on: T15 · Branch: `feat/T16-webhooks`
+**STRETCH: PayPal webhooks route with signature verification** · Owner: Adarsh · Lane: **Backend lane** · Slot: Wed 19:30–23:30 · Est: 1.0 h · Depends on: T15 · Branch: `feat/T16-webhooks`
 
-Open a terminal in the repo (or a worktree), run `claude`, paste:
+In the repo root (or a worktree), paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task T16: STRETCH: PayPal webhooks route with signature verification.
-Branch: feat/T16-webhooks. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/T16-webhooks. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -530,17 +530,17 @@ RULES
 
 ## T17
 
-**STRETCH: Reauthorize button + honor-period countdown** · Owner: Adarsh · Tool: **Claude Code** · Slot: Wed 19:30–23:30 · Est: 0.75 h · Depends on: T05, F06 · Branch: `feat/T17-reauthorize`
+**STRETCH: Reauthorize button + honor-period countdown** · Owner: Adarsh · Lane: **Backend lane** · Slot: Wed 19:30–23:30 · Est: 0.75 h · Depends on: T05, F06 · Branch: `feat/T17-reauthorize`
 
-Open a terminal in the repo (or a worktree), run `claude`, paste:
+In the repo root (or a worktree), paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task T17: STRETCH: Reauthorize button + honor-period countdown.
-Branch: feat/T17-reauthorize. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/T17-reauthorize. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
-Implement POST /api/jobs/:id/reauthorize using payments.reauthorize; replace authorization_id, reset honor_period_ends_at. Expect an error when the original authorization is still inside its honor period (verify) and surface it nicely. Expose honorPeriodEndsAt in PaymentSummary (already in contracts). The UI countdown is a separate Cursor change: describe the needed component in the hand-off.
+Implement POST /api/jobs/:id/reauthorize using payments.reauthorize; replace authorization_id, reset honor_period_ends_at. Expect an error when the original authorization is still inside its honor period (verify) and surface it nicely. Expose honorPeriodEndsAt in PaymentSummary (already in contracts). The UI countdown is a separate Frontend lane change: describe the needed component in the hand-off.
 
 ACCEPTANCE CRITERIA (all must be true; quote each in the PR with how you verified it)
 Endpoint 16 works or shows the PayPal error gracefully; UI countdown to honor_period_ends_at.
@@ -556,13 +556,13 @@ RULES
 
 ## T18
 
-**STRETCH: Payouts to worker after capture (simulated)** · Owner: Adarsh · Tool: **Claude Code** · Slot: Wed 19:30–23:30 · Est: 1.0 h · Depends on: T13 · Branch: `feat/T18-payouts`
+**STRETCH: Payouts to worker after capture (simulated)** · Owner: Adarsh · Lane: **Backend lane** · Slot: Wed 19:30–23:30 · Est: 1.0 h · Depends on: T13 · Branch: `feat/T18-payouts`
 
-Open a terminal in the repo (or a worktree), run `claude`, paste:
+In the repo root (or a worktree), paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task T18: STRETCH: Payouts to worker after capture (simulated).
-Branch: feat/T18-payouts. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/T18-payouts. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -582,19 +582,19 @@ RULES
 
 ## F01
 
-**App shell: layout, role switcher (?as=), nav, theme, shadcn setup, landing page with origin story** · Owner: Collaborator · Tool: **Cursor** · Slot: Tue 14:00–16:00 · Est: 1.0 h · Depends on: T00 · Branch: `feat/F01-app-shell`
+**App shell: layout, role switcher (?as=), nav, theme, shadcn setup, landing page with origin story** · Owner: Collaborator · Lane: **Frontend lane** · Slot: Tue 14:00–16:00 · Est: 1.0 h · Depends on: T00 · Branch: `feat/F01-app-shell`
 
-Open Cursor Agent (Agent mode, the repo root as workspace), paste:
+In the repo root, paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task F01: App shell: layout, role switcher (?as=), nav, theme, shadcn setup, landing page with origin story.
-Branch: feat/F01-app-shell. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/F01-app-shell. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
 Build the app shell with shadcn/ui (`npx shadcn@latest init`, then add button card badge input textarea select dialog toast/sonner tabs table separator skeleton progress tooltip).
 - src/app/layout.tsx: header (logo text "ProofPay", role badge, "PayPal Sandbox" badge, links: New job, My jobs, Reviewer), footer ("Sandbox demo. No real money moves.").
-- src/app/page.tsx landing: hero "Money moves when the camera says the job is done.", 3-step explainer (Hold with PayPal → Prove with photos → AI verifies → Capture), origin story card (the "delivered" parcel that never arrived), 3 role cards linking to `/?as=customer` etc. The role is set via POST /api/role {role} (Claude Code provides it); until then set the `pp_role` cookie client-side in src/lib/role.ts.
+- src/app/page.tsx landing: hero "Money moves when the camera says the job is done.", 3-step explainer (Hold with PayPal → Prove with photos → AI verifies → Capture), origin story card (the "delivered" parcel that never arrived), 3 role cards linking to `/?as=customer` etc. The role is set via POST /api/role {role} (the Backend lane provides it); until then set the `pp_role` cookie client-side in src/lib/role.ts.
 - src/lib/format.ts formatMoney(Money), formatDate.
 - Responsive at 390px. Screenshot in PR.
 
@@ -612,13 +612,13 @@ RULES
 
 ## F02
 
-**Customer: create job form + editable criteria preview** · Owner: Collaborator · Tool: **Cursor** · Slot: Tue 16:00–19:00 · Est: 1.5 h · Depends on: F01, T01 · Branch: `feat/F02-create-job`
+**Customer: create job form + editable criteria preview** · Owner: Collaborator · Lane: **Frontend lane** · Slot: Tue 16:00–19:00 · Est: 1.5 h · Depends on: F01, T01 · Branch: `feat/F02-create-job`
 
-Open Cursor Agent (Agent mode, the repo root as workspace), paste:
+In the repo root, paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task F02: Customer: create job form + editable criteria preview.
-Branch: feat/F02-create-job. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/F02-create-job. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -642,13 +642,13 @@ RULES
 
 ## F03
 
-**PayPal Buttons checkout (intent=authorize) on job page** · Owner: Collaborator · Tool: **Cursor** · Slot: Wed 09:00–13:00 · Est: 1.0 h · Depends on: F02, T04 · Branch: `feat/F03-paypal-buttons`
+**PayPal Buttons checkout (intent=authorize) on job page** · Owner: Collaborator · Lane: **Frontend lane** · Slot: Wed 09:00–13:00 · Est: 1.0 h · Depends on: F02, T04 · Branch: `feat/F03-paypal-buttons`
 
-Open Cursor Agent (Agent mode, the repo root as workspace), paste:
+In the repo root, paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task F03: PayPal Buttons checkout (intent=authorize) on job page.
-Branch: feat/F03-paypal-buttons. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/F03-paypal-buttons. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -669,13 +669,13 @@ RULES
 
 ## F04
 
-**Worker: evidence upload (before/after, camera capture, previews, liveness code banner)** · Owner: Collaborator · Tool: **Cursor** · Slot: Wed 09:00–13:00 · Est: 1.5 h · Depends on: F01, T01 · Branch: `feat/F04-worker-upload`
+**Worker: evidence upload (before/after, camera capture, previews, liveness code banner)** · Owner: Collaborator · Lane: **Frontend lane** · Slot: Wed 09:00–13:00 · Est: 1.5 h · Depends on: F01, T01 · Branch: `feat/F04-worker-upload`
 
-Open Cursor Agent (Agent mode, the repo root as workspace), paste:
+In the repo root, paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task F04: Worker: evidence upload (before/after, camera capture, previews, liveness code banner).
-Branch: feat/F04-worker-upload. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/F04-worker-upload. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -699,13 +699,13 @@ RULES
 
 ## F05
 
-**Verification result view: per-criterion cards + bounding-box overlay + forensics flags** · Owner: Collaborator · Tool: **Cursor** · Slot: Wed 14:00–18:00 · Est: 2.0 h · Depends on: F04, T01 · Branch: `feat/F05-result-view`
+**Verification result view: per-criterion cards + bounding-box overlay + forensics flags** · Owner: Collaborator · Lane: **Frontend lane** · Slot: Wed 14:00–18:00 · Est: 2.0 h · Depends on: F04, T01 · Branch: `feat/F05-result-view`
 
-Open Cursor Agent (Agent mode, the repo root as workspace), paste:
+In the repo root, paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task F05: Verification result view: per-criterion cards + bounding-box overlay + forensics flags.
-Branch: feat/F05-result-view. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/F05-result-view. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -730,13 +730,13 @@ RULES
 
 ## F06
 
-**Money timeline + settlement panel (accept/decline partial, void, PayPal IDs)** · Owner: Collaborator · Tool: **Cursor** · Slot: Wed 14:00–18:00 · Est: 1.5 h · Depends on: F05, T06 · Branch: `feat/F06-timeline-settlement`
+**Money timeline + settlement panel (accept/decline partial, void, PayPal IDs)** · Owner: Collaborator · Lane: **Frontend lane** · Slot: Wed 14:00–18:00 · Est: 1.5 h · Depends on: F05, T06 · Branch: `feat/F06-timeline-settlement`
 
-Open Cursor Agent (Agent mode, the repo root as workspace), paste:
+In the repo root, paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task F06: Money timeline + settlement panel (accept/decline partial, void, PayPal IDs).
-Branch: feat/F06-timeline-settlement. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/F06-timeline-settlement. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -759,17 +759,17 @@ RULES
 
 ## F07
 
-**Reviewer console: queue table, job detail, approve/partial/reject, evidence pack** · Owner: Collaborator · Tool: **Cursor** · Slot: Wed 19:30–23:30 · Est: 1.5 h · Depends on: F05, T07 · Branch: `feat/F07-reviewer`
+**Reviewer console: queue table, job detail, approve/partial/reject, evidence pack** · Owner: Collaborator · Lane: **Frontend lane** · Slot: Wed 19:30–23:30 · Est: 1.5 h · Depends on: F05, T07 · Branch: `feat/F07-reviewer`
 
-Open Cursor Agent (Agent mode, the repo root as workspace), paste:
+In the repo root, paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task F07: Reviewer console: queue table, job detail, approve/partial/reject, evidence pack.
-Branch: feat/F07-reviewer. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/F07-reviewer. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
-Build src/app/reviewer/page.tsx (queue table from GET /api/review-queue: title, amount, reason, age) and src/app/reviewer/jobs/[id]/page.tsx (reuse EvidenceViewer/CriterionCard/FlagsPanel/MoneyTimeline) with a decision form: Approve / Partial (amount input ≤ authorized) / Reject, plus notes → POST review. Button "Generate evidence pack" → POST agent/evidence-pack → render the markdown (react-markdown is OK, note the dependency) with Copy + Download .md. If REVIEWER_PASSCODE is set, prompt once and send it as header x-reviewer-passcode (coordinate the header name with Claude Code in the hand-off).
+Build src/app/reviewer/page.tsx (queue table from GET /api/review-queue: title, amount, reason, age) and src/app/reviewer/jobs/[id]/page.tsx (reuse EvidenceViewer/CriterionCard/FlagsPanel/MoneyTimeline) with a decision form: Approve / Partial (amount input ≤ authorized) / Reject, plus notes → POST review. Button "Generate evidence pack" → POST agent/evidence-pack → render the markdown (react-markdown is OK, note the dependency) with Copy + Download .md. If REVIEWER_PASSCODE is set, prompt once and send it as header x-reviewer-passcode (coordinate the header name with the Backend lane in the hand-off).
 
 ACCEPTANCE CRITERIA (all must be true; quote each in the PR with how you verified it)
 /reviewer lists HUMAN_REVIEW jobs (endpoint 17); detail reuses F05; decision form posts endpoint 13; 'Generate evidence pack' shows markdown (endpoint 18) with copy/download; passcode prompt if REVIEWER_PASSCODE set.
@@ -785,13 +785,13 @@ RULES
 
 ## F08
 
-**Demo polish: empty/loading/error states, copy, favicon, OG image, screenshots for README** · Owner: Collaborator · Tool: **Cursor** · Slot: Thu 09:00–12:00 · Est: 1.0 h · Depends on: F06, F07 · Branch: `feat/F08-polish`
+**Demo polish: empty/loading/error states, copy, favicon, OG image, screenshots for README** · Owner: Collaborator · Lane: **Frontend lane** · Slot: Thu 09:00–12:00 · Est: 1.0 h · Depends on: F06, F07 · Branch: `feat/F08-polish`
 
-Open Cursor Agent (Agent mode, the repo root as workspace), paste:
+In the repo root, paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task F08: Demo polish: empty/loading/error states, copy, favicon, OG image, screenshots for README.
-Branch: feat/F08-polish. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/F08-polish. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -811,39 +811,39 @@ RULES
 
 ## F09
 
-**STRETCH: AG Grid reviewer/ops grid (only if AG Grid sponsor chosen)** · Owner: Collaborator · Tool: **Cursor** · Slot: Wed 19:30–23:30 · Est: 1.5 h · Depends on: F07 · Branch: `feat/F09-ag-grid`
+**AG Grid escrow/ledger dashboard (jobs, held/captured/released, flags)** · Owner: Collaborator · Lane: **Frontend lane** · Slot: Wed 19:30–23:30 · Est: 1.5 h · Depends on: F07 · Branch: `feat/F09-ag-grid`
 
-Open Cursor Agent (Agent mode, the repo root as workspace), paste:
+In the repo root, paste:
 
 ```text
-You are working on ProofPay (read AGENTS.md first). Task F09: STRETCH: AG Grid reviewer/ops grid (only if AG Grid sponsor chosen).
-Branch: feat/F09-ag-grid. Only modify paths your tool owns (AGENTS.md §4).
+You are working on ProofPay (read AGENTS.md first). Task F09: AG Grid escrow/ledger dashboard (jobs, held/captured/released, flags).
+Branch: feat/F09-ag-grid. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
-(Only if Adarsh chose the AG Grid sponsor target.) `npm i ag-grid-react ag-grid-community`. Reviewer "All jobs" grid: columns id, title, status (cell renderer chip), authorized, captured, released, flags count, updated; quick filter, sort, CSV export. Reference: https://github.com/paypaldev/hackathon-paypal-ag-grid-boilerplate. Add "AG Grid" to Built With.
+Required sponsor work, together with the Render deploy (T15). `npm i ag-grid-react ag-grid-community`. Build the reviewer escrow/ledger dashboard ("All jobs") with AG Grid Community: columns id, title, status (cell renderer chip), held, captured, released, flags count, updated; quick filter, sort, CSV export. Reference: https://github.com/paypaldev/hackathon-paypal-ag-grid-boilerplate. Add "AG Grid" to README Built with.
 
 ACCEPTANCE CRITERIA (all must be true; quote each in the PR with how you verified it)
-AG Grid community grid of all jobs with status, held/captured/released amounts, flags; filter + sort; listed in Built With.
+AG Grid Community grid is the escrow/ledger dashboard: every job with status, held, captured, and released amounts, and fraud flags; column filter and sort; ag-grid-react and ag-grid-community installed; named in README Built with and in the Devpost sponsor fields together with the Render deploy (T15).
 
 RULES
 - Make a 5-10 line plan first, then implement in small commits "F09: <summary>".
 - Run `npm run check` until green.
 - Never print or commit secrets/.env.local. Sandbox only.
 - If you need a change outside your owned paths, STOP and describe it (file, function, signature) in the hand-off.
-- Finish: open PR "[F09] STRETCH: AG Grid reviewer/ops grid (only if AG Grid sponsor chosen)" using .github/pull_request_template.md, then output the AGENTS.md §10 hand-off block ending with
+- Finish: open PR "[F09] AG Grid escrow/ledger dashboard (jobs, held/captured/released, flags)" using .github/pull_request_template.md, then output the AGENTS.md §10 hand-off block ending with
   NOTION: F09 → In review; Branch=feat/F09-ag-grid; PR=<url>
 ```
 
 ## A01
 
-**Eval dataset: shoot 12–20 before/after pairs + case.json labels (human-heavy)** · Owner: Adarsh · Tool: **Antigravity** · Slot: Tue 20:30–23:00 + Wed 08:00–09:00 · Est: 2.0 h · Depends on: — · Branch: `feat/A01-eval-dataset`
+**Eval dataset: shoot 12–20 before/after pairs + case.json labels (human-heavy)** · Owner: Adarsh · Lane: **QA lane** · Slot: Tue 20:30–23:00 + Wed 08:00–09:00 · Est: 2.0 h · Depends on: — · Branch: `feat/A01-eval-dataset`
 
-Open Antigravity (Agent Manager → new agent in this workspace; use Planning mode), paste:
+In the repo root, paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task A01: Eval dataset: shoot 12–20 before/after pairs + case.json labels (human-heavy).
-Branch: feat/A01-eval-dataset. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/A01-eval-dataset. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -851,7 +851,7 @@ WHAT TO DO
 Human part (Adarsh): photograph each case (same angle before/after, sticky note with the code in the after photo), drop files in, run `npm run eval:validate`. Put 2 images in eval/stock/ (your own "doorstep parcel" shots) for duplicate tests. No faces or readable addresses.
 
 ACCEPTANCE CRITERIA (all must be true; quote each in the PR with how you verified it)
-eval/pairs/NN-slug/{case.json,before_*.jpg,after_*.jpg} for >=12 cases from MANUAL §9.5 table; images <=1600px, no faces/PII; eval/stock has 2 images; Antigravity agent generated case.json skeletons + a validation script (npm run eval:validate) that passes.
+eval/pairs/NN-slug/{case.json,before_*.jpg,after_*.jpg} for >=12 cases from MANUAL §9.5 table; images <=1600px, no faces/PII; eval/stock has 2 images; case.json skeletons and scripts/eval-validate.ts exist and npm run eval:validate passes.
 
 RULES
 - Make a 5-10 line plan first, then implement in small commits "A01: <summary>".
@@ -864,13 +864,13 @@ RULES
 
 ## A02
 
-**Eval runner: npm run eval writes the eval report (+ --record fixtures for mock mode)** · Owner: Adarsh · Tool: **Antigravity** · Slot: Wed 14:00–18:00 · Est: 1.0 h · Depends on: A01, T11, T12, T10 · Branch: `feat/A02-eval-runner`
+**Eval runner: npm run eval writes the eval report (+ --record fixtures for mock mode)** · Owner: Adarsh · Lane: **QA lane** · Slot: Wed 14:00–18:00 · Est: 1.0 h · Depends on: A01, T11, T12, T10 · Branch: `feat/A02-eval-runner`
 
-Open Antigravity (Agent Manager → new agent in this workspace; use Planning mode), paste:
+In the repo root, paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task A02: Eval runner: npm run eval writes the eval report (+ --record fixtures for mock mode).
-Branch: feat/A02-eval-runner. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/A02-eval-runner. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -890,13 +890,13 @@ RULES
 
 ## A03
 
-**E2E happy path: create job -> sandbox PayPal authorize -> upload -> APPROVED -> CAPTURED** · Owner: Collaborator · Tool: **Antigravity** · Slot: Wed 19:30–23:30 · Est: 1.5 h · Depends on: F03, F04, F06, T13 · Branch: `feat/A03-e2e-happy`
+**E2E happy path: create job -> sandbox PayPal authorize -> upload -> APPROVED -> CAPTURED** · Owner: Collaborator · Lane: **QA lane** · Slot: Wed 19:30–23:30 · Est: 1.5 h · Depends on: F03, F04, F06, T13 · Branch: `feat/A03-e2e-happy`
 
-Open Antigravity (Agent Manager → new agent in this workspace; use Planning mode), paste:
+In the repo root, paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task A03: E2E happy path: create job -> sandbox PayPal authorize -> upload -> APPROVED -> CAPTURED.
-Branch: feat/A03-e2e-happy. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/A03-e2e-happy. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -904,10 +904,10 @@ Set up Playwright (playwright.config.ts with webServer: `npm run dev`, env VISIO
 1. /?as=customer → New job (bike chain, $60) → save → PayPal button → popup → sandbox login (E2E_BUYER_EMAIL/PASSWORD) → approve → expect [data-testid=funds-held].
 2. /?as=worker → job → upload eval/pairs/06-*/before_1.jpg and after_1.jpg → submit.
 3. /?as=customer → expect status CAPTURED in the timeline within 30s.
-Use the Antigravity browser subagent (`/browser`) to explore selectors and record a walkthrough first, then codify it in Playwright. Save the recording artifact locally (docs/recordings/ is git-ignored). Missing data-testids → list them in the hand-off for Cursor.
+Use the browser to explore selectors and record a walkthrough first, then codify it in Playwright. Save the recording locally (`docs/recordings/` is git-ignored). Missing data-testids → list them in the hand-off for the Frontend lane.
 
 ACCEPTANCE CRITERIA (all must be true; quote each in the PR with how you verified it)
-tests/e2e/happy.spec.ts (Playwright) passes locally with VISION_MOCK=1 and sandbox buyer creds from env (E2E_BUYER_EMAIL/PASSWORD); Antigravity browser recording saved to docs/recordings/ (not committed if >10MB).
+tests/e2e/happy.spec.ts (Playwright) passes locally with VISION_MOCK=1 and sandbox buyer creds from env (E2E_BUYER_EMAIL/PASSWORD); A browser recording saved to docs/recordings/ (not committed if >10MB).
 
 RULES
 - Make a 5-10 line plan first, then implement in small commits "A03: <summary>".
@@ -920,13 +920,13 @@ RULES
 
 ## A04
 
-**E2E partial + fraud paths (PARTIAL accept -> partial capture; duplicate -> HUMAN_REVIEW -> void)** · Owner: Collaborator · Tool: **Antigravity** · Slot: Thu 09:00–12:00 · Est: 1.0 h · Depends on: A03, F07, T14 · Branch: `feat/A04-e2e-partial-fraud`
+**E2E partial + fraud paths (PARTIAL accept -> partial capture; duplicate -> HUMAN_REVIEW -> void)** · Owner: Collaborator · Lane: **QA lane** · Slot: Thu 09:00–12:00 · Est: 1.0 h · Depends on: A03, F07, T14 · Branch: `feat/A04-e2e-partial-fraud`
 
-Open Antigravity (Agent Manager → new agent in this workspace; use Planning mode), paste:
+In the repo root, paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task A04: E2E partial + fraud paths (PARTIAL accept -> partial capture; duplicate -> HUMAN_REVIEW -> void).
-Branch: feat/A04-e2e-partial-fraud. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/A04-e2e-partial-fraud. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -946,13 +946,13 @@ RULES
 
 ## A05
 
-**Demo dry-run on hosted Render URL; capture screenshots + backup screen recording** · Owner: Collaborator · Tool: **Antigravity** · Slot: Thu 12:30–15:00 · Est: 1.0 h · Depends on: T15, A04, F08 · Branch: `feat/A05-demo-dryrun`
+**Demo dry-run on hosted Render URL; capture screenshots + backup screen recording** · Owner: Collaborator · Lane: **QA lane** · Slot: Thu 12:30–15:00 · Est: 1.0 h · Depends on: T15, A04, F08 · Branch: `feat/A05-demo-dryrun`
 
-Open Antigravity (Agent Manager → new agent in this workspace; use Planning mode), paste:
+In the repo root, paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task A05: Demo dry-run on hosted Render URL; capture screenshots + backup screen recording.
-Branch: feat/A05-demo-dryrun. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/A05-demo-dryrun. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -972,13 +972,13 @@ RULES
 
 ## A06
 
-**Fresh-clone judge test: follow README from zero in a clean folder** · Owner: Collaborator · Tool: **Antigravity** · Slot: Thu 12:30–15:00 · Est: 0.75 h · Depends on: T15 · Branch: `feat/A06-readme-fixes`
+**Fresh-clone judge test: follow README from zero in a clean folder** · Owner: Collaborator · Lane: **QA lane** · Slot: Thu 12:30–15:00 · Est: 0.75 h · Depends on: T15 · Branch: `feat/A06-readme-fixes`
 
-Open Antigravity (Agent Manager → new agent in this workspace; use Planning mode), paste:
+In the repo root, paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task A06: Fresh-clone judge test: follow README from zero in a clean folder.
-Branch: feat/A06-readme-fixes. Only modify paths your tool owns (AGENTS.md §4).
+Branch: feat/A06-readme-fixes. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
@@ -996,19 +996,44 @@ RULES
   NOTION: A06 → In review; Branch=feat/A06-readme-fixes; PR=<url>
 ```
 
+## A07
+
+**Fill the README Try it (sandbox) buyer login once the sandbox personal account exists** · Owner: Adarsh · Lane: **QA lane** · Slot: Tue 14:00–16:00 · Est: 0.25 h · Depends on: — · Branch: `docs/A07-sandbox-login`
+
+In the repo root, paste:
+
+```text
+You are working on ProofPay (read AGENTS.md first). Task A07: Fill the README Try it (sandbox) buyer login once the sandbox personal account exists.
+Branch: docs/A07-sandbox-login. Only modify paths your lane owns (AGENTS.md §4).
+Read: AGENTS.md and the README section "Try it (sandbox)".
+
+WHAT TO DO
+Docs-only. When the PayPal sandbox personal (buyer) account exists, replace the README placeholders `<sandbox-buyer-email>` and `<sandbox-buyer-password>` with that account's email and password. Keep the "Sandbox only. No real money moves." warning. Do not invent credentials. Do not put the password in `.env.example`, Notion, the PR body, or chat. `.env.example` stays empty placeholders.
+
+ACCEPTANCE CRITERIA (all must be true; quote each in the PR with how you verified it)
+README 'Try it (sandbox)' shows the real sandbox personal (buyer) email and password, marked sandbox-only and no real money. Values come from the PayPal Developer Dashboard sandbox account. .env.example stays placeholders. The login is not pasted into Notion, PR text, or chat.
+
+RULES
+- Make a 5-10 line plan first, then implement in small commits "A07: <summary>".
+- Never print or commit secrets/.env.local. The README sandbox buyer login is the one exception the owner approved, and only there.
+- If you need a change outside your owned paths, STOP and describe it (file, function, signature) in the hand-off.
+- Finish: open PR "[A07] Fill the README Try it (sandbox) buyer login once the sandbox personal account exists" using .github/pull_request_template.md, then output the AGENTS.md §10 hand-off block ending with
+  NOTION: A07 → In review; Branch=docs/A07-sandbox-login; PR=<url>
+```
+
 ## S01
 
-**Record + edit demo video (<3:00), upload to YouTube public** · Owner: Adarsh · Tool: **Antigravity** · Slot: Thu 12:30–15:00 · Est: 1.5 h · Depends on: A05 · Branch: `n/a`
+**Record + edit demo video (<3:00), upload to YouTube public** · Owner: Adarsh · Lane: **QA lane** · Slot: Thu 12:30–15:00 · Est: 1.5 h · Depends on: A05 · Branch: `n/a`
 
-Open Antigravity (Agent Manager → new agent in this workspace; use Planning mode), paste:
+In the repo root, paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task S01: Record + edit demo video (<3:00), upload to YouTube public.
-Branch: n/a. Only modify paths your tool owns (AGENTS.md §4).
+Branch: n/a. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
-(Human-led.) Use docs/DEMO_AND_SUBMISSION.md §1. Optional agent help: ask Antigravity to generate a shot checklist artifact and to time each segment from the A05 recordings. Record with OBS/QuickTime, edit to 2:40–2:55, add captions, no copyrighted music. Upload to YouTube as Public, title "ProofPay: vision-verified escrow on PayPal (PayPal AI Hackathon)". Paste the link in Notion S01 notes.
+(Human-led.) Use docs/DEMO_AND_SUBMISSION.md §1. Optional help from the QA lane: generate a shot checklist and time each segment from the A05 recordings. Record with OBS/QuickTime, edit to 2:40–2:55, add captions, no copyrighted music. Upload to YouTube as Public, title "ProofPay: vision-verified escrow on PayPal (PayPal AI Hackathon)". Paste the link in Notion S01 notes.
 
 ACCEPTANCE CRITERIA (all must be true; quote each in the PR with how you verified it)
 Video follows docs/DEMO_AND_SUBMISSION.md script, 2:40–2:55 long, captions on, no copyrighted music, public YouTube link in Notion.
@@ -1024,20 +1049,20 @@ RULES
 
 ## S02
 
-**Devpost submission: text, Built With, tools used, repo URL, video, hosted URL, testing instructions** · Owner: Collaborator · Tool: **Claude Code** · Slot: Thu 15:00–18:00 · Est: 1.0 h · Depends on: S01, A06 · Branch: `docs/S02-devpost`
+**Devpost submission: text, Built With, tools used, repo URL, video, hosted URL, testing instructions** · Owner: Collaborator · Lane: **Backend lane** · Slot: Thu 15:00–18:00 · Est: 1.0 h · Depends on: S01, A06 · Branch: `docs/S02-devpost`
 
-Open a terminal in the repo (or a worktree), run `claude`, paste:
+In the repo root (or a worktree), paste:
 
 ```text
 You are working on ProofPay (read AGENTS.md first). Task S02: Devpost submission: text, Built With, tools used, repo URL, video, hosted URL, testing instructions.
-Branch: docs/S02-devpost. Only modify paths your tool owns (AGENTS.md §4).
+Branch: docs/S02-devpost. Only modify paths your lane owns (AGENTS.md §4).
 Read: AGENTS.md, src/shared/contracts.ts (if present), and the docs/MANUAL.md sections named below.
 
 WHAT TO DO
-Draft the Devpost text from docs/DEMO_AND_SUBMISSION.md §3 using the real numbers from eval/report.md and the real hosted URL; save it as docs/DEVPOST.md (docs-only PR). Add a "For judges" section to the README (hosted URL, sandbox note, VISION_MOCK, how to get sandbox creds, optional shared sandbox buyer login if Adarsh approves). Then the humans paste it into Devpost and tick the checklist in §2. Adarsh submits.
+Draft the Devpost text from docs/DEMO_AND_SUBMISSION.md §3 using the real numbers from eval/report.md and the real hosted URL; save it as docs/DEVPOST.md (docs-only PR). Point judges at the README quickstart and "Try it (sandbox)" (A07 fills the buyer login). Enter both sponsor targets: Render and AG Grid. The AI-tools list goes in the Devpost form, not in the repo. Then the humans paste it into Devpost and tick the checklist in §2. Adarsh submits.
 
 ACCEPTANCE CRITERIA (all must be true; quote each in the PR with how you verified it)
-Checklist in docs/DEMO_AND_SUBMISSION.md all ticked; draft saved by Collaborator by 16:00 CET; Adarsh (team Representative) reviews and submits before 18:00 CET; repo public with MIT licence visible in About; screenshot of submission confirmation saved.
+Checklist in docs/DEMO_AND_SUBMISSION.md all ticked, including both Render and AG Grid sponsor fields; draft saved by Collaborator by 16:00 CET; Adarsh (team Representative) reviews and submits before 18:00 CET; repo public with MIT licence visible in About; screenshot of submission confirmation saved.
 
 RULES
 - Make a 5-10 line plan first, then implement in small commits "S02: <summary>".

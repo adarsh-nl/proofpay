@@ -1,6 +1,6 @@
 # ProofPay — Master Build Manual
 
-> Audience: Adarsh, Collaborator, and every AI coding agent (Cursor, Claude Code, Antigravity).
+> Audience: Adarsh, Collaborator, and every coding agent (Backend lane, Frontend lane, QA lane). Instructions live only in `AGENTS.md`.
 > Status: **v1, written Tue 10 Nov 2026 13:30 CET.** Anything marked **(verify)** has not been confirmed against live docs or the sandbox. Check it before relying on it.
 > All times are **CET (Europe/Amsterdam, UTC+1)** unless stated otherwise.
 
@@ -49,16 +49,16 @@
 |---|---|---|
 | Technological Implementation | Orders v2 `AUTHORIZE`, Payments v2 capture / partial capture with `final_capture` / void / reauthorize / refund; idempotency keys; error mapping; VLM structured output with zod; forensics; eval numbers | `src/server/paypal/*`, `src/server/vision/*`, `eval/` |
 | Design | Three role views, a money timeline ("Held $120 → Captured $96 → Released $24"), bounding‑box overlays, a plain‑English verdict | `src/app/(ui)/*`, `src/components/*` |
-| Potential Impact | Gig work, home services, last‑mile delivery. Origin story: "delivered" parcel with no proof | README, video 0:00–0:25 |
+| Potential Impact | Gig work, home services, last‑mile delivery. Origin story: a Fitbit marked "delivered" in Enschede that never arrived, with no photo | README, video 0:00–0:25 |
 | Innovation | "Proof‑of‑work escrow": evidence is the capture trigger, AI writes the contract, liveness codes | video, Devpost text |
 | Presentation | 3‑minute script with three contrasting outcomes | `docs/DEMO_AND_SUBMISSION.md` |
 | **Best Use of PayPal + AI** (HM) | AI decides *how much* to capture; PayPal executes it | — |
 | **Best Use of Agentic Commerce** (HM) | Settlement agent with tool calls, policy guardrails, human approval gate; PayPal Agent Toolkit tools | `src/server/agent/*` |
-| **Render** (sponsor) | Deployed on Render; (stretch) verification runs as a Render Workflows task | `render.yaml`, `workflows/` |
-| **APIMatic** (sponsor) | Dev‑time only: the APIMatic PayPal Context Plugin in Cursor/Claude Code. Mention it in "Built With" only if we actually used it. | — |
-| **AG Grid** (sponsor, stretch) | Reviewer console grid / AG Studio dashboard of jobs and payment states | `src/components/review/*` |
+| **Render** (sponsor) | Deployed on Render via `render.yaml` (T15). Render Workflows for verification stays stretch (S6). | `render.yaml` |
+| **APIMatic** (sponsor, optional) | Dev‑time only: the APIMatic PayPal Context Plugin. Mention it in "Built With" only if we actually used it. | — |
+| **AG Grid** (sponsor) | Escrow/ledger dashboard of jobs and payment states (F09, MVP) | `src/components/review/*` |
 
-Prizes stack as 1 HM + 1 sponsor at most, so pick **one** sponsor to aim for. Render is the cheapest because we deploy there anyway. AG Grid has the biggest pot but needs real UI time. **Decision for Adarsh: Render (default) or AG Grid.**
+Rules award at most one Grand or Honorable Mention, plus at most one sponsor prize. We still **build and submit for both Render and AG Grid**: a Render web service (`render.yaml`, T15) and an AG Grid escrow/ledger dashboard (F09).
 
 ## 4. Scope tiers
 
@@ -73,7 +73,8 @@ Prizes stack as 1 HM + 1 sponsor at most, so pick **one** sponsor to aim for. Re
 - M8 UI: customer job page, worker upload page, result page with box overlays, money timeline, reviewer queue (simple table).
 - M9 Settlement agent v1: writes the explanation and partial proposal (LLM), and executes only after a human click.
 - M10 Seed data + `eval/` with ≥ 12 pairs (target 20) + `npm run eval` report.
-- M11 Deployed on Render, README quickstart verified from a fresh clone.
+- M11 Deployed on Render (`render.yaml`), README quickstart verified from a fresh clone.
+- M12 AG Grid escrow/ledger dashboard: every job with status, held, captured, and released amounts, and fraud flags; filter and sort (F09).
 
 ### Stretch (only after MVP is green)
 - S1 Webhooks endpoint with signature verification (`PAYMENT.AUTHORIZATION.CREATED`, `PAYMENT.CAPTURE.COMPLETED`, `PAYMENT.AUTHORIZATION.VOIDED`, `CUSTOMER.DISPUTE.CREATED`; verify names in the event‑names list).
@@ -82,8 +83,7 @@ Prizes stack as 1 HM + 1 sponsor at most, so pick **one** sponsor to aim for. Re
 - S4 Reauthorize button + expiry countdown (honor period).
 - S5 Worker payout via Payouts API (`POST /v1/payments/payouts`) after capture (**verify** sandbox Payouts is enabled for the app).
 - S6 Render Workflows task for verification (fan‑out per criterion).
-- S7 AG Grid reviewer console.
-- S8 Self‑consistency: run the VLM twice with shuffled image order; disagreement → UNCERTAIN.
+- S7 Self‑consistency: run the VLM twice with shuffled image order; disagreement → UNCERTAIN. The AG Grid ledger is MVP (M12 / F09), not stretch.
 
 ### Cut list (do not start)
 Real auth/OAuth · Stripe‑style connected accounts · C2PA validation · reverse image search APIs · CLIP embeddings · native mobile · i18n · multi‑currency · email notifications.
@@ -93,15 +93,15 @@ Real auth/OAuth · Stripe‑style connected accounts · C2PA validation · rever
 | Layer | Choice | Why for 1.5 days |
 |---|---|---|
 | App | **Next.js 15 App Router + TypeScript** (verify current major with `npx create-next-app@latest`) | One codebase, one deploy; API routes and UI together; every agent knows it |
-| UI | Tailwind + shadcn/ui | Fast, good‑looking defaults; Cursor is strong here; a shadcn MCP is installed |
+| UI | Tailwind + shadcn/ui, plus **AG Grid** for the escrow/ledger dashboard (F09) | Fast defaults; AG Grid is the sponsor ledger, not the rest of the UI |
 | Validation | **zod** | One schema for API I/O, DB JSON columns and LLM structured output |
 | AI | **Vercel AI SDK** (`ai`, `@ai-sdk/google` / `@ai-sdk/openai`), `generateObject` with zod schemas, `generateText` with tools for the agent | Provider‑agnostic; PayPal Agent Toolkit ships an AI SDK adapter (`@paypal/agent-toolkit/ai-sdk`) |
-| VLM | Default **Gemini (Flash tier)**, fallback **OpenAI GPT‑4o‑class**. Model ID in `VLM_MODEL` (**verify current IDs**) | Gemini is documented to return normalized bounding boxes (`box_2d`, 0–1000; **verify**); both support JSON schema output |
+| VLM | Default a current flash-class model from `AI_PROVIDER`, with the other configured provider as fallback. Model ID in `VLM_MODEL` (**verify current IDs**) | The chosen provider must return normalized bounding boxes (`box_2d`, 0–1000; **verify**) and JSON-schema output |
 | Images | `sharp` (resize, grayscale for dHash), `exifr` (EXIF) | Pure npm, no Python |
 | DB | **SQLite** via `better-sqlite3` + **Drizzle ORM** | Zero setup for judges; `npm run db:reset` |
-| Tests | **vitest** (unit), **Playwright** (e2e; Antigravity can also drive Chrome) | Standard |
+| Tests | **vitest** (unit), **Playwright** (e2e) | Standard |
 | PayPal | Raw REST via `fetch` (typed wrapper) + PayPal JS SDK in the browser; `@paypal/agent-toolkit` for agent tools | Agent Toolkit has **no void / partial‑capture tools** (as of the 29 Oct 2026 docs), so escrow ops must be direct REST |
-| Deploy | **Render Web Service** (Node), `render.yaml` blueprint | Sponsor prize; simple |
+| Deploy | **Render Web Service** (Node), `render.yaml` blueprint | Sponsor target, together with AG Grid; one Node service |
 
 **Why not Python FastAPI for vision?** We'd have two services, two deploys and CORS, and judges would need two runtimes. Our "vision" is VLM calls plus light image maths that `sharp` handles. Adarsh's CV expertise goes into **prompt design, criteria and the eval set**, not model training.
 
@@ -390,7 +390,7 @@ else                                                    → REJECTED
 ```
 `Decision = { outcome, score, captureAmount?: Money, reasons: string[] }`. Note `cL` (liveness) is required, so a missing code → REJECTED (if confident) or HUMAN_REVIEW.
 
-### 9.5 Evaluation set (`eval/`), owner Adarsh, tool Antigravity
+### 9.5 Evaluation set (`eval/`), owner Adarsh, QA lane
 
 Goal: **20 before/after pairs**, made Tue evening and Wed morning with a phone. Minimum 12 for MVP.
 
@@ -465,7 +465,7 @@ Common 422 issues to handle with friendly messages: `AUTHORIZATION_EXPIRED`, `AU
 ### 10.6 PayPal Agent Toolkit (agent layer)
 - `npm i @paypal/agent-toolkit`, `import { PayPalAgentToolkit } from '@paypal/agent-toolkit/ai-sdk'`, `new PayPalAgentToolkit({ clientId, clientSecret, configuration: { actions: { orders: { get: true }, refunds: { create: true, get: true }, disputes: { list: true, get: true } } } })` (**verify** the action keys in the package README; the docs example shows `orders: { create, get }`).
 - Tools documented 29 Oct 2026: `create_order`, `get_order`, `pay_order`, `create_refund`, `get_refund`, `list_disputes`, `get_dispute`, `accept_dispute_claim`, invoices, subscriptions, shipment tracking, reporting. **No void or partial capture tool**, so our own typed tools (`capture_partial`, `void_authorization`) wrap §10.3 and sit behind the policy gate.
-- Dev‑time (not runtime): PayPal MCP server (`npx -y @paypal/mcp --tools=all` with `PAYPAL_ENVIRONMENT=SANDBOX`, or remote `https://mcp.sandbox.paypal.com/sse`) and the APIMatic PayPal Context Plugin (`npx context-plugins install paypal`) in Cursor/Claude Code to inspect sandbox objects and get accurate SDK context.
+- Dev‑time (not runtime): PayPal MCP server (`npx -y @paypal/mcp --tools=all` with `PAYPAL_ENVIRONMENT=SANDBOX`, or remote `https://mcp.sandbox.paypal.com/sse`) and the APIMatic PayPal Context Plugin (`npx context-plugins install paypal`) to inspect sandbox objects and get accurate SDK context.
 
 ## 11. Agentic layer: the Settlement Agent (`src/server/agent/`)
 

@@ -28,9 +28,8 @@ The authoritative tree with owners is in **`AGENTS.md` §3**, and the ownership 
 ```
 
 Dependencies (verify latest versions at install time, and don't pin to versions you haven't installed):
-- runtime: `next`, `react`, `react-dom`, `zod`, `ai`, `@ai-sdk/google`, `@ai-sdk/openai`, `@paypal/agent-toolkit`, `@paypal/react-paypal-js`, `drizzle-orm`, `better-sqlite3`, `sharp`, `exifr`, `server-only`, `clsx`, `tailwind-merge`, `lucide-react`
+- runtime: `next`, `react`, `react-dom`, `zod`, `ai`, `@ai-sdk/google`, `@ai-sdk/openai`, `@paypal/agent-toolkit`, `@paypal/react-paypal-js`, `drizzle-orm`, `better-sqlite3`, `sharp`, `exifr`, `server-only`, `clsx`, `tailwind-merge`, `lucide-react`, `ag-grid-react`, `ag-grid-community` (F09 escrow/ledger dashboard, MVP)
 - dev: `typescript`, `@types/node`, `@types/react`, `@types/better-sqlite3`, `drizzle-kit`, `tsx`, `vitest`, `@playwright/test`, `eslint`, `eslint-config-next`, `tailwindcss`, `@tailwindcss/postcss`
-- stretch: `ag-grid-react`, `ag-grid-community` (F09 only)
 
 ## `render.yaml` (proposed; T15 finalises it)
 
