@@ -52,6 +52,8 @@ const EnvSchema = z
     PAYPAL_MOCK: flag(false),
     NEXT_PUBLIC_PAYPAL_MOCK: flag(false),
     PAYOUTS_ENABLED: flag(false),
+    /** Stretch T18: worker payout receiver (PayPal sandbox account email). */
+    WORKER_SANDBOX_EMAIL: optionalString,
     CURRENCY: withDefault("USD").pipe(z.string().regex(/^[A-Z]{3}$/)),
 
     AI_PROVIDER: withDefault("google").pipe(z.enum(["google", "openai"])),

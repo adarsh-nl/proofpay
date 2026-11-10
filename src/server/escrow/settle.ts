@@ -18,6 +18,7 @@ import {
   refundCapture,
   voidAuthorization,
 } from "@/server/paypal/payments";
+import { createPayout } from "@/server/paypal/payouts";
 import { assertCanCapture } from "@/server/agent/policy";
 import { IllegalTransition, transition, type Actor } from "./machine";
 
@@ -71,6 +72,65 @@ function logPayPalCall(
     },
     db,
   );
+}
+
+
+/**
+ * Stretch T18: after a successful capture, pay the worker from the captured
+ * amount when `PAYOUTS_ENABLED=1` (`WORKER_SANDBOX_EMAIL`). A payout failure
+ * never fails the capture: it is logged as a `PAYPAL_CALL` event instead.
+ */
+async function maybePayoutWorker(
+  job: Job,
+  capturedCents: number,
+  currency: string,
+  db: ProofPayDb,
+): Promise<void> {
+  const env = getEnv();
+  if (!env.PAYOUTS_ENABLED) return;
+  const receiverEmail = env.WORKER_SANDBOX_EMAIL;
+  if (!receiverEmail) {
+    console.warn(
+      "[settle] PAYOUTS_ENABLED=1 but WORKER_SANDBOX_EMAIL is empty; skipping the worker payout",
+    );
+    return;
+  }
+  try {
+    const payout = await createPayout({
+      jobId: job.id,
+      amountCents: capturedCents,
+      currency,
+      receiverEmail,
+      attempt: 1,
+      db,
+    });
+    insertEvent(
+      {
+        jobId: job.id,
+        type: "PAYPAL_CALL",
+        actor: "system",
+        data: {
+          op: "payout",
+          ok: true,
+          batchId: payout.batchId,
+          status: payout.status,
+          amountCents: capturedCents,
+          currency,
+        },
+      },
+      db,
+    );
+    console.info(
+      `[settle] worker payout ${payout.batchId} (${payout.status}) for ${job.id}`,
+    );
+  } catch (error) {
+    logPayPalCall(job.id, "payout", error, db);
+    console.error(
+      `[settle] worker payout failed for ${job.id}: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+  }
 }
 
 interface PaymentContext {
@@ -155,6 +215,12 @@ async function capture(
     "CAPTURED",
     actor,
     { kind: amountCents === undefined ? "FULL" : "PARTIAL", captureId, capturedCents },
+    db,
+  );
+  await maybePayoutWorker(
+    job,
+    payment.capturedCents + capturedCents,
+    payment.currency,
     db,
   );
   return {

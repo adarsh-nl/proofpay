@@ -227,7 +227,8 @@ Authoritative list: `.env.example`. Server code reads env **only** through `src/
 | `T_PASS` `T_PARTIAL` `T_CONF` `T_LOW_CONF` `PARTIAL_ROUND_TO` | no | `0.9 0.5 0.75 0.6 0.05` | Decision thresholds |
 | `REVIEWER_PASSCODE` | no | — | Gate for `/reviewer` on the hosted demo |
 | `APP_BASE_URL` | yes | `http://localhost:3000` | |
-| `PAYOUTS_ENABLED` | no | `0` | Stretch T18 |
+| `PAYOUTS_ENABLED` | no | `0` | Stretch T18: after CAPTURED, pay the worker from the captured amount |
+| `WORKER_SANDBOX_EMAIL` | no | — | Stretch T18: PayPal sandbox account email that receives the simulated worker payout |
 | `E2E_BUYER_EMAIL` / `E2E_BUYER_PASSWORD` | e2e only | sandbox personal account | Never commit `.env.local`. The judge-facing sandbox buyer login is only the README "Try it (sandbox)" section (task A07). |
 
 Adding a var: add it to `.env.example` (empty or a safe default + comment), `src/server/env.ts`, and this table, all in the same PR.

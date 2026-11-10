@@ -48,6 +48,16 @@ type MockAuthorization = {
   expirationTime: string;
 };
 
+type MockPayout = {
+  id: string;
+  senderBatchId: string;
+  status: "PENDING";
+  amountCents: number;
+  currency: string;
+  receiver: string;
+  createTime: string;
+};
+
 type MockOrder = {
   id: string;
   status: "CREATED" | "COMPLETED";
@@ -62,6 +72,7 @@ type MockState = {
   orders: Map<string, MockOrder>;
   authorizations: Map<string, MockAuthorization>;
   captures: Map<string, MockCapture>;
+  payouts: Map<string, MockPayout>;
   invoiceIds: Set<string>;
   replays: Map<string, { status: number; body: unknown }>;
 };
@@ -75,6 +86,7 @@ function freshState(): MockState {
     orders: new Map(),
     authorizations: new Map(),
     captures: new Map(),
+    payouts: new Map(),
     invoiceIds: new Set(),
     replays: new Map(),
   };
@@ -373,6 +385,68 @@ function refundCapture(id: string, body: unknown): { status: number; body: unkno
   };
 }
 
+function payoutBody(payout: MockPayout) {
+  return {
+    batch_header: {
+      payout_batch_id: payout.id,
+      batch_status: payout.status,
+      sender_batch_id: payout.senderBatchId,
+      time_created: payout.createTime,
+      amount: amountOf(payout.amountCents, payout.currency),
+    },
+    links: [],
+  };
+}
+
+/** Payouts v1: one EMAIL item per batch (the worker payout, stretch T18). */
+function createPayoutBatch(body: unknown): { status: number; body: unknown } {
+  const payload = isRecord(body) ? body : {};
+  const header = isRecord(payload.sender_batch_header)
+    ? payload.sender_batch_header
+    : undefined;
+  const senderBatchId =
+    header && typeof header.sender_batch_id === 'string'
+      ? header.sender_batch_id
+      : undefined;
+  if (!senderBatchId) {
+    throw invalid('sender_batch_header.sender_batch_id is required');
+  }
+  const items = Array.isArray(payload.items) ? payload.items : undefined;
+  const item: unknown = items?.[0];
+  if (!isRecord(item)) throw invalid('items[0] is required');
+  const receiver = typeof item.receiver === 'string' ? item.receiver.trim() : '';
+  if (!receiver) throw invalid('items[0].receiver is required');
+  // Payouts v1 uses `{ value, currency }` (not the Orders v2 `currency_code`).
+  const rawAmount = isRecord(item.amount) ? item.amount : undefined;
+  const valueText =
+    rawAmount && typeof rawAmount.value === 'string' ? rawAmount.value : undefined;
+  const currencyText =
+    rawAmount && typeof rawAmount.currency === 'string'
+      ? rawAmount.currency
+      : undefined;
+  if (!valueText || !currencyText) {
+    throw invalid('items[0].amount must be { value, currency }');
+  }
+  let cents: number;
+  try {
+    cents = toCents(valueText);
+  } catch {
+    throw invalid('items[0].amount.value must be a decimal string');
+  }
+  if (cents <= 0) throw invalid('items[0].amount.value must be greater than zero');
+  const payout: MockPayout = {
+    id: nextId('MOCK-PAYOUT'),
+    senderBatchId,
+    status: 'PENDING',
+    amountCents: cents,
+    currency: currencyText,
+    receiver,
+    createTime: new Date().toISOString(),
+  };
+  state().payouts.set(payout.id, payout);
+  return { status: 201, body: payoutBody(payout) };
+}
+
 function route(req: MockRequest): { status: number; body: unknown } {
   const method = req.method.toUpperCase();
   const path = req.path.split("?")[0] ?? "";
@@ -406,6 +480,14 @@ function route(req: MockRequest): { status: number; body: unknown } {
   }
   if ((m = /^\/v2\/payments\/captures\/([^/]+)\/refund$/.exec(path)) && method === "POST") {
     return refundCapture(m[1] ?? "", req.body);
+  }
+  if (method === "POST" && path === "/v1/payments/payouts") {
+    return createPayoutBatch(req.body);
+  }
+  if ((m = /^\/v1\/payments\/payouts\/([^/]+)$/.exec(path)) && method === "GET") {
+    const payout = state().payouts.get(m[1] ?? "");
+    if (!payout) throw notFound("payout");
+    return { status: 200, body: payoutBody(payout) };
   }
   throw new MockHttpError(
     404,
