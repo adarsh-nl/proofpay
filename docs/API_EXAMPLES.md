@@ -118,4 +118,14 @@ curl -s -X POST $BASE/api/jobs/$JOB/refund -b pp_role=reviewer -H 'content-type:
   -d '{"amount":{"currency":"USD","value":"10.00"},"reason":"Goodwill refund"}'
 ```
 
-Routes 10 (`POST /api/jobs/:id/verify`), 16 (`reauthorize`), 18 (`agent/evidence-pack`) and 19 (`webhooks/paypal`) are added by tasks T13, T17, T14 and T16.
+```bash
+# 18. Evidence pack (reviewer) → {"markdown":"# ProofPay evidence pack: ..."}
+#     Job, checklist, AI verdicts with boxes, forensics, photos, timeline, PayPal ids and the order
+#     status read with the PayPal Agent Toolkit `get_order` tool (the mock order when PAYPAL_MOCK=1).
+curl -s -X POST $BASE/api/jobs/$JOB/agent/evidence-pack -b pp_role=reviewer -H 'content-type: application/json' -d '{}'
+
+# 10. Re-run verification (reviewer) → {"verification":{...},"job":{...}}
+curl -s -X POST $BASE/api/jobs/$JOB/verify -b pp_role=reviewer -H 'content-type: application/json' -d '{"force":true}'
+```
+
+Routes 16 (`reauthorize`) and 19 (`webhooks/paypal`) are stretch tasks (T17, T16).

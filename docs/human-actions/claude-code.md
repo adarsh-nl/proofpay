@@ -4,11 +4,14 @@
 - [ ] **T03 smoke test**: put real sandbox credentials in `.env.local`, then run `npx tsx scripts/paypal-smoke.ts` → expected: `PayPal sandbox token OK (expires in ~Ns)` (the token itself is never printed).
 - [ ] **T04 real order + authorize**: with real credentials, create a job, run `POST /api/paypal/orders` (or `POST /api/paypal/orders` via curl), approve the order in the sandbox buyer account, then call `POST /api/paypal/orders/:orderId/authorize` → expected: job status `AUTHORIZED`, a 4-digit liveness code, payment row with `authorizationId`, `authorizationStatus` and `expiresAt`. Paste the order id + authorization id into the T04 PR.
 - [ ] **T05 partial-capture remainder**: run `npx tsx scripts/paypal-partial-capture-experiment.ts` with real credentials (approve the $100 order in the browser when prompted). It captures $80 with `final_capture:true`, GETs the authorization and tries a void. Record the observed lines in the verification log of `docs/REFERENCES.md` (is the remaining $20 released? does void return `CANNOT_BE_VOIDED`?). The code currently assumes the authorization reports `CAPTURED` and that the remainder is released.
+- [ ] **T14 settlement agent with a real model**: set `VISION_MOCK=0`, an AI key and `LLM_MODEL`, run the cleaning demo job to PARTIAL and read the latest `AGENT_MESSAGE` event → expected: `model` is the model id (not `template`), the explanation cites criterion ids, `captureAmount` is at most the decision amount. Not run: no AI key on the build machine.
+- [ ] **T14 PayPal Agent Toolkit `get_order`**: with real sandbox credentials and `PAYPAL_MOCK=0`, call `POST /api/jobs/<id>/agent/evidence-pack` as reviewer for an authorized job → expected: the "Order status (PayPal Agent Toolkit `get_order`)" line shows the real order status, not `UNAVAILABLE`. Not run: no credentials. The toolkit is created with `context.sandbox: true` (it defaults to the live API); its sandbox base URL is `https://api.sandbox.paypal.com`.
 - [ ] **T15 Render deploy**: create the Render blueprint, set the secret env vars, deploy, then run the happy path on the hosted URL. The README "Hosted demo" line needs the final URL.
 - [ ] **T16/T17/T18 (stretch, only if reached)**: webhooks/disputes/payouts need real sandbox features enabled + a public URL.
 
 ## CROSS-OWNER REQUESTS
-- [ ] (none yet)
+- [ ] `src/lib/api-client.ts` `listEvidence(jobId): Promise<EvidenceItem[]>` calling `GET /api/jobs/:id/evidence` (owner: Frontend lane), why: image ids `B1..Bn` / `A1..An` follow upload order per phase, and file names can have gaps after a photo is deleted.
+- [ ] Settlement panel (owner: Frontend lane): the proposal is at the top level of the latest `AGENT_MESSAGE` event data and also under `data.proposal`; `proposalId` is stable per verification.
 
 ## GATE-TIMEOUTS / MERGE-NEEDED / BUGS FOUND
 - [ ] (none yet)
