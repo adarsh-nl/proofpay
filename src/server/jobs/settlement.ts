@@ -8,6 +8,7 @@ import {
 } from "@/shared/contracts";
 import { toCents } from "@/shared/money";
 import { getDb, type ProofPayDb } from "@/server/db/client";
+import { assertCanRefund } from "@/server/agent/policy";
 import { insertEvent } from "@/server/db/repo";
 import { IllegalTransition, transition, type Actor } from "@/server/escrow/machine";
 import { settle } from "@/server/escrow/settle";
@@ -32,8 +33,12 @@ export function findLatestProposal(job: Job): SettlementProposal | undefined {
   for (let index = job.events.length - 1; index >= 0; index -= 1) {
     const event = job.events[index];
     if (event?.type !== "AGENT_MESSAGE") continue;
-    const parsed = SettlementProposalSchema.safeParse(event.data);
-    if (parsed.success) return parsed.data;
+    const data: unknown = event.data;
+    const nested = typeof data === "object" && data !== null ? (data as { proposal?: unknown }).proposal : undefined;
+    for (const candidate of [data, nested]) {
+      const parsed = SettlementProposalSchema.safeParse(candidate);
+      if (parsed.success) return parsed.data;
+    }
   }
   return undefined;
 }
@@ -175,5 +180,6 @@ export async function refundJob(
     },
     db,
   );
+  assertCanRefund(jobId, db);
   return (await settle(jobId, { kind: "REFUND", amountCents, actor: "reviewer" }, db)).job;
 }

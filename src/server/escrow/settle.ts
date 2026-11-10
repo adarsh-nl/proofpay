@@ -18,6 +18,7 @@ import {
   refundCapture,
   voidAuthorization,
 } from "@/server/paypal/payments";
+import { assertCanCapture } from "@/server/agent/policy";
 import { IllegalTransition, transition, type Actor } from "./machine";
 
 /**
@@ -116,6 +117,8 @@ async function capture(
   actor: Actor,
   db: ProofPayDb,
 ): Promise<SettleResult> {
+  // Policy gate: no capture without the required approval (src/server/agent/policy.ts).
+  assertCanCapture(job.id, amountCents ?? payment.authorizedCents, db);
   const invoiceId = `${job.id}-${payment.captureIds.length + 1}`;
   let captureId: string;
   let capturedCents: number;

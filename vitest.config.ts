@@ -4,6 +4,9 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   test: {
     environment: "node",
+    // Several agents and CI share the machine; module imports alone can take seconds.
+    testTimeout: 30_000,
+    hookTimeout: 30_000,
     include: ["tests/unit/**/*.test.ts"],
   },
   resolve: {
