@@ -5,6 +5,7 @@ import { getDb, type ProofPayDb } from "@/server/db/client";
 import { createJob, getJob, replaceCriteria } from "@/server/db/repo";
 import { getEnv } from "@/server/env";
 import { ConflictError, NotFoundError, ValidationError } from "@/server/http/errors";
+import { generateCriteria } from "@/server/vision/criteria";
 import { buildTemplateCriteria } from "@/server/vision/criteria-templates";
 
 export const LIVENESS_CRITERION_ID = "cL";
@@ -37,12 +38,23 @@ export async function createJobFromBody(
   body: CreateJobBody,
   db: ProofPayDb = getDb(),
 ): Promise<Job> {
-  const currency = getEnv().CURRENCY;
+  const env = getEnv();
+  const currency = env.CURRENCY;
   if (body.amount.currency !== currency) {
     throw new ValidationError(`Amounts must be in ${currency}.`, "CURRENCY_NOT_SUPPORTED");
   }
-  // TODO(T08): swap for generateCriteria(job), which falls back to these templates.
-  const criteria = buildTemplateCriteria(body.category);
+  // Falls back to the category templates on mock mode, timeout or any AI error.
+  const criteria = await generateCriteria(
+    {
+      title: body.title,
+      description: body.description,
+      category: body.category,
+      amount: body.amount,
+      customerName: body.customerName,
+      workerName: body.workerName,
+    },
+    { mock: env.VISION_MOCK },
+  );
   const job = createJob(
     {
       title: body.title,
