@@ -5,7 +5,7 @@ import { syntheticImage, reencodeJpeg, resizeJpeg } from '../../fixtures/synthet
 
 // Image-heavy tests spin up sharp/jpeg encoders; under the full suite's parallel
 // workers the default 5 s per-test budget is too tight on CI.
-vi.setConfig({ testTimeout: 30_000, hookTimeout: 30_000 });
+vi.setConfig({ testTimeout: 120_000, hookTimeout: 120_000 });
 
 /**
  * dHash properties (prompt contract C10): a q60 re-encode or a resize of the same

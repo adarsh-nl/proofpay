@@ -1,5 +1,9 @@
 import sharp from 'sharp';
 
+// Unit-test images are generated in many parallel vitest workers; keep each sharp
+// instance single-threaded so the machine does not thrash under CPU contention.
+sharp.concurrency(1);
+
 /**
  * Synthetic test-image generator (prompt contract C10).
  *
@@ -58,6 +62,8 @@ function blockPattern(seed: number): Buffer {
   return raw;
 }
 
+const imageCache = new Map<string, Promise<Buffer>>();
+
 /** Generate a synthetic JPEG (default 800x600, q90, "SYNTHETIC TEST IMAGE <seed>" overlay). */
 export async function syntheticImage(
   seed: number,
@@ -66,6 +72,20 @@ export async function syntheticImage(
   const width = options.width ?? 800;
   const height = options.height ?? 600;
   const quality = options.quality ?? 90;
+  const cacheKey = `${seed}:${width}:${height}:${quality}`;
+  const cached = imageCache.get(cacheKey);
+  if (cached) return cached;
+  const generated = generateSyntheticImage(seed, width, height, quality);
+  imageCache.set(cacheKey, generated);
+  return generated;
+}
+
+async function generateSyntheticImage(
+  seed: number,
+  width: number,
+  height: number,
+  quality: number,
+): Promise<Buffer> {
 
   const pattern = blockPattern(seed);
   const base = await sharp(pattern, {
