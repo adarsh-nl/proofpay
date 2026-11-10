@@ -2,6 +2,7 @@ import { ArrowRight, Camera, CheckCircle2, Package, ShieldCheck, Sparkles, Users
 import Link from 'next/link';
 import { Suspense } from 'react';
 
+import { MyJobsList, MyJobsListSkeleton } from '@/components/job/MyJobsList';
 import { RoleSetter } from '@/components/layout/RoleSetter';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -56,6 +57,8 @@ const ROLES = [
     cta: 'Start as reviewer',
   },
 ] as const;
+
+export const dynamic = 'force-dynamic';
 
 export default function LandingPage() {
   return (
@@ -169,6 +172,10 @@ export default function LandingPage() {
           ))}
         </div>
       </section>
+
+      <Suspense fallback={<MyJobsListSkeleton />}>
+        <MyJobsList />
+      </Suspense>
     </div>
   );
 }

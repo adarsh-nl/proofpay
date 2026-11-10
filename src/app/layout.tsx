@@ -13,14 +13,38 @@ import './globals.css';
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
+const DESCRIPTION =
+  'ProofPay holds a payment with PayPal and only releases it when AI checks the before/after photos against the acceptance criteria. Human approval for every partial payment.';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.APP_BASE_URL ?? 'http://localhost:3000'),
   title: {
     default: 'ProofPay — vision-verified escrow on PayPal',
     template: '%s · ProofPay',
   },
-  description:
-    'ProofPay holds a payment with PayPal and only releases it when AI checks the before/after photos against the acceptance criteria. Human approval for every partial payment.',
+  description: DESCRIPTION,
   applicationName: 'ProofPay',
+  openGraph: {
+    type: 'website',
+    siteName: 'ProofPay',
+    title: 'ProofPay — vision-verified escrow on PayPal',
+    description: DESCRIPTION,
+    url: '/',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'ProofPay — money moves when the camera says the job is done.',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ProofPay — vision-verified escrow on PayPal',
+    description: DESCRIPTION,
+    images: ['/og-image.png'],
+  },
 };
 
 export default async function RootLayout({
