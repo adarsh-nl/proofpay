@@ -138,4 +138,13 @@ curl -s -X POST $BASE/api/jobs/$JOB/verify -b pp_role=reviewer -H 'content-type:
 curl -s -X POST $BASE/api/dev/reset -b pp_role=reviewer
 ```
 
-Routes 16 (`reauthorize`) and 19 (`webhooks/paypal`) are stretch tasks (T17, T16).
+## Reauthorize (reviewer)
+
+```bash
+# 16. Restart the 3-day honor period with a new PayPal authorization → {"job":{...}}
+#     The job status does not change; payment.authorizationId and honorPeriodEndsAt do.
+#     PayPal refuses this while the honor period is still running: 409 with PayPal's issue as error.code.
+curl -s -X POST $BASE/api/jobs/$JOB/reauthorize -b pp_role=reviewer -H 'content-type: application/json' -d '{}'
+```
+
+Route 19 (`webhooks/paypal`) is a stretch task (T16).
