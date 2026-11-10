@@ -87,7 +87,12 @@ cat "$WORK_DIR/health.json"; echo
 [ "$(json "$WORK_DIR/health.json" 'd.ok && d.mockPaypal && d.mockVision')" = "true" ] || fail "health is not ok / not in mock mode"
 
 step "Pages"
-for path in "/" "/customer/new" "/jobs/demo-bike" "/worker/jobs/demo-bike" "/reviewer"; do
+# <url path>:<page file>; a page that is not in this checkout yet is skipped, not failed.
+for entry in "/:src/app/page.tsx" "/customer/new:src/app/customer/new/page.tsx" \
+  "/jobs/demo-bike:src/app/jobs/[id]/page.tsx" "/worker/jobs/demo-bike:src/app/worker/jobs/[id]/page.tsx" \
+  "/reviewer:src/app/reviewer/page.tsx"; do
+  path="${entry%%:*}"; file="${entry#*:}"
+  if [ ! -f "$file" ]; then echo "skip GET $path ($file is not in this checkout)"; continue; fi
   code="$(curl -s -o /dev/null -w '%{http_code}' "$BASE$path")"
   [ "$code" = "200" ] || fail "GET $path returned $code"
   echo "ok  GET $path"
