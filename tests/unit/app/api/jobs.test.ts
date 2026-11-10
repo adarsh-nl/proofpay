@@ -373,3 +373,38 @@ describe("POST /api/role", () => {
     expect(res.status).toBe(400);
   });
 });
+
+describe("photo numbering after a delete", () => {
+  it("renumbers files at submit so A1..An match upload order", async () => {
+    const job = await authorizedJob();
+    const { evidence } = await jsonOf<{ evidence: EvidenceItem[] }>(
+      await upload(job.id, "after", [await image(1), await image(2), await image(3)]),
+    );
+    await upload(job.id, "before", [await image(4)]);
+    const second = await sharp(
+      Buffer.from(await (await getUpload(apiRequest("/x"), params({ jobId: job.id, file: "after_2.jpg" }))).arrayBuffer()),
+    ).stats();
+    await deleteEvidence(
+      apiRequest("/x", { method: "DELETE", role: "worker" }),
+      params({ id: job.id, evidenceId: evidence[0]?.id ?? "" }),
+    );
+    const res = await submit(apiRequest("/x", { role: "worker", body: {} }), params({ id: job.id }));
+    expect(res.status).toBe(202);
+
+    const listed = await jsonOf<{ evidence: EvidenceItem[] }>(
+      await listEvidenceRoute(apiRequest("/x"), params({ id: job.id })),
+    );
+    expect(listed.evidence.filter((e) => e.phase === "after").map((e) => e.url)).toEqual([
+      `/api/uploads/${job.id}/after_1.jpg`,
+      `/api/uploads/${job.id}/after_2.jpg`,
+    ]);
+    expect(listed.evidence.filter((e) => e.phase === "after").map((e) => e.id)).toEqual([evidence[1]?.id, evidence[2]?.id]);
+    const first = await getUpload(apiRequest("/x"), params({ jobId: job.id, file: "after_1.jpg" }));
+    expect(first.status).toBe(200);
+    // after_1.jpg is now the photo that was uploaded second.
+    const stats = await sharp(Buffer.from(await first.arrayBuffer())).stats();
+    expect(stats.channels[0]?.mean).toBeCloseTo(second.channels[0]?.mean ?? -1, 0);
+    expect((await getUpload(apiRequest("/x"), params({ jobId: job.id, file: "after_3.jpg" }))).status).toBe(404);
+    expect((await getUpload(apiRequest("/x"), params({ jobId: job.id, file: "before_1.jpg" }))).status).toBe(200);
+  });
+});

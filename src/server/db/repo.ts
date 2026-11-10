@@ -529,6 +529,15 @@ export function listEvidenceRows(
     .all();
 }
 
+/** Point an evidence row at a renamed file (`path` is relative to UPLOAD_DIR). */
+export function updateEvidencePath(
+  evidenceId: string,
+  path: string,
+  db: ProofPayDb = getDb(),
+): void {
+  db.update(t.evidence).set({ path }).where(eq(t.evidence.id, evidenceId)).run();
+}
+
 export function getEvidenceRowBySha(
   sha256: string,
   db: ProofPayDb = getDb(),

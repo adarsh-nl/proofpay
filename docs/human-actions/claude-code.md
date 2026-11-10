@@ -17,5 +17,8 @@
 - [ ] `src/lib/api-client.ts` `listEvidence(jobId): Promise<EvidenceItem[]>` calling `GET /api/jobs/:id/evidence` (owner: Frontend lane), why: image ids `B1..Bn` / `A1..An` follow upload order per phase, and file names can have gaps after a photo is deleted.
 - [ ] Settlement panel (owner: Frontend lane): the proposal is at the top level of the latest `AGENT_MESSAGE` event data and also under `data.proposal`; `proposalId` is stable per verification.
 
+- [ ] `src/lib/boxes.ts` `evidenceImageUrl(jobId, imageId)` (owner: Frontend lane), why: it maps `A1` to `after_1.jpg` by position. The backend now renumbers files at submit so this holds, but before submit (worker page) a deleted photo can leave a gap; use `EvidenceItem.url` from `api.listEvidence(jobId)` there. No change needed for the verification view.
+- [ ] Reviewer pages (owner: Frontend lane), why: `/reviewer` was not on `main` during the bugbash (F07 open), so the reviewer flow was checked through the API only (`reviewQueue`, `evidencePack`, `review`). Re-run `npx tsx scripts/api-smoke.ts <base-url>` and click through `/reviewer` once F07 merges.
+
 ## GATE-TIMEOUTS / MERGE-NEEDED / BUGS FOUND
-- [ ] (none yet)
+- [x] BUGBASH (fixed): after a worker deleted a photo, the remaining files kept their numbers, so the viewer loaded `after_1.jpg` for image `A1` and got a 404 or the wrong photo. Files are renumbered at submit (`compactEvidenceFiles`).
