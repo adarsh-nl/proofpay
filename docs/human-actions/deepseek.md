@@ -6,8 +6,8 @@
 - [ ] **T11/A02**: once real photos + an AI key exist, run `npm run eval -- --record` to write `eval/fixtures/<sha256 of first after image>.json` for each pair and commit those fixtures, so `VISION_MOCK=1` demos replay real model outputs (C6 step 1). Until then the mock falls back to the deterministic per-category report.
 
 ## CROSS-OWNER REQUESTS
-- [ ] T07 (Backend lane): in the evidence-upload route, map `IngestError` from `ingestImage` (codes `INVALID_IMAGE` / `UNSUPPORTED_FORMAT`) to HTTP 400 with the error message — it is already user-friendly ("Upload a JPEG, PNG or WebP image (HEIC is not supported yet).").
-- [ ] T13 (Backend lane): pass `authorizedAt` to `runForensics` (derive it from the `STATUS_CHANGED` event with `toStatus = AUTHORIZED` in `job.events`, fallback `payments.authorizationExpiresAt − 29 days`) and pass `firstAfterSha256 = evidence[0].sha256` to `verifyEvidence` so recorded fixtures replay correctly.
+- [x] ~~T07: map `IngestError` (`INVALID_IMAGE` / `UNSUPPORTED_FORMAT`) to HTTP 400 in the evidence-upload route~~ — done on main: `src/server/http/with-errors.ts` (T07) handles `IngestError`, and `src/server/jobs/evidence.ts` maps the codes.
+- [x] ~~T13: pass `authorizedAt` to `runForensics` and `firstAfterSha256` to `verifyEvidence`~~ — done on main: `src/server/vision/orchestrator.ts` derives `authorizedAt` from the `STATUS_CHANGED → AUTHORIZED` event and passes `afterRows[0].sha256` as `firstAfterSha256`.
 
 ## GATE-TIMEOUTS / MERGE-NEEDED / BUGS FOUND
-- (none yet)
+- (none)
