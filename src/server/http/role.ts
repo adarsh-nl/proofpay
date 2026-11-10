@@ -1,5 +1,7 @@
 import "server-only";
+import { timingSafeEqual } from "node:crypto";
 import { RoleSchema, type Role } from "@/shared/contracts";
+import { getEnv } from "@/server/env";
 import { PolicyError } from "./errors";
 
 export const ROLE_COOKIE = "pp_role";
@@ -36,6 +38,33 @@ export function requireRole(req: Request, ...roles: Role[]): Role {
       "FORBIDDEN_ROLE",
       { required: roles, actual: role ?? null },
     );
+  }
+  return role;
+}
+
+export const REVIEWER_PASSCODE_HEADER = "x-reviewer-passcode";
+
+function sameSecret(a: string, b: string): boolean {
+  const left = Buffer.from(a);
+  const right = Buffer.from(b);
+  return left.length === right.length && timingSafeEqual(left, right);
+}
+
+/**
+ * Reviewer role, plus the `x-reviewer-passcode` header when `REVIEWER_PASSCODE`
+ * is set (hosted demo gate, C8).
+ */
+export function requireReviewer(req: Request): Role {
+  const role = requireRole(req, "reviewer");
+  const passcode = getEnv().REVIEWER_PASSCODE;
+  if (passcode) {
+    const given = req.headers.get(REVIEWER_PASSCODE_HEADER) ?? "";
+    if (!sameSecret(given, passcode)) {
+      throw new PolicyError(
+        "Reviewer passcode required. Enter the passcode to use the reviewer console.",
+        "REVIEWER_PASSCODE_REQUIRED",
+      );
+    }
   }
   return role;
 }
