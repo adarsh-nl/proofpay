@@ -43,4 +43,4 @@ Checked on **Tue 10 Nov 2026 (~13:15–13:30 CET)** unless noted. "Verify" means
 ## Verification log (append here)
 | Date/time (CET) | Who | What was verified | Result |
 |---|---|---|---|
-| | | | |
+| 2026-11-10 15:25 CET | Backend lane | T05 partial-capture behaviour: `final_capture:true` on an 80% capture — is the remainder released, and what does a following void return? Script: `scripts/paypal-partial-capture-experiment.ts`. | **LIVE-VERIFY (not run)** — no sandbox credentials on the agent machine. Automated tests use the in-memory mock (C7 assumption: authorization reports `CAPTURED` after a final partial capture, remainder released). Human: run the script and append the observed `[5] [6] [7]` lines here. |
