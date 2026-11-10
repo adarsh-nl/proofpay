@@ -206,8 +206,8 @@ Authoritative list: `.env.example`. Server code reads env **only** through `src/
 |---|---|---|---|
 | `PAYPAL_ENV` | yes | `sandbox` | Must be `sandbox`; the code refuses `live` |
 | `PAYPAL_API_BASE` | yes | `https://api-m.sandbox.paypal.com` | |
-| `PAYPAL_CLIENT_ID` | yes (unless `PAYPAL_MOCK=1`) | — | Sandbox app |
-| `PAYPAL_CLIENT_SECRET` | yes (unless `PAYPAL_MOCK=1`) | — | **Secret, server only** |
+| `PAYPAL_CLIENT_ID` | yes (not needed in PayPal mock mode) | — | Sandbox app |
+| `PAYPAL_CLIENT_SECRET` | yes (not needed in PayPal mock mode) | — | **Secret, server only** |
 | `NEXT_PUBLIC_PAYPAL_CLIENT_ID` | yes | same as client id | Public by design |
 | `PAYPAL_WEBHOOK_ID` | stretch | — | From Dashboard → app → Webhooks |
 | `CURRENCY` | yes | `USD` | |
