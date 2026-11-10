@@ -2,7 +2,7 @@ import "server-only";
 import type { CreateJobBody, Criterion, Job } from "@/shared/contracts";
 import { toCents } from "@/shared/money";
 import { getDb, type ProofPayDb } from "@/server/db/client";
-import { createJob, getJob, insertEvent, replaceCriteria } from "@/server/db/repo";
+import { createJob, getJob, replaceCriteria } from "@/server/db/repo";
 import { getEnv } from "@/server/env";
 import { ConflictError, NotFoundError, ValidationError } from "@/server/http/errors";
 import { buildTemplateCriteria } from "@/server/vision/criteria-templates";
@@ -56,11 +56,7 @@ export async function createJobFromBody(
     },
     db,
   );
-  insertEvent(
-    { jobId: job.id, type: "STATUS_CHANGED", toStatus: "CREATED", actor: "customer", data: {} },
-    db,
-  );
-  return requireJob(job.id, db);
+  return job;
 }
 
 /**
