@@ -51,6 +51,29 @@ export async function gotoWithRetry(page: Page, url: string, attempts = 3): Prom
   }
 }
 
+/**
+ * Put the app back to the three seeded demo jobs (no payments, no photos) through
+ * `POST /api/dev/reset`. Every spec file calls this in `beforeAll`, so the files do not
+ * depend on the order they run in: without it, a spec that settles `demo-cleaning` or
+ * leaves photos behind makes the next spec fail (job no longer CREATED, duplicate photo).
+ *
+ * The route only exists when the server runs with `DEMO_RESET_ENABLED=1` (the managed
+ * e2e server sets it). Against a server without it (for example the hosted demo) the
+ * route answers 404 and the reset is skipped.
+ */
+export async function resetDemoData(request: APIRequestContext): Promise<boolean> {
+  const passcode = process.env.REVIEWER_PASSCODE;
+  const response = await request.post('/api/dev/reset', {
+    headers: {
+      cookie: 'pp_role=reviewer',
+      ...(passcode ? { 'x-reviewer-passcode': passcode } : {}),
+    },
+  });
+  if (response.status() === 404) return false;
+  expect(response.ok(), `POST /api/dev/reset -> ${response.status()}`).toBeTruthy();
+  return true;
+}
+
 /** The current job id from a `/jobs/<id>` URL. */
 export function jobIdFromUrl(page: Page): string {
   const match = page.url().match(/\/jobs\/([^/?#]+)/);

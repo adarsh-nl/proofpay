@@ -9,9 +9,14 @@
  */
 import { expect, test } from '@playwright/test';
 
-import { fetchJob } from './helpers/api';
+import { fetchJob, resetDemoData } from './helpers/api';
 import { authorizeJobWithMock, DEMO_CLEANING, openJob, uploadEvidenceAndSubmit } from './helpers/flow';
 import { PARTIAL_AFTER_IMAGE, PARTIAL_BEFORE_IMAGE } from './helpers/images';
+
+// Start from the three seeded demo jobs, whatever ran before this file.
+test.beforeAll(async ({ request }) => {
+  await resetDemoData(request);
+});
 
 test.describe('partial settlement path (demo-cleaning)', () => {
   test('PARTIAL proposal 80% -> customer accepts -> CAPTURED $96.00 of $120.00', async ({ page, request }) => {
