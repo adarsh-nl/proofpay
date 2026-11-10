@@ -1,0 +1,67 @@
+{
+  "id": "demo-bike",
+  "title": "Replace bike chain",
+  "description": "The chain on my commuter bike is worn out. Replace it with a new chain and check the tension and lubrication.",
+  "category": "bike_repair",
+  "amount": { "currency": "USD", "value": "60.00" },
+  "status": "CREATED",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "Chain is new/clean and fully seated on the sprockets",
+      "howToVerify": "Look at the chain: it should be clean and new-looking, with every link seated on the front and rear sprocket teeth. Rust or a loose chain fails.",
+      "required": true,
+      "weight": 0.35,
+      "phase": "after",
+      "source": "llm"
+    },
+    {
+      "id": "c2",
+      "label": "Chain tension looks correct (no excessive sag)",
+      "howToVerify": "The lower run of the chain should be tight with only a small amount of play. A hanging or drooping chain fails.",
+      "required": true,
+      "weight": 0.25,
+      "phase": "after",
+      "source": "llm"
+    },
+    {
+      "id": "c3",
+      "label": "Drivetrain is lubricated without excess oil",
+      "howToVerify": "The chain should look lightly oiled, not dripping or dry. Visible thick globs of oil fail.",
+      "required": false,
+      "weight": 0.2,
+      "phase": "after",
+      "source": "llm"
+    },
+    {
+      "id": "c4",
+      "label": "Work area and bike left tidy",
+      "howToVerify": "No tools, packaging or dirty rags left around the bike.",
+      "required": false,
+      "weight": 0.2,
+      "phase": "after",
+      "source": "llm"
+    },
+    {
+      "id": "cL",
+      "label": "Liveness code {CODE} visible in at least one after photo (written on paper or shown on a phone screen)",
+      "howToVerify": "Look for a handwritten or phone-displayed 4 digit code in the after photos and read it.",
+      "required": true,
+      "weight": 0,
+      "phase": "after",
+      "source": "system"
+    }
+  ],
+  "events": [
+    {
+      "id": 1,
+      "type": "STATUS_CHANGED",
+      "toStatus": "CREATED",
+      "actor": "customer",
+      "data": null,
+      "createdAt": "2026-11-10T09:12:00.000Z"
+    }
+  ],
+  "createdAt": "2026-11-10T09:12:00.000Z",
+  "updatedAt": "2026-11-10T09:12:00.000Z"
+}
