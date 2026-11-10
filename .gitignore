@@ -16,3 +16,6 @@ docs/recordings/
 .vercel
 .render
 npm-debug.log*
+
+# typescript
+*.tsbuildinfo

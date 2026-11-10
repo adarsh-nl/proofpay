@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      VISION_MOCK: "1"
+      PAYPAL_MOCK: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+
+      # docs/MANUAL.md §14: no secrets in the tree. The pattern is assembled
+      # from fragments so this workflow file does not match itself.
+      - name: Secret scan
+        run: |
+          set -euo pipefail
+          SECRET_PATTERN="(PAYPAL_CLIENT""_SECRET|s""k-|AI""za)[^=]*="
+          MATCHES="$(git grep -nE "$SECRET_PATTERN" -- . \
+            ':!docs' ':!README.md' ':!.env.example' ':!package-lock.json' ':!.github' || true)"
+          if [ -n "$MATCHES" ]; then
+            echo "Potential secret found:"
+            echo "$MATCHES"
+            exit 1
+          fi
+          echo "No secrets found."
