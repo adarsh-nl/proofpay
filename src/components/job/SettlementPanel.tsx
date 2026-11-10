@@ -23,8 +23,18 @@ function latestProposal(job: Job): SettlementProposal | undefined {
   for (let index = job.events.length - 1; index >= 0; index -= 1) {
     const event = job.events[index];
     if (event?.type !== 'AGENT_MESSAGE') continue;
-    const parsed = SettlementProposalSchema.safeParse(event.data);
-    if (parsed.success) return parsed.data;
+    // The settlement agent stores `{ proposal, explanation, model }` in the event
+    // data; the backend's findLatestProposal unwraps the same way. Accept both the
+    // nested and the bare settlement-proposal payload shapes (MANUAL §8).
+    const data: unknown = event.data;
+    const nested =
+      typeof data === 'object' && data !== null
+        ? (data as { proposal?: unknown }).proposal
+        : undefined;
+    for (const candidate of [data, nested]) {
+      const parsed = SettlementProposalSchema.safeParse(candidate);
+      if (parsed.success) return parsed.data;
+    }
   }
   return undefined;
 }
