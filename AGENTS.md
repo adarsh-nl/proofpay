@@ -206,11 +206,13 @@ Authoritative list: `.env.example`. Server code reads env **only** through `src/
 |---|---|---|---|
 | `PAYPAL_ENV` | yes | `sandbox` | Must be `sandbox`; the code refuses `live` |
 | `PAYPAL_API_BASE` | yes | `https://api-m.sandbox.paypal.com` | |
-| `PAYPAL_CLIENT_ID` | yes | — | Sandbox app |
-| `PAYPAL_CLIENT_SECRET` | yes | — | **Secret, server only** |
+| `PAYPAL_CLIENT_ID` | yes (unless `PAYPAL_MOCK=1`) | — | Sandbox app |
+| `PAYPAL_CLIENT_SECRET` | yes (unless `PAYPAL_MOCK=1`) | — | **Secret, server only** |
 | `NEXT_PUBLIC_PAYPAL_CLIENT_ID` | yes | same as client id | Public by design |
 | `PAYPAL_WEBHOOK_ID` | stretch | — | From Dashboard → app → Webhooks |
 | `CURRENCY` | yes | `USD` | |
+| `PAYPAL_MOCK` | no | `0` | `1` = PayPal calls are served by the in-memory fake in `src/server/paypal/mock.ts` (no network, no credentials). Tests, e2e and CI use `1` |
+| `NEXT_PUBLIC_PAYPAL_MOCK` | no | `0` | `1` = the job page shows a "Simulate PayPal approval (mock)" button instead of the PayPal JS buttons |
 | `AI_PROVIDER` | yes | `google` \| `openai` | |
 | `GOOGLE_GENERATIVE_AI_API_KEY` | if google | — | AI SDK default env name (verify) |
 | `OPENAI_API_KEY` | if openai | — | |
