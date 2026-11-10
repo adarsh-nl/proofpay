@@ -6,7 +6,6 @@ import type {
   Decision,
   ForensicsReport,
   Job,
-  PaymentSummary,
   VerificationBundle,
   VerificationReport,
 } from "@/shared/contracts";
@@ -15,7 +14,6 @@ import { runSettlementAgent } from "@/server/agent/settlement-agent";
 import { getDb, type ProofPayDb } from "@/server/db/client";
 import {
   getJob,
-  getPayment,
   insertVerification,
   listEvidenceRows,
   listVerifications,
@@ -42,9 +40,6 @@ import { verifyEvidence, type VerifyImage } from "./verify";
  * - APPROVED auto-captures via `onApproved()` when `AUTO_CAPTURE_ON_APPROVE=1`.
  */
 
-const AUTHORIZATION_VALID_MS = 29 * 24 * 60 * 60 * 1000;
-const DEFAULT_STOCK_DIR = "eval/stock";
-
 export interface RunVerificationDeps {
   /** Test seam: replace the VLM call (e.g. to simulate a VLM failure). */
   verifier?: typeof verifyEvidence;
@@ -66,14 +61,12 @@ export interface VerificationOutcome {
   decision: Decision;
 }
 
-/** Authorization time ≈ expiration_time − 29 days (PROOFPAY hold period). */
-export function authorizedAtFromPayment(
-  payment: PaymentSummary | undefined,
-): string | null {
-  if (!payment?.expiresAt) return null;
-  const expiresAt = Date.parse(payment.expiresAt);
-  if (!Number.isFinite(expiresAt)) return null;
-  return new Date(expiresAt - AUTHORIZATION_VALID_MS).toISOString();
+/** Authorization time from the job timeline (`STATUS_CHANGED` → AUTHORIZED). */
+export function authorizedAtFromJob(job: Job): string | null {
+  const event = job.events.find(
+    (item) => item.type === "STATUS_CHANGED" && item.toStatus === "AUTHORIZED",
+  );
+  return event?.createdAt ?? null;
 }
 
 function toForensicsEvidence(row: EvidenceRow): ForensicsEvidence {
@@ -162,7 +155,9 @@ export async function runVerification(
 
   const verifier = options.verifier ?? verifyEvidence;
   const uploadDir = resolve(process.cwd(), options.uploadDir ?? env.UPLOAD_DIR);
-  const stockDir = resolve(process.cwd(), options.stockDir ?? DEFAULT_STOCK_DIR);
+  const stockDir = options.stockDir
+    ? resolve(process.cwd(), options.stockDir)
+    : undefined;
 
   let verification: VerificationBundle;
   let decision: Decision;
@@ -195,7 +190,7 @@ export async function runVerification(
       evidence: evidenceRows.map(toForensicsEvidence),
       otherEvidence: otherRows.map(toForensicsEvidence),
       stock,
-      authorizedAt: authorizedAtFromPayment(getPayment(jobId, db)),
+      authorizedAt: authorizedAtFromJob(job),
       vlmReport: report,
     });
 

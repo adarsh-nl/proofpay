@@ -1,7 +1,6 @@
 import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
-import { mkdir as mkdirSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import sharp from "sharp";
 import type { JobCategory } from "@/shared/contracts";
@@ -30,6 +29,7 @@ let db: ProofPayDb;
 let tmpRoot: string;
 let uploadDir: string;
 let sequence = 0;
+let jobCounter = 0;
 
 async function makeJpeg(color: { r: number; g: number; b: number }) {
   return sharp({
@@ -50,7 +50,7 @@ beforeEach(async () => {
 
   tmpRoot = await mkdtemp(join(tmpdir(), "proofpay-orch-"));
   uploadDir = join(tmpRoot, "uploads");
-  mkdirSync(uploadDir, { recursive: true });
+  await mkdir(uploadDir, { recursive: true });
 
   db = createDb(":memory:");
   runMigrations(db);
@@ -110,7 +110,8 @@ async function createSubmittedJob(options: {
 }): Promise<SubmittedJob> {
   const category = options.category ?? "bike_repair";
   const amountCents = options.amountCents ?? 6000;
-  const jobId = `orch-job-${sequence}-${category}`;
+  jobCounter += 1;
+  const jobId = `orch-job-${sequence}-${jobCounter}-${category}`;
   createJob(
     {
       id: jobId,
@@ -282,14 +283,12 @@ describe("runVerification with VISION_MOCK=1", () => {
     ).toContain("NO_AFTER_EVIDENCE");
   });
 
-  it("can force a second attempt while the job is still EVIDENCE_SUBMITTED", async () => {
+  it("does not re-run a captured job, even with force", async () => {
     const { jobId } = await createSubmittedJob({ category: "bike_repair" });
-    // Move back to a verifiable state without triggering capture: use a failing
-    // VLM first, then a successful forced re-run is not possible (HUMAN_REVIEW),
-    // so this asserts the guard: a second non-forced call does nothing.
     await runVerification(jobId, { db, uploadDir });
     expect(getJob(jobId, db)?.status).toBe("CAPTURED");
     const again = await runVerification(jobId, { db, uploadDir, force: true });
     expect(again).toBeNull();
+    expect(listVerifications(jobId, db)).toHaveLength(1);
   });
 });

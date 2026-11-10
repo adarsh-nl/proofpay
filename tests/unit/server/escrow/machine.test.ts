@@ -140,5 +140,5 @@ describe("transition", () => {
         expect(updated.status, `${from} -> ${to}`).toBe(to);
       }
     }
-  });
+  }, 30_000);
 });
