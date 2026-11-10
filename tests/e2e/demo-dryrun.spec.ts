@@ -18,7 +18,14 @@ import { expect, test, type Page } from '@playwright/test';
 import sharp from 'sharp';
 
 import { fetchJob, gotoWithRetry, jobIdFromUrl, selectRole } from './helpers/api';
-import { authorizeJobWithMock, DEMO_CLEANING, DEMO_DELIVERY, openJob, uploadEvidenceAndSubmit } from './helpers/flow';
+import {
+  attachEvidenceWithRetry,
+  authorizeJobWithMock,
+  DEMO_CLEANING,
+  DEMO_DELIVERY,
+  openJob,
+  uploadEvidenceAndSubmit,
+} from './helpers/flow';
 import {
   AFTER_IMAGE,
   BEFORE_IMAGE,
@@ -138,10 +145,8 @@ test.describe('@dryrun demo dry-run (three stories from the script)', () => {
       await openJob(page, jobId, 'worker');
       const liveness = page.getByTestId('liveness-code');
       await expect(liveness).toContainText(/\d{4}/, { timeout: 30_000 });
-      await page.getByTestId('dropzone-before').setInputFiles(BEFORE_IMAGE);
-      await page.getByTestId('dropzone-after').setInputFiles(AFTER_IMAGE);
       const submit = page.getByTestId('submit-evidence');
-      await expect(submit).toBeEnabled({ timeout: 20_000 });
+      await attachEvidenceWithRetry(page, BEFORE_IMAGE, AFTER_IMAGE, submit);
       await capture(page, '04-worker-upload-code', 'Worker view: liveness-code banner + before/after evidence');
       await Promise.all([
         page.waitForURL((url) => /^\/jobs\/[^/?#]+$/.test(url.pathname), { timeout: 45_000 }),
@@ -181,9 +186,13 @@ test.describe('@dryrun demo dry-run (three stories from the script)', () => {
       ).toBeVisible({ timeout: 20_000 });
       await capture(page, '07-partial-proposal', 'Settlement agent proposal: capture $96.00, release $24.00, customer Accept');
 
+      // Script shot 6 continues: the customer accepts, and the partial capture runs.
+      await page.getByTestId('accept-proposal').click();
+      await expect(page.getByTestId('job-status')).toHaveAttribute('data-status', 'CAPTURED', { timeout: 60_000 });
       const job = await fetchJob(request, DEMO_CLEANING);
-      expect(job.status).toBe('PARTIAL');
-      expect(job.latestVerification?.decision.captureAmount?.value).toBe('96.00');
+      expect(job.status).toBe('CAPTURED');
+      expect(job.payment?.captured.value).toBe('96.00');
+      expect(Number(job.payment?.captured.value)).toBeLessThan(Number(job.payment?.authorized?.value ?? '0'));
       ok = true;
     } finally {
       recordFlow('cleaning partial proposal ($96.00 / $24.00)', started, ok);
@@ -213,8 +222,18 @@ test.describe('@dryrun demo dry-run (three stories from the script)', () => {
       await expect(page.getByTestId('evidence-pack-markdown')).toContainText(DEMO_DELIVERY, { timeout: 60_000 });
       await capture(page, '09-reviewer-evidence-pack', 'Reviewer evidence pack (markdown) for the duplicate delivery');
 
+      // Script shot 7 continues: the reviewer rejects and the hold is voided.
+      await page.getByTestId('review-decision-reject').click();
+      await page.getByTestId('review-notes').fill(
+        'The after photo is a known stock doorstep image, so the delivery cannot be verified. Rejecting and releasing the hold.',
+      );
+      await page.getByTestId('review-submit').click();
+      await page.waitForURL(/\/reviewer$/, { timeout: 45_000 });
+      await openJob(page, DEMO_DELIVERY, 'customer');
+      await expect(page.getByTestId('job-status')).toHaveAttribute('data-status', 'VOIDED', { timeout: 30_000 });
       const job = await fetchJob(request, DEMO_DELIVERY);
-      expect(job.status).toBe('HUMAN_REVIEW');
+      expect(job.status).toBe('VOIDED');
+      expect(job.payment?.captured.value).toBe('0.00');
       ok = true;
     } finally {
       recordFlow('delivery fraud flags + reviewer evidence pack', started, ok);
