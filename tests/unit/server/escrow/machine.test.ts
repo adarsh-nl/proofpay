@@ -1,77 +1,144 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { getJob, listEvents } from "@/server/db/repo";
-import { IllegalTransition, transition } from "@/server/escrow/machine";
+import { beforeEach, describe, expect, it } from "vitest";
+import { TRANSITIONS, type EscrowStatus } from "@/shared/escrow";
+import {
+  createDb,
+  runMigrations,
+  type ProofPayDb,
+} from "@/server/db/client";
+import { createJob, getJob } from "@/server/db/repo";
+import {
+  IllegalTransition,
+  transition,
+} from "@/server/escrow/machine";
 import { NotFoundError } from "@/server/http/errors";
-import { ESCROW_STATUSES, TRANSITIONS, type EscrowStatus } from "@/shared/escrow";
-import { makeJob, setupTestApp, teardownTestApp } from "../../helpers";
+import { buildTemplateCriteria } from "@/server/vision/criteria-templates";
+
+let db: ProofPayDb;
 
 beforeEach(() => {
-  setupTestApp();
+  db = createDb(":memory:");
+  runMigrations(db);
 });
-afterEach(() => teardownTestApp());
 
-/** Walk a job to `target` along allowed transitions. */
-const PATHS: Record<EscrowStatus, EscrowStatus[]> = {
-  CREATED: [],
-  CANCELLED: ["CANCELLED"],
-  AUTHORIZED: ["AUTHORIZED"],
-  VOIDED: ["AUTHORIZED", "VOIDED"],
-  EVIDENCE_SUBMITTED: ["AUTHORIZED", "EVIDENCE_SUBMITTED"],
-  VERIFYING: ["AUTHORIZED", "EVIDENCE_SUBMITTED", "VERIFYING"],
-  APPROVED: ["AUTHORIZED", "EVIDENCE_SUBMITTED", "VERIFYING", "APPROVED"],
-  PARTIAL: ["AUTHORIZED", "EVIDENCE_SUBMITTED", "VERIFYING", "PARTIAL"],
-  REJECTED: ["AUTHORIZED", "EVIDENCE_SUBMITTED", "VERIFYING", "REJECTED"],
-  HUMAN_REVIEW: ["AUTHORIZED", "EVIDENCE_SUBMITTED", "VERIFYING", "HUMAN_REVIEW"],
-  CAPTURED: ["AUTHORIZED", "EVIDENCE_SUBMITTED", "VERIFYING", "APPROVED", "CAPTURED"],
-  REFUNDED: ["AUTHORIZED", "EVIDENCE_SUBMITTED", "VERIFYING", "APPROVED", "CAPTURED", "REFUNDED"],
-};
+function createTestJob(id = "job-1") {
+  return createJob(
+    {
+      id,
+      title: "Replace bike chain",
+      description: "Swap the worn chain for a new one.",
+      category: "bike_repair",
+      amountCents: 6000,
+      currency: "USD",
+      criteria: buildTemplateCriteria("bike_repair"),
+    },
+    db,
+  );
+}
 
-function jobIn(status: EscrowStatus): string {
-  const job = makeJob();
-  for (const step of PATHS[status]) transition(job.id, step, "system");
-  return job.id;
+/** Shortest legal path CREATED → target, for table-driven transition tests. */
+function pathTo(target: EscrowStatus): EscrowStatus[] {
+  const queue: EscrowStatus[][] = [["CREATED"]];
+  const seen = new Set<EscrowStatus>(["CREATED"]);
+  while (queue.length > 0) {
+    const path = queue.shift() as EscrowStatus[];
+    const last = path[path.length - 1];
+    if (last === target) return path;
+    for (const next of TRANSITIONS[last]) {
+      if (seen.has(next)) continue;
+      seen.add(next);
+      queue.push([...path, next]);
+    }
+  }
+  throw new Error(`no path from CREATED to ${target}`);
+}
+
+function moveTo(jobId: string, target: EscrowStatus): void {
+  const path = pathTo(target);
+  for (const next of path.slice(1)) {
+    transition(jobId, next, "system", { test: true }, db);
+  }
 }
 
 describe("transition", () => {
-  const allowed = ESCROW_STATUSES.flatMap((from) => TRANSITIONS[from].map((to) => [from, to] as const));
-  it.each(allowed)("allows %s → %s and records a STATUS_CHANGED event", (from, to) => {
-    const id = jobIn(from);
-    const before = listEvents(id).length;
-    const job = transition(id, to, "reviewer", { note: "x" });
-    expect(job.status).toBe(to);
-    const events = listEvents(id);
-    expect(events).toHaveLength(before + 1);
-    expect(events.at(-1)).toMatchObject({
+  it("moves a job and appends an atomic STATUS_CHANGED event", () => {
+    const job = createTestJob();
+    const updated = transition(
+      job.id,
+      "AUTHORIZED",
+      "customer",
+      { authorizationId: "MOCK-AUTH-1" },
+      db,
+    );
+    expect(updated.status).toBe("AUTHORIZED");
+    expect(updated.events).toHaveLength(2);
+    const event = updated.events.at(-1);
+    expect(event).toMatchObject({
       type: "STATUS_CHANGED",
-      fromStatus: from,
-      toStatus: to,
-      actor: "reviewer",
-      data: { note: "x" },
+      fromStatus: "CREATED",
+      toStatus: "AUTHORIZED",
+      actor: "customer",
     });
+    expect(event?.data).toEqual({ authorizationId: "MOCK-AUTH-1" });
   });
 
-  const illegal = ESCROW_STATUSES.flatMap((from) =>
-    ESCROW_STATUSES.filter((to) => !TRANSITIONS[from].includes(to)).map((to) => [from, to] as const),
-  );
-  it.each(illegal)("rejects %s → %s and changes nothing", (from, to) => {
-    const id = jobIn(from);
-    const before = listEvents(id).length;
-    expect(() => transition(id, to, "system")).toThrow(IllegalTransition);
-    expect(getJob(id)?.status).toBe(from);
-    expect(listEvents(id)).toHaveLength(before);
-  });
-
-  it("carries from and to on IllegalTransition", () => {
-    const id = jobIn("CREATED");
-    try {
-      transition(id, "CAPTURED", "system");
-      expect.unreachable();
-    } catch (error) {
-      expect(error).toMatchObject({ from: "CREATED", to: "CAPTURED" });
-    }
+  it("throws IllegalTransition and writes nothing for a forbidden move", () => {
+    const job = createTestJob();
+    expect(() => transition(job.id, "CAPTURED", "system", {}, db)).toThrow(
+      IllegalTransition,
+    );
+    expect(() => transition(job.id, "CAPTURED", "system", {}, db)).toThrow(
+      /CREATED to CAPTURED/,
+    );
+    const after = transition(job.id, "AUTHORIZED", "customer", {}, db);
+    expect(after.events).toHaveLength(2);
   });
 
   it("throws NotFoundError for an unknown job", () => {
-    expect(() => transition("nope", "AUTHORIZED", "system")).toThrow(NotFoundError);
+    expect(() => transition("nope", "AUTHORIZED", "customer", {}, db)).toThrow(
+      NotFoundError,
+    );
+  });
+
+  it("rejects a stale writer (row changed since the status was read)", () => {
+    const job = createTestJob();
+    transition(job.id, "AUTHORIZED", "customer", {}, db);
+    // Two writers race: the second one still believes the job is CREATED.
+    transition(job.id, "EVIDENCE_SUBMITTED", "worker", {}, db);
+    expect(() =>
+      transition(job.id, "AUTHORIZED", "customer", {}, db),
+    ).toThrow(IllegalTransition);
+  });
+
+  it.each([
+    "AUTHORIZED",
+    "EVIDENCE_SUBMITTED",
+    "VERIFYING",
+    "APPROVED",
+    "PARTIAL",
+    "REJECTED",
+    "HUMAN_REVIEW",
+    "CAPTURED",
+    "VOIDED",
+    "CANCELLED",
+    "REFUNDED",
+  ] as EscrowStatus[])("reaches %s through the MANUAL §7 path", (target) => {
+    const job = createTestJob();
+    moveTo(job.id, target);
+    const after = getJob(job.id, db);
+    expect(after?.status).toBe(target);
+    expect(after?.events.at(-1)?.toStatus).toBe(target);
+  });
+
+  it("covers every allowed transition exactly like the shared table", () => {
+    for (const from of Object.keys(TRANSITIONS) as EscrowStatus[]) {
+      for (const to of TRANSITIONS[from]) {
+        db = createDb(":memory:");
+        runMigrations(db);
+        const job = createTestJob();
+        moveTo(job.id, from);
+        const updated = transition(job.id, to, "system", {}, db);
+        expect(updated.status, `${from} -> ${to}`).toBe(to);
+      }
+    }
   });
 });

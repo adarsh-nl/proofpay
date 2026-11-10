@@ -23,7 +23,6 @@ export class IllegalTransition extends Error {
  * status, check the allowed-transitions table, update `jobs.status` and append
  * a `STATUS_CHANGED` event.
  */
-// TODO(T06): settle() and the approval-gated transitions build on this.
 export function transition(
   jobId: string,
   to: EscrowStatus,
