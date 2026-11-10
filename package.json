@@ -16,6 +16,7 @@
     "check": "npm run lint && npm run typecheck && npm test",
     "db:generate": "drizzle-kit generate",
     "db:reset": "tsx scripts/db-reset.ts",
+    "db:migrate": "tsx scripts/db-migrate.ts",
     "e2e": "playwright test",
     "eval": "tsx --conditions=react-server scripts/eval.ts",
     "eval:validate": "tsx scripts/eval-validate.ts"

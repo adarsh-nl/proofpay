@@ -39,7 +39,7 @@ services:
     name: proofpay
     runtime: node
     plan: free            # free = ephemeral disk + spin-down (verify current Render free-tier limits)
-    buildCommand: npm ci && npm run build
+    buildCommand: npm ci --include=dev && npm run build   # NODE_ENV=production would otherwise skip devDependencies
     startCommand: npm start
     healthCheckPath: /api/health
     envVars:
