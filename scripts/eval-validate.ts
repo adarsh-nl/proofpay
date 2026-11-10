@@ -17,7 +17,7 @@
  */
 import { mkdir, readdir, readFile, rename, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import sharp from 'sharp';
+import sharp, { type Metadata } from 'sharp';
 import * as exifr from 'exifr';
 
 import {
@@ -64,10 +64,15 @@ function isImageMetadata(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
 
-/** Parse EXIF into a plain object; any failure means "no usable EXIF". */
+/**
+ * Parse EXIF into a plain object; any failure means "no usable EXIF".
+ * Params are the file bytes, not the path: exifr's path reader leaks a FileHandle that
+ * recent Node versions refuse to close silently during garbage collection.
+ */
 async function readExif(filePath: string): Promise<Record<string, unknown>> {
   try {
-    const parsed: unknown = await exifr.parse(filePath, { pick: [...EXIF_PICK] });
+    const bytes = await readFile(filePath);
+    const parsed: unknown = await exifr.parse(bytes, { pick: [...EXIF_PICK] });
     return isImageMetadata(parsed) ? parsed : {};
   } catch {
     return {};
@@ -92,7 +97,7 @@ async function processImage(
   issues: Issue[],
   caseId: string,
 ): Promise<ImageOutcome | null> {
-  let metadata: sharp.Metadata;
+  let metadata: Metadata;
   try {
     metadata = await sharp(filePath).metadata();
   } catch {
@@ -244,11 +249,9 @@ async function validateCase(
   let dirty = false;
   for (const name of images.sort()) {
     const filePath = path.join(caseDir, name);
-    const outcome = await processImage(filePath, issues, caseId);
-    if (!outcome) continue;
-    if (outcome.resized) result.resized += 1;
-    if (outcome.stripped) result.stripped += 1;
 
+    // Read the after photo's timestamp BEFORE processImage re-encodes it (sharp drops
+    // all metadata by default, so the EXIF is gone after that step).
     if (/^after_/i.test(name) && evalCase.exifTakenAt === null) {
       const exif = await readExif(filePath);
       const takenAt = toIsoDate(exif.DateTimeOriginal) ?? toIsoDate(exif.CreateDate);
@@ -264,6 +267,11 @@ async function validateCase(
         );
       }
     }
+
+    const outcome = await processImage(filePath, issues, caseId);
+    if (!outcome) continue;
+    if (outcome.resized) result.resized += 1;
+    if (outcome.stripped) result.stripped += 1;
   }
 
   if (dirty) {

@@ -64,7 +64,7 @@ export const EvalCaseSchema = z.object({
   criteria: z.array(EvalCriterionSchema).min(2).max(6).optional(),
   expected: EvalCaseExpectedSchema,
   notes: z.string().default(''),
-  /** Flip to true only when before_*/after_* photos exist for this case. */
+  /** Flip to true only when before_ and after_ photos exist for this case. */
   ready: z.boolean().default(false),
   /** DateTimeOriginal of the after photo, recorded by eval:validate before EXIF is stripped. */
   exifTakenAt: z.string().nullable().default(null),
