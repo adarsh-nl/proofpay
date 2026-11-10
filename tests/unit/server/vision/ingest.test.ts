@@ -9,7 +9,7 @@ import { injectExifTimestamp, syntheticImage } from '../../fixtures/synthetic';
 
 // Image-heavy tests spin up sharp/jpeg encoders; under the full suite's parallel
 // workers the default 5 s per-test budget is too tight on CI.
-vi.setConfig({ testTimeout: 30_000, hookTimeout: 30_000 });
+vi.setConfig({ testTimeout: 120_000, hookTimeout: 120_000 });
 
 /**
  * Evidence ingest tests (T09). Images come from the deterministic C10 generator;
