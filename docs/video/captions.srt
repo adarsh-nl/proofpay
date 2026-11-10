@@ -1,0 +1,81 @@
+1
+00:00:00,000 --> 00:00:08,996
+On 7 November my new Fitbit was marked
+delivered in Enschede. It never arrived.
+
+2
+00:00:09,046 --> 00:00:14,950
+No photo, no proof, but the money had
+already moved.
+
+3
+00:00:15,000 --> 00:00:25,166
+ProofPay is escrow for real-world work:
+PayPal holds the payment, AI checks the
+
+4
+00:00:25,216 --> 00:00:29,950
+proof, and only then does money move.
+
+5
+00:00:30,000 --> 00:00:42,450
+The customer describes the job; AI turns
+it into a checklist that can be checked
+
+6
+00:00:42,500 --> 00:00:54,950
+from photos. PayPal authorizes 60 dollars:
+held, not charged, for up to 29 days.
+
+7
+00:00:55,000 --> 00:01:09,186
+The worker uploads before-and-after photos
+with a one-time code in frame. A vision
+
+8
+00:01:09,236 --> 00:01:19,950
+model checks every item and shows where it
+found the evidence.
+
+9
+00:01:20,000 --> 00:01:34,950
+All criteria pass, so ProofPay captures
+the payment through PayPal automatically.
+
+10
+00:01:35,000 --> 00:01:45,664
+When the job is partly done, our
+settlement agent proposes a fair split and
+
+11
+00:01:45,714 --> 00:01:56,950
+explains it. The customer approves, and
+PayPal captures 96 dollars and releases
+
+12
+00:01:57,000 --> 00:02:04,950
+the rest. The agent can't move money
+without that click.
+
+13
+00:02:05,000 --> 00:02:14,853
+Fraud checks catch reused or stock photos,
+wrong scenes and missing codes. The job
+
+14
+00:02:14,903 --> 00:02:25,119
+goes to a human with a ready-made evidence
+pack, and the hold is voided. The customer
+
+15
+00:02:25,169 --> 00:02:29,950
+never pays for a Fitbit that never came.
+
+16
+00:02:30,000 --> 00:02:40,424
+Built on PayPal's authorize-and-capture
+APIs and AI vision. Proof before payment,
+
+17
+00:02:40,474 --> 00:02:44,950
+for every gig, repair and delivery.
