@@ -68,7 +68,7 @@ export async function uploadEvidenceAndSubmit(
  * lost (state still shows 0 photos and the submit button stays disabled); retry once or
  * twice instead of flaking.
  */
-async function attachEvidenceWithRetry(
+export async function attachEvidenceWithRetry(
   page: Page,
   beforeFile: string,
   afterFile: string,

@@ -124,6 +124,48 @@ Other commands: `npm run check` (lint + typecheck + unit tests) · `npm run e2e`
 
 Limitations (honest): role switching via `?as=` is a demo convenience, not authentication. On Render's free tier the SQLite DB and uploads reset on restart. The AI can be wrong, so low‑confidence or suspicious cases always go to a human.
 
+## Screenshots
+
+Captured by the automated demo dry-run (`npx playwright test -g @dryrun`); per-shot
+timings, OK/glitch results, the first-navigation time and the exact commands are in
+[docs/DRYRUN_REPORT.md](docs/DRYRUN_REPORT.md).
+
+**Landing:** "Money moves when the camera says the job is done."
+
+![Landing page](docs/img/01-landing.png)
+
+**Customer creates the job; AI writes the photo-checkable checklist** (and the liveness code):
+
+![Create job with the AI checklist](docs/img/02-create-job-ai-checklist.png)
+
+**PayPal authorizes the payment — "Funds held by PayPal", not charged:**
+
+![Funds held by PayPal](docs/img/03-funds-held.png)
+
+**Worker view: the 4-digit liveness code and before/after evidence:**
+
+![Worker upload with liveness code](docs/img/04-worker-upload-code.png)
+
+**AI verification: per-criterion verdicts with evidence boxes:**
+
+![Verification result with evidence boxes](docs/img/05-verification-boxes.png)
+
+**Money timeline: Held $60.00 -> Verified -> Captured $60.00:**
+
+![Captured money timeline](docs/img/06-timeline-captured.png)
+
+**Partial result: the settlement agent proposes $96.00 / $24.00 and the customer accepts:**
+
+![Partial settlement proposal](docs/img/07-partial-proposal.png)
+
+**Fraud path: a reused stock photo is flagged and escalated to a human:**
+
+![Fraud flags on a reused stock photo](docs/img/08-fraud-flags.png)
+
+**Reviewer view: a ready-made evidence pack in markdown:**
+
+![Reviewer evidence pack](docs/img/09-reviewer-evidence-pack.png)
+
 ---
 
 ## For judges
