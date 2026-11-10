@@ -1,0 +1,262 @@
+{
+  "id": "demo-review",
+  "title": "Parcel delivery to the front door",
+  "description": "Deliver the parcel to the front door and leave it out of the rain.",
+  "category": "delivery",
+  "amount": {
+    "currency": "USD",
+    "value": "45.00"
+  },
+  "status": "HUMAN_REVIEW",
+  "livenessCode": "7731",
+  "customerName": "Demo Customer",
+  "workerName": "Demo Worker",
+  "criteria": [
+    {
+      "id": "c1",
+      "label": "Parcel visible at the delivery door",
+      "howToVerify": "The parcel must be visible at the door in an after photo.",
+      "required": true,
+      "weight": 0.4,
+      "phase": "after",
+      "source": "llm"
+    },
+    {
+      "id": "c2",
+      "label": "Door/house number visible and legible",
+      "howToVerify": "The door or house number must be readable so the address is provable.",
+      "required": true,
+      "weight": 0.4,
+      "phase": "after",
+      "source": "llm"
+    },
+    {
+      "id": "c3",
+      "label": "Parcel undamaged and not exposed to weather",
+      "howToVerify": "The parcel looks intact and not sitting in rain or dirt.",
+      "required": false,
+      "weight": 0.2,
+      "phase": "after",
+      "source": "llm"
+    },
+    {
+      "id": "cL",
+      "label": "Liveness code 7731 visible in at least one after photo (written on paper or shown on a phone screen)",
+      "howToVerify": "Look for a handwritten or phone-displayed 4 digit code in the after photos and read it.",
+      "required": true,
+      "weight": 0,
+      "phase": "after",
+      "source": "system"
+    }
+  ],
+  "payment": {
+    "orderId": "MOCK-ORDER-7",
+    "authorizationId": "MOCK-AUTH-7",
+    "authorizationStatus": "CREATED",
+    "authorized": {
+      "currency": "USD",
+      "value": "45.00"
+    },
+    "captured": {
+      "currency": "USD",
+      "value": "0.00"
+    },
+    "refunded": {
+      "currency": "USD",
+      "value": "0.00"
+    },
+    "captureIds": [],
+    "expiresAt": "2026-12-09T10:02:00.000Z",
+    "honorPeriodEndsAt": "2026-11-13T10:02:00.000Z"
+  },
+  "latestVerification": {
+    "id": "ver_demo_review",
+    "attempt": 1,
+    "model": "gemini-2.5-flash",
+    "mock": true,
+    "createdAt": "2026-11-10T10:05:00.000Z",
+    "report": {
+      "verdicts": [
+        {
+          "criterionId": "c1",
+          "verdict": "PASS",
+          "confidence": 0.94,
+          "rationale": "The parcel is clearly visible on the doorstep.",
+          "evidence": [
+            {
+              "imageId": "A1",
+              "box_2d": [
+                420,
+                260,
+                780,
+                760
+              ],
+              "note": "Parcel at the door"
+            }
+          ]
+        },
+        {
+          "criterionId": "c2",
+          "verdict": "PASS",
+          "confidence": 0.91,
+          "rationale": "Door number 14 is legible above the parcel.",
+          "evidence": [
+            {
+              "imageId": "A1",
+              "box_2d": [
+                120,
+                600,
+                320,
+                840
+              ],
+              "note": "House number"
+            }
+          ]
+        },
+        {
+          "criterionId": "c3",
+          "verdict": "PASS",
+          "confidence": 0.9,
+          "rationale": "The box is dry and intact under the covered porch.",
+          "evidence": [
+            {
+              "imageId": "A1",
+              "box_2d": [
+                430,
+                270,
+                700,
+                700
+              ],
+              "note": "Undamaged parcel"
+            }
+          ]
+        },
+        {
+          "criterionId": "cL",
+          "verdict": "PASS",
+          "confidence": 0.96,
+          "rationale": "The handwritten code 7731 is legible on the note in the after photo.",
+          "evidence": [
+            {
+              "imageId": "A1",
+              "box_2d": [
+                40,
+                40,
+                200,
+                300
+              ],
+              "note": "Sticky note with 7731"
+            }
+          ]
+        }
+      ],
+      "sameScene": {
+        "verdict": "SAME",
+        "confidence": 0.88,
+        "rationale": "Same doorstep, same door colour and house number as the before photo."
+      },
+      "livenessCode": {
+        "found": true,
+        "readValue": "7731",
+        "imageId": "A1"
+      },
+      "imageQualityIssues": [
+        "NONE"
+      ],
+      "summary": "Every criterion passes, but the forensics pass found the after photo duplicated from another job."
+    },
+    "forensics": {
+      "flags": [
+        {
+          "code": "EXACT_DUPLICATE",
+          "level": "HIGH",
+          "message": "The after photo is byte-identical to an image already uploaded for another job.",
+          "evidenceIds": [
+            "ev_after_1"
+          ]
+        },
+        {
+          "code": "EXIF_MISSING",
+          "level": "INFO",
+          "message": "The after photo has no EXIF timestamp; not treated as fraud on its own.",
+          "evidenceIds": [
+            "ev_after_1"
+          ]
+        }
+      ]
+    },
+    "decision": {
+      "outcome": "HUMAN_REVIEW",
+      "score": 1,
+      "reasons": [
+        "EXACT_DUPLICATE (HIGH): the after photo was already used on another job.",
+        "A HIGH fraud flag always goes to a human reviewer, even when the criteria pass."
+      ]
+    }
+  },
+  "events": [
+    {
+      "id": 1,
+      "type": "STATUS_CHANGED",
+      "toStatus": "CREATED",
+      "actor": "customer",
+      "data": null,
+      "createdAt": "2026-11-10T09:50:00.000Z"
+    },
+    {
+      "id": 2,
+      "type": "PAYPAL_CALL",
+      "actor": "customer",
+      "data": {
+        "op": "create_order",
+        "orderId": "MOCK-ORDER-7"
+      },
+      "createdAt": "2026-11-10T09:58:00.000Z"
+    },
+    {
+      "id": 3,
+      "type": "STATUS_CHANGED",
+      "fromStatus": "CREATED",
+      "toStatus": "AUTHORIZED",
+      "actor": "customer",
+      "data": {
+        "authorizationId": "MOCK-AUTH-7"
+      },
+      "createdAt": "2026-11-10T10:02:00.000Z"
+    },
+    {
+      "id": 4,
+      "type": "STATUS_CHANGED",
+      "fromStatus": "AUTHORIZED",
+      "toStatus": "EVIDENCE_SUBMITTED",
+      "actor": "worker",
+      "data": {
+        "afterImages": 1,
+        "beforeImages": 1
+      },
+      "createdAt": "2026-11-10T10:04:00.000Z"
+    },
+    {
+      "id": 5,
+      "type": "STATUS_CHANGED",
+      "fromStatus": "EVIDENCE_SUBMITTED",
+      "toStatus": "VERIFYING",
+      "actor": "system",
+      "data": null,
+      "createdAt": "2026-11-10T10:04:05.000Z"
+    },
+    {
+      "id": 6,
+      "type": "STATUS_CHANGED",
+      "fromStatus": "VERIFYING",
+      "toStatus": "HUMAN_REVIEW",
+      "actor": "system",
+      "data": {
+        "reason": "High fraud flag"
+      },
+      "createdAt": "2026-11-10T10:05:00.000Z"
+    }
+  ],
+  "createdAt": "2026-11-10T09:50:00.000Z",
+  "updatedAt": "2026-11-10T10:05:00.000Z"
+}

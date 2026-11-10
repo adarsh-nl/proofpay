@@ -10,3 +10,6 @@
 
 ## GATE-TIMEOUTS / MERGE-NEEDED / BUGS FOUND
 - [ ] Local install note (not a code change): on this machine `npm ci` fails while compiling `better-sqlite3` on Node 26; `npm ci --ignore-scripts` installs fine (the prebuilt N-API binary ships in the package tarball) and `require('better-sqlite3')` plus `sharp` both load. CI uses Node 20 and is unaffected.
+
+## CROSS-OWNER REQUESTS
+- [ ] `src/server/jobs/settlement.ts::findLatestProposal` + `src/server/agent/settlement-agent.ts` (owner: Backend lane). Verified 16:30 CET on main @732c964 + T07: the T13 stub writes an `AGENT_MESSAGE` event whose data is `{ proposal: SettlementProposal, explanation, model }`, but `findLatestProposal` parses `event.data` directly with `SettlementProposalSchema`, so it never finds the proposal. Result: customer `POST /api/jobs/:id/settlement/accept` always answers `409 PROPOSAL_NOT_CURRENT` on a PARTIAL job (repro: run the demo cleaning flow with `PAYPAL_MOCK=1 VISION_MOCK=1`; job ends PARTIAL with a proposal event, accept → 409). Fix: store the proposal at `event.data` root (MANUAL §8 says the proposal is the AGENT_MESSAGE data) or unwrap `event.data.proposal` in `findLatestProposal`. Frontend `SettlementPanel` already accepts both shapes.

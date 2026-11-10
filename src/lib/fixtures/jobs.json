@@ -4,22 +4,41 @@
       "id": "demo-bike",
       "title": "Replace bike chain",
       "status": "CREATED",
-      "amount": { "currency": "USD", "value": "60.00" },
+      "amount": {
+        "currency": "USD",
+        "value": "60.00"
+      },
       "updatedAt": "2026-11-10T09:12:00.000Z"
     },
     {
       "id": "demo-cleaning",
       "title": "Apartment deep clean",
       "status": "AUTHORIZED",
-      "amount": { "currency": "USD", "value": "120.00" },
+      "amount": {
+        "currency": "USD",
+        "value": "120.00"
+      },
       "updatedAt": "2026-11-10T09:20:00.000Z"
     },
     {
       "id": "demo-delivery",
       "title": "Parcel delivery to the front door",
       "status": "CREATED",
-      "amount": { "currency": "USD", "value": "45.00" },
+      "amount": {
+        "currency": "USD",
+        "value": "45.00"
+      },
       "updatedAt": "2026-11-10T09:05:00.000Z"
+    },
+    {
+      "id": "demo-review",
+      "title": "Parcel delivery to the front door",
+      "status": "HUMAN_REVIEW",
+      "amount": {
+        "currency": "USD",
+        "value": "45.00"
+      },
+      "updatedAt": "2026-11-10T10:05:00.000Z"
     }
   ]
 }
