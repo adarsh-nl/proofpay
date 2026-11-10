@@ -14,7 +14,9 @@ services:
     runtime: node
     plan: free
     region: frankfurt
-    buildCommand: npm ci && npm run build
+    # NODE_ENV=production (below) makes a plain `npm ci` skip devDependencies, and the
+    # build needs them (TypeScript, Tailwind). `--include=dev` installs them anyway.
+    buildCommand: npm ci --include=dev && npm run build
     startCommand: npm start
     healthCheckPath: /api/health
     autoDeploy: true
