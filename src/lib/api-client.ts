@@ -315,6 +315,18 @@ export const api = {
     return response.job;
   },
 
+  /** Photos already stored for this job (GET /api/jobs/:id/evidence). */
+  async listEvidence(id: string, options?: ApiRequestOptions): Promise<EvidenceItem[]> {
+    if (FIXTURE_MODE) return [];
+    const response = await request(
+      `/api/jobs/${encodeURIComponent(id)}/evidence`,
+      EvidenceResponseSchema,
+      { method: 'GET' },
+      options,
+    );
+    return response.evidence;
+  },
+
   /** MANUAL §8 #7 */
   async uploadEvidence(
     id: string,
